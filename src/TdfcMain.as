@@ -129,7 +129,8 @@ package
          {
             var u:* = units[i];
             live[u] = true;
-            if (!isEnemy(u))
+            var ucls:String = shortClass(u); // 每帧每单位算一次，事件循环复用
+            if (!isEnemy(u, ucls))
             {
                continue;
             }
@@ -162,7 +163,7 @@ package
          // ---- 心跳 + 内存清扫 ----
          if (tick % Config.HEARTBEAT_EVERY == 0)
          {
-            heartbeat(units, gg);
+            heartbeat(units, gg, loc);
             sweepStates();
          }
       }
@@ -242,10 +243,40 @@ package
          return (Math.random() * 2 - 1) * err;
       }
 
-      /** 敌性判定：非玩家/非NPC、阵营 1..99、存活、可被锁、有耳朵。 */
-      public static function isEnemy(u:*):Boolean
+      /** 非战斗单位名单：环境/脚本对象（无战术行为，不参与警戒传播）。
+       *  依据 1.02 反编译核对：UnitTrigger/UnitTrap/UnitDestr/UnitMWall/Mine
+       *  无武器无索敌；UnitDamager 是环境激光器、UnitVortex 是环境漩涡
+       *  （有自己的 findCel 索敌但属机关，不应接收小队警报）。
+       *  注意：UnitTrain 等真战斗单位不在名单内。 */
+      private static const NON_COMBAT:Object = {
+         UnitTrigger: 1, UnitDamager: 1, UnitTrap: 1, UnitDestr: 1,
+         UnitMWall: 1, Mine: 1, UnitVortex: 1
+      };
+
+      /** 短类名（fe.unit::UnitRaider → UnitRaider）。 */
+      public static function shortClass(u:*):String
+      {
+         var r:String = "?";
+         try
+         {
+            r = getQualifiedClassName(u).split("::").pop().split(".").pop();
+         }
+         catch (e:Error) {}
+         return r;
+      }
+
+      /** 敌性判定：非玩家/非NPC/非环境对象、阵营 1..99、存活、可被锁、有耳朵。 */
+      public static function isEnemy(u:*, cls:String = null):Boolean
       {
          if (u == null)
+         {
+            return false;
+         }
+         if (cls == null)
+         {
+            cls = shortClass(u);
+         }
+         if (NON_COMBAT[cls] === 1)
          {
             return false;
          }
@@ -297,15 +328,20 @@ package
          return q + "@" + int(u["X"]) + "," + int(u["Y"]);
       }
 
-      private static function heartbeat(units:Array, gg:*):void
+      private static function heartbeat(units:Array, gg:*, loc:*):void
       {
          var searching:int = 0;
          var engaged:int = 0;
          var foes:int = 0;
+         var hear:int = 0;  // 玩家听觉半径内（噪声×ear 判定）——"为什么没交战"诊断用
+         var los:int = 0;   // 对玩家有视线（SIGHT_RANGE 内）
+         var px:Number = gg["X"];
+         var py:Number = gg["Y"];
          for (var i:int = 0; i < units.length; i++)
          {
             var u:* = units[i];
-            if (!isEnemy(u))
+            var ucls:String = shortClass(u);
+            if (!isEnemy(u, ucls))
             {
                continue;
             }
@@ -319,9 +355,22 @@ package
             {
                engaged++;
             }
+            var ear:Number = num(u, "ear", 1);
+            var dx:Number = u["X"] - px;
+            var dy:Number = u["Y"] - py;
+            var d2:Number = dx * dx + dy * dy;
+            if (d2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
+            {
+               hear++;
+            }
+            if (d2 < Config.SIGHT_RANGE * Config.SIGHT_RANGE && Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
+            {
+               los++;
+            }
          }
          TdfcLog.line("hb", "t=" + tick + " foes=" + foes + " engaged=" + engaged
-            + " searching=" + searching + " ggN=" + int(num(gg, "noise", 0)));
+            + " searching=" + searching + " hear=" + hear + " los=" + los
+            + " ggN=" + int(num(gg, "noise", 0)));
       }
 
       /** 清扫已离场单位的模组侧状态（防 Dictionary 强引用泄漏）。 */

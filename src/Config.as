@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.1.0";
+      public static const VER:String = "0.1.1";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
