@@ -58,6 +58,10 @@ package
             + " propGunshot=" + (Config.ENABLE_PROP_GUNSHOT ? 1 : 0)
             + " propDamage=" + (Config.ENABLE_PROP_DAMAGE ? 1 : 0)
             + " search=" + (Config.ENABLE_SEARCH ? 1 : 0)
+            + " dodgeAim=" + (Config.ENABLE_DODGE_AIM ? 1 : 0)
+            + " dodgeThreat=" + (Config.ENABLE_DODGE_THREAT ? 1 : 0)
+            + " cover=" + (Config.ENABLE_COVER ? 1 : 0)
+            + " retreat=" + (Config.ENABLE_RETREAT ? 1 : 0)
             + " testSpawn=" + (Config.ENABLE_TEST_SPAWN ? 1 : 0));
       }
 

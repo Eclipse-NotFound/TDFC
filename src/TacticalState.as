@@ -29,6 +29,34 @@ package
       public var cdGunshot:int = -999999;
       public var cdDamage:int = -999999;
 
+      // ---- 受击记忆（Phase 2 用）----
+      public var lastHitTick:int = -999999;  // 最近受击世界帧号
+
+      // ---- Phase 2：瞄准回避 ----
+      public var lastDodgeTick:int = -999999;// 最近一次躲避开始帧
+      public var dodgeT:int = 0;             // 剩余躲避 tick（>0 活动）
+      public var dodgeDir:int = 0;           // 侧移方向 ±1
+      public var aimExposed:int = 0;         // 被玩家瞄准累计 tick
+
+      // ---- Phase 2：慢弹回避 ----
+      public var threatScan:int = 0;         // 威胁扫描节拍
+      public var threatT:int = 0;            // 剩余威胁躲避 tick
+      public var threatDir:int = 0;          // 威胁躲避方向 ±1
+
+      // ---- Phase 2：掩体 ----
+      public var coverPhase:int = 0;         // 0=无 1=SEEK 2=HIDE
+      public var coverT:int = 0;             // 掩体剩余总时长
+      public var peekT:int = 0;              // 探头节拍
+      public var peekOn:Boolean = false;     // 当前是否探头
+      public var coverX:Number = 0;          // 掩体点
+      public var coverY:Number = 0;
+      public var lastCoverTick:int = -999999;
+
+      // ---- Phase 2：撤退 ----
+      public var retreatT:int = 0;           // 剩余撤退 tick
+      public var retreatX:Number = 0;        // 撤退点
+      public var retreatY:Number = 0;
+
       public function TacticalState()
       {
       }

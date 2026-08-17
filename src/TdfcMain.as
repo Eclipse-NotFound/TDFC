@@ -144,15 +144,26 @@ package
             }
 
             // 受击传播：hp 下降
-            if (Config.ENABLE_PROP_DAMAGE && !isNaN(st.prevHp) && num(u, "hp", 0) < st.prevHp)
+            if (!isNaN(st.prevHp) && num(u, "hp", 0) < st.prevHp)
             {
-               Propagation.damage(units, u, gg, loc, tick);
+               st.lastHitTick = tick; // 受击记忆（Phase 2 掩体/撤退触发用）
+               if (Config.ENABLE_PROP_DAMAGE)
+               {
+                  Propagation.damage(units, u, gg, loc, tick);
+               }
             }
 
             // 记忆与搜索
             if (Config.ENABLE_SEARCH)
             {
                SearchCtrl.update(u, st, gg, loc, tick);
+            }
+
+            // Phase 2 生存层（瞄准回避/慢弹回避/掩体/撤退）
+            if (Config.ENABLE_DODGE_AIM || Config.ENABLE_DODGE_THREAT
+               || Config.ENABLE_COVER || Config.ENABLE_RETREAT)
+            {
+               TacticalCtrl.update(u, st, gg, loc, tick);
             }
 
             // 快照
@@ -335,6 +346,9 @@ package
          var foes:int = 0;
          var hear:int = 0;  // 玩家听觉半径内（噪声×ear 判定）——"为什么没交战"诊断用
          var los:int = 0;   // 对玩家有视线（SIGHT_RANGE 内）
+         var dodging:int = 0;
+         var covering:int = 0;
+         var retreating:int = 0;
          var px:Number = gg["X"];
          var py:Number = gg["Y"];
          for (var i:int = 0; i < units.length; i++)
@@ -347,9 +361,24 @@ package
             }
             foes++;
             var st:TacticalState = states[u];
-            if (st != null && st.searchPhase == SearchCtrl.PHASE_SEARCH)
+            if (st != null)
             {
-               searching++;
+               if (st.searchPhase == SearchCtrl.PHASE_SEARCH)
+               {
+                  searching++;
+               }
+               if (st.dodgeT > 0 || st.threatT > 0)
+               {
+                  dodging++;
+               }
+               if (st.coverPhase > 0)
+               {
+                  covering++;
+               }
+               if (st.retreatT > 0)
+               {
+                  retreating++;
+               }
             }
             if (u["celUnit"] === gg)
             {
@@ -370,6 +399,7 @@ package
          }
          TdfcLog.line("hb", "t=" + tick + " foes=" + foes + " engaged=" + engaged
             + " searching=" + searching + " hear=" + hear + " los=" + los
+            + " dodge=" + dodging + " cover=" + covering + " retreat=" + retreating
             + " ggN=" + int(num(gg, "noise", 0)));
       }
 

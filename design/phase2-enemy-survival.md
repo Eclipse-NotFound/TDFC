@@ -39,20 +39,30 @@
 
 ### 2.1 移动覆盖的三种候选机制（Phase 2 核心决策）
 
-**机制一：每帧 cel 重写（推荐 v0.2）**
-- 交战敌人：vanilla 每 10 tick 才 findCel→setCel(gg) 一次；TDFC 每帧把
-  celX/celY 写到战术点（侧移点/掩体点/撤退点）→ 9/10 的帧由 TDFC 主导移动方向，
-  原版行走逻辑照常执行（朝 cel 走）。竞态窗口（被 setCel(gg) 拉回的帧）表现为
-  短暂朝向抖动，实测评估。
-- 优势：不破坏原版的碰撞/跳跃/寻边处理，风险最小。
-- 限制：只在 aiSpok>0（交战/怀疑）时有效——平静单位每帧被原版把 cel 重置回自身，
-  无法指挥（v0.2 的四个行为全部作用于交战/被击中场景，恰好满足）。
+**实现前新增确认的两个 vanilla 事实（1.02 反编译）**：
+- 交战接近逻辑：`aiState 2/3/6/8` 段每 15 tick 检查 `|celDX|>100` 才把
+  aiNapr/tstor 指向目标（**100px 水平死区**）——纯 cel 引导的小幅侧移（<100px）
+  不会触发走向。
+- `forces()` 对 `[-maxSpeed, maxSpeed]` 范围内的 dx **不施加摩擦**
+  （walk≠0 时只钳制超出 maxSpeed 的极端值）→ 直接写 dx 的侧移能在多次 step
+  中保持，vanilla 不清理。
 
-**机制二：直接写 walk/dx/maxSpeed（备选/增补）**
-- `walk`/`maxSpeed`/`dx`/`dy` 均 public。每帧覆盖有效，但与原版加速度逻辑
-  （accel/brake）互搏，容易出现"抖动/抽搐"移动。仅用于特殊情形：
-  撤退提速（写 maxSpeed=runSpeed×系数）与静止（把 cel 指向自身位置）。
-- 结论：v0.2 以机制一为主、机制二仅用 maxSpeed 提速/降速。
+**机制一：celX/celY 直写（掩体/撤退用，已实现）**
+- 直接写 `celX/celY`（public）而非 `setCel(null,x,y)`——后者会把 celUnit 置空
+  打断交战；直写保留 `celUnit==gg`，vanilla 每 10 tick 的 findCel→setCel(gg)
+  只短暂覆盖，TDFC 每帧重写即在 9/10 帧主导。
+- 消费方：水平走向（>100px 死区、15 tick 方向更新）、垂直跳跃（celDY 阈值）、
+  武器瞄准（武器朝 celX/celY 转）——掩体 SEEK/HIDE、撤退全部走这条。
+- 已知限制：到达判定需含 100px 死区（COVER_ARRIVE=110）；方向更新延迟
+  ≤15 tick（掩体起步可能慢半拍，实测评估）。
+
+**机制二：dx 直写（侧移躲避用，已实现）**
+- 写 `dx = dir × maxSpeed`（都在 public），vanilla forces() 不清理该范围
+  的 dx → 侧移持续生效。仅水平方向（地面单位无垂直速度杠杆）。
+- 侧移方向 = 水平离开玩家（-sign(u.X-px)）；躲避期间 cel 保持指向玩家
+  （武器仍朝玩家，视觉可读：敌人一边看着你一边横移）。
+- 限制：跳跃/飞行中 dx 被 forces() 阻尼（0.7-0.8×）；站立(walk=0)时受
+  brake 摩擦——实测观察实际位移量再调 DODGE_TICKS/DODGE_DIST。
 
 **机制三：利用原版既有的"恐惧"状态（放弃）**
 - 原版手雷恐惧走 internal aiState=6（跑速 1.5×），模组无法置入该状态 → 不可用。
@@ -105,8 +115,7 @@
   - 对每个候选点：`敌方视野→玩家` 之间被瓦片遮挡（Los.clear 反向判定 +
     tile.phis==1），且候选点本身可达（getAbsTile 非实体）；
   - 取"遮挡分最高、距离最近"者作为 coverPoint，写 cel。
-  - **Box 是否挡弹/挡视线需实现时验证**（object-containers: Box 在 loc.objs；
-    若 Box 有碰撞体可挡视线则在采样中加入 Box 检测，否则只认瓦片）。
+  - **掩体只认瓦片**（用户确认：念力可移动的箱子不挡视线；Box 也不参与采样）。
 - **状态机**：HT→SEEK(向掩体移动) → HIDE(掩体后缩着，period 12-20 tick 探头
   一次：cel 指向玩家 3-5 tick，然后缩回；有 currentWeapon 才探头) →
   RECOVER(掩体停留超时或玩家贴近 <150px → 交还会战逻辑)。全程不超过
