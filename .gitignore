@@ -1,0 +1,17 @@
+# ---- TDFC 模组 .gitignore ----
+
+# 构建产物（可重新生成，见 build.bat）
+release/
+*.swf
+
+# FFDec 反编译工作区（pfe.swf 脚本副本，体积大且属于 game-reference 范畴）
+build/ffdec_work/
+
+# 运行时日志
+build/logs/
+state/logs/
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
