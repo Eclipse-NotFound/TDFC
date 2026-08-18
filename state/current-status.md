@@ -57,6 +57,9 @@
 
 ## 关键技术结论（已回馈公共知识）
 
-- 日志通道：`knowledge-validation/facts/mod-log-channel.md`
+- 日志通道：`shared-knowledge/knowledge-validation/facts/mod-log-channel.md`
+- 原版 AI 驱动接口图景（internal 不可写清单 / 起疑通道唯一性=写 gg.noise /
+  cel 引导移动死区与节拍 / dx·dy 直写语义 / vAngle 半死锥）：`shared-knowledge/entities/facts/enemy-ai-drive-interfaces.md`
+- 帧间 diff 事件检测法：`shared-knowledge/knowledge-validation/experiments/frame-diff-event-detection.md`
 - 起疑通道唯一性：敌人 aiSpok 只能由 vanilla listen(玩家噪声) 抬升（internal 不可写），
-  模组唤醒敌人的唯一杠杆是写 gg.noise（记录在 mod-log-channel.md 与本文档）
+  模组唤醒敌人的唯一杠杆是写 gg.noise（详见 enemy-ai-drive-interfaces）
