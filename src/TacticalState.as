@@ -36,12 +36,20 @@ package
       public var lastDodgeTick:int = -999999;// 最近一次躲避开始帧
       public var dodgeT:int = 0;             // 剩余躲避 tick（>0 活动）
       public var dodgeDir:int = 0;           // 侧移方向 ±1
+      public var dodgeX:Number = 0;          // 躲避点（cel 引导）
+      public var dodgeY:Number = 0;
       public var aimExposed:int = 0;         // 被玩家瞄准累计 tick
 
       // ---- Phase 2：慢弹回避 ----
       public var threatScan:int = 0;         // 威胁扫描节拍
       public var threatT:int = 0;            // 剩余威胁躲避 tick
-      public var threatDir:int = 0;          // 威胁躲避方向 ±1
+      public var threatX:Number = 0;         // 威胁回避点（cel 引导）
+      public var threatY:Number = 0;
+
+      // ---- 声源位置冻结（问题 3：防无 LOS 隔墙实时追踪）----
+      public var nudgeTick:int = -999999;    // 最近一次声源位置更新时间
+      public var nudgeX:Number = 0;          // 冻结的声源位置
+      public var nudgeY:Number = 0;
 
       // ---- Phase 2：掩体 ----
       public var coverPhase:int = 0;         // 0=无 1=SEEK 2=HIDE

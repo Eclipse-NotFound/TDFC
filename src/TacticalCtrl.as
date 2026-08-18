@@ -3,12 +3,22 @@ package
    /**
     * Phase 2 生存层控制器（瞄准回避 / 慢弹回避 / 掩体评估 / 撤退协议）。
     *
+    * v0.2.1 修复（用户实测反馈）：
+    *  1. 瞄准回避：弃用 dx 直写（与 brake 摩擦互搏 → 原地抽搐），改为
+    *     cel 躲避点（原版平滑走位）+ Y 轴起跳（dy=-jumpdy×系数，玩家平射时）。
+    *  2. 慢弹回避：弃用 dx 直写（撞墙触发原版自动跳墙 → 惊慌乱跳），改为
+    *     cel 方向性回避点（弹速垂直方向采样非实体点）；PhisBullet（投掷手雷）
+    *     交还原版 findGrenades 恐惧（loc.grenades 数组，1.02 反编译确认），
+    *     TDFC 只处理 Bullet/SmartBullet（榴弹/火箭/导弹）——消除双重惊慌。
+    *  3. 隔墙瞄准：无 LOS 声源位置按单位冻结（POSITION_FREEZE），不再实时
+    *     追踪玩家（配合 2026-08-18 候选机制 D 的冻结部分）。
+    *  4. 撤退：优先级提到掩体之前；低血（<RETREAT_RATIO）时掩体不抢占；
+    *     撤退可打断掩体并复用其掩体点；受击窗口放宽到 300 tick。
+    *
     * 机制（见 design/phase2-enemy-survival.md §2）：
     *  - celX/celY 直写（保留 celUnit=gg，不打断交战）：驱动原版"走向目标点"
-    *    逻辑（|celDX|>100 死区、每 15 tick 更新方向、跳跃爬坡）——用于
-    *    掩体与撤退；
-    *  - dx 直写：原版 forces() 对 [-maxSpeed, maxSpeed] 内的 dx 不施加摩擦，
-    *    vanilla 每步不清理 → 用于侧移躲避（横向离开玩家/威胁）。
+    *    逻辑（|celDX|>100 死区、每 15 tick 更新方向、跳跃爬坡）。
+    *  - dy 直写起跳：jumpdy public，dy=-jumpdy×系数后原版重力自然回落。
     *  - 行为互斥 + 固定优先级：撤退 > 掩体 > 威胁躲避 > 瞄准躲避。
     *
     * 全 public API，不读写 internal。
@@ -45,6 +55,9 @@ package
 
       private static const TOL_RAD:Number = Config.AIM_TOL_DEG * Math.PI / 180;
       private static const COVER_DISTS:Array = [60, 120, 180];
+      private static const THREAT_AVOID_DISTS:Array = [90, 160];
+      private static const LEVEL_AIM_DY:Number = 60;   // 平射判定（|玩家-敌|高度差）
+      private static const HIT_WINDOW:int = 300;       // 受击窗口（撤退触发）
 
       /** 每帧更新单个单位的 Phase 2 行为。返回 true 表示本帧 TDFC 发出了移动指令。 */
       public static function update(u:*, st:TacticalState, gg:*, loc:*, tick:int):Boolean
@@ -54,6 +67,11 @@ package
          var ux:Number = TdfcMain.num(u, "X", 0);
          var uy:Number = TdfcMain.num(u, "Y", 0);
          var ucls:String = TdfcMain.shortClass(u);
+         var hp:Number = TdfcMain.num(u, "hp", 0);
+         var mhp:Number = TdfcMain.num(u, "maxhp", 1);
+         var hpRatio:Number = mhp > 0 ? hp / mhp : 1;
+         var inRetreat:Boolean = st.retreatT > 0;
+         var inCover:Boolean = st.coverPhase > 0;
 
          // ---- 活跃门控：交战 / 最近目击 / 最近受击，否则清空临时状态 ----
          var active:Boolean = (u["celUnit"] === gg)
@@ -66,9 +84,76 @@ package
             return false;
          }
 
-         // ---- 触发条件互斥判断 ----
-         var inCover:Boolean = st.coverPhase > 0;
-         var inRetreat:Boolean = st.retreatT > 0;
+         // ===== D. 撤退（优先于掩体：低血时离开而不是就近躲）=====
+         if (Config.ENABLE_RETREAT && st.threatT <= 0 && st.dodgeT <= 0
+            && doct(ucls, "r") > 0)
+         {
+            if (!inRetreat && hpRatio < Config.RETREAT_RATIO
+               && (tick - st.lastHitTick) < HIT_WINDOW
+               && Los.toPlayer(u, loc, gg, 900))
+            {
+               // 打断掩体并复用掩体点；无掩体点则朝远离玩家方向
+               var hadCover:Boolean = inCover;
+               if (hadCover)
+               {
+                  st.retreatX = st.coverX;
+                  st.retreatY = st.coverY;
+                  st.coverPhase = 0;
+               }
+               else
+               {
+                  var side:Number = (ux >= px) ? 1 : -1;
+                  var rx:Number = ux + side * Config.RETREAT_DIST;
+                  var ry:Number = uy;
+                  if (tileSolid(loc, rx, ry))
+                  {
+                     rx = ux + side * 140;
+                     if (tileSolid(loc, rx, ry))
+                     {
+                        rx = ux - side * 120; // 反方向兜底
+                     }
+                  }
+                  st.retreatX = rx;
+                  st.retreatY = ry;
+               }
+               st.retreatT = Config.RETREAT_MAX;
+               TdfcLog.line("retreat", "GO " + TdfcMain.tag(u)
+                  + " hp=" + int(hp) + "/" + int(mhp)
+                  + (hadCover ? " (from cover)" : "")
+                  + " to " + int(st.retreatX) + "," + int(st.retreatY));
+            }
+            if (inRetreat)
+            {
+               st.retreatT--;
+               // 玩家逼近 → 背水一战
+               if (dist2(u, gg) < Config.BACKS_BREACH * Config.BACKS_BREACH)
+               {
+                  st.retreatT = 0;
+                  TdfcLog.line("retreat", "ABORT breach " + TdfcMain.tag(u));
+               }
+               else if (st.retreatT <= 0)
+               {
+                  TdfcLog.line("retreat", "END " + TdfcMain.tag(u));
+                  // 撤退结束仍低血且可掩体 → 转入掩体固守
+                  if (Config.ENABLE_COVER && doct(ucls, "c") > 0
+                     && hpRatio < Config.RETREAT_RATIO * 1.4
+                     && tick - st.lastCoverTick >= Config.COVER_CD)
+                  {
+                     var cp:* = findCoverPoint(loc, u, ux, uy, px, py);
+                     if (cp != null)
+                     {
+                        st.coverPhase = 1;
+                        st.coverT = Config.COVER_MAX_TICKS;
+                        st.coverX = cp.x;
+                        st.coverY = cp.y;
+                        st.peekT = Config.PEEK_MIN;
+                        st.peekOn = false;
+                        TdfcLog.line("cover", "SEEK(after retreat) " + TdfcMain.tag(u));
+                     }
+                  }
+               }
+            }
+         }
 
          // ===== A. 瞄准回避 =====
          if (Config.ENABLE_DODGE_AIM && !inCover && !inRetreat && st.threatT <= 0)
@@ -89,7 +174,34 @@ package
                st.dodgeT = Config.DODGE_TICKS;
                st.dodgeDir = (ux >= px) ? 1 : -1; // 水平离开玩家方向
                st.lastDodgeTick = tick;
-               TdfcLog.line("dodge", "AIM " + TdfcMain.tag(u));
+               // 2D 躲避：水平躲避点（避开实体瓦片）+ Y 轴起跳（平射时越过弹线）
+               var hop:Boolean = false;
+               if (Math.abs(py - uy) < LEVEL_AIM_DY && u["stay"] == true)
+               {
+                  hop = true;
+               }
+               var ddx:Number = ux + st.dodgeDir * Config.DODGE_DIST;
+               if (tileSolid(loc, ddx, uy))
+               {
+                  ddx = ux - st.dodgeDir * Config.DODGE_DIST;
+                  st.dodgeDir = -st.dodgeDir;
+                  if (tileSolid(loc, ddx, uy))
+                  {
+                     ddx = ux; // 两侧都被挡：只起跳（或原地）
+                  }
+               }
+               st.dodgeX = ddx;
+               st.dodgeY = uy;
+               if (hop)
+               {
+                  try
+                  {
+                     u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP;
+                  }
+                  catch (e:Error) {}
+               }
+               TdfcLog.line("dodge", "AIM " + TdfcMain.tag(u)
+                  + " hop=" + (hop ? 1 : 0) + " to " + int(ddx));
             }
             if (st.dodgeT > 0)
             {
@@ -110,9 +222,37 @@ package
                   if (t != null)
                   {
                      st.threatT = Config.THREAT_DODGE_TICKS;
-                     st.threatDir = (ux >= TdfcMain.num(t, "X", ux)) ? 1 : -1;
                      st.lastDodgeTick = tick;
-                     TdfcLog.line("threat", "PROJ " + TdfcMain.tag(u));
+                     // 垂直弹速方向采样躲避点（cel 引导，原版平滑绕行）
+                     var rot:Number = TdfcMain.num(t, "rot", 0);
+                     var pvx:Number = Math.cos(rot);
+                     var pvy:Number = Math.sin(rot);
+                     var pt:* = pickSafePoint(loc, ux, uy, pvy, -pvx); // 垂直一侧
+                     if (pt == null)
+                     {
+                        pt = pickSafePoint(loc, ux, uy, -pvy, pvx);    // 另一侧
+                     }
+                     if (pt != null)
+                     {
+                        st.threatX = pt.x;
+                        st.threatY = pt.y;
+                     }
+                     else
+                     {
+                        st.threatX = ux + (ux >= px ? 1 : -1) * 120;
+                        st.threatY = uy;
+                     }
+                     // 平射威胁 + 在地面 → 起跳
+                     if (Math.abs(pvy) < 0.5 && u["stay"] == true)
+                     {
+                        try
+                        {
+                           u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP;
+                        }
+                        catch (e:Error) {}
+                     }
+                     TdfcLog.line("threat", "PROJ " + TdfcMain.tag(u)
+                        + " to " + int(st.threatX) + "," + int(st.threatY));
                   }
                }
             }
@@ -122,12 +262,13 @@ package
             }
          }
 
-         // ===== C. 掩体 =====
+         // ===== C. 掩体（低血由撤退接管）=====
          if (Config.ENABLE_COVER && !inRetreat && st.threatT <= 0 && st.dodgeT <= 0
             && doct(ucls, "c") > 0)
          {
             var hitRecently:Boolean = (tick - st.lastHitTick) < 90;
             if (st.coverPhase == 0
+               && hpRatio >= Config.RETREAT_RATIO // 低血不抢占（留给撤退）
                && (hitRecently || st.aimExposed >= Config.EXPOSED_TICKS)
                && tick - st.lastCoverTick >= Config.COVER_CD)
             {
@@ -147,7 +288,6 @@ package
             if (st.coverPhase == 1)
             {
                st.coverT--;
-               // 到达判定：原版接近死区约 100px
                var ddx:Number = st.coverX - ux;
                var ddy:Number = st.coverY - uy;
                if (ddx * ddx + ddy * ddy < Config.COVER_ARRIVE * Config.COVER_ARRIVE
@@ -171,7 +311,6 @@ package
                      TdfcLog.line("cover", "PEEK " + TdfcMain.tag(u));
                   }
                }
-               // 破点：玩家逼近或超时 → 解除
                if (dist2(u, gg) < Config.BREACH_RANGE * Config.BREACH_RANGE
                   || st.coverT <= 0)
                {
@@ -182,54 +321,9 @@ package
             }
          }
 
-         // ===== D. 撤退 =====
-         if (Config.ENABLE_RETREAT && !inCover && st.threatT <= 0 && st.dodgeT <= 0
-            && doct(ucls, "r") > 0)
-         {
-            var hp:Number = TdfcMain.num(u, "hp", 0);
-            var mhp:Number = TdfcMain.num(u, "maxhp", 1);
-            if (st.retreatT <= 0 && mhp > 0
-               && hp / mhp < Config.RETREAT_RATIO
-               && (tick - st.lastHitTick) < 120
-               && Los.toPlayer(u, loc, gg, 900))
-            {
-               var rx:Number = ux + (ux - px > 0 ? 1 : -1) * Config.RETREAT_DIST;
-               var ry:Number = uy;
-               // 简单可达性：目标瓦片非实体，否则缩短
-               if (tileSolid(loc, rx, ry))
-               {
-                  rx = ux + (ux - px > 0 ? 1 : -1) * 140;
-                  if (tileSolid(loc, rx, ry))
-                  {
-                     rx = ux - (ux - px > 0 ? 1 : -1) * 120; // 反方向兜底
-                  }
-               }
-               st.retreatT = Config.RETREAT_MAX;
-               st.retreatX = rx;
-               st.retreatY = ry;
-               TdfcLog.line("retreat", "GO " + TdfcMain.tag(u)
-                  + " hp=" + int(hp) + "/" + int(mhp)
-                  + " to " + int(rx) + "," + int(ry));
-            }
-            if (st.retreatT > 0)
-            {
-               st.retreatT--;
-               // 玩家逼近 → 背水一战
-               if (dist2(u, gg) < Config.BACKS_BREACH * Config.BACKS_BREACH)
-               {
-                  st.retreatT = 0;
-                  TdfcLog.line("retreat", "ABORT breach " + TdfcMain.tag(u));
-               }
-               else if (st.retreatT <= 0)
-               {
-                  TdfcLog.line("retreat", "END " + TdfcMain.tag(u));
-               }
-            }
-         }
-
          // ===== 写入仲裁：撤退 > 掩体 > 威胁躲避 > 瞄准躲避 =====
          var acted:Boolean = false;
-         if (st.retreatT > 0)
+         if (inRetreat)
          {
             writeCel(u, st.retreatX, st.retreatY);
             acted = true;
@@ -248,12 +342,12 @@ package
          }
          else if (st.threatT > 0)
          {
-            writeDx(u, st.threatDir);
+            writeCel(u, st.threatX, st.threatY);
             acted = true;
          }
          else if (st.dodgeT > 0)
          {
-            writeDx(u, st.dodgeDir);
+            writeCel(u, st.dodgeX, st.dodgeY);
             acted = true;
          }
          return acted;
@@ -300,6 +394,8 @@ package
 
       /**
        * 在 firstObj 链上找威胁弹体：慢速（vel<阈值）且相对运动扫掠会命中本敌。
+       * 只处理 Bullet（榴弹/火箭直射）与 SmartBullet（导弹）——PhisBullet
+       * （投掷手雷）交还原版 findGrenades 恐惧，避免双重反应。
        * 相对速度扫掠（shared-knowledge projectile-step-sweep）：
        * O=弹-敌起点差，RV=弹速-敌速，最近点 t*∈[0,1] 距离 < 命中半径 → 威胁。
        */
@@ -310,11 +406,12 @@ package
          var hitR:Number = Config.THREAT_HIT_R;
          var proj:* = loc["firstObj"];
          var nodes:int = 0;
+         var threat:Object = null;
          while (proj != null && nodes < 256)
          {
             nodes++;
             var cls:String = TdfcMain.shortClass(proj);
-            if (cls == "Bullet" || cls == "PhisBullet" || cls == "SmartBullet")
+            if (cls == "Bullet" || cls == "SmartBullet")
             {
                if (proj["owner"] !== u && TdfcMain.num(proj, "liv", 0) > 0)
                {
@@ -343,14 +440,15 @@ package
                      var rr:Number = hitR + TdfcMain.num(proj, "explRadius", 0);
                      if (dmin < rr)
                      {
-                        return proj;
+                        threat = proj;
+                        break;
                      }
                   }
                }
             }
             proj = proj["nobj"];
          }
-         return null;
+         return threat;
       }
 
       // ============ 掩体点搜索 ============
@@ -378,7 +476,6 @@ package
                {
                   continue;
                }
-               // 候选→玩家被遮挡 = 该点可作为掩体
                if (!Los.clear(loc, dx, dy, px, py))
                {
                   if (bestD < 0 || COVER_DISTS[di] < bestD)
@@ -411,15 +508,28 @@ package
          catch (e:Error) {}
       }
 
-      /** dx 直写侧移（原版 forces() 不清理 [-maxSpeed,maxSpeed] 内的 dx）。 */
-      private static function writeDx(u:*, dir:int):void
+      /** 沿 (dx,dy) 方向采样躲避点：多个距离取第一个非实体瓦片点。 */
+      private static function pickSafePoint(loc:*, ux:Number, uy:Number,
+         dx:Number, dy:Number):Object
       {
-         try
+         var len:Number = Math.sqrt(dx * dx + dy * dy);
+         if (len < 0.001)
          {
-            var sp:Number = TdfcMain.num(u, "maxSpeed", 10);
-            u["dx"] = dir * sp;
+            return null;
          }
-         catch (e:Error) {}
+         dx = dx / len;
+         dy = dy / len;
+         for (var i:int = 0; i < THREAT_AVOID_DISTS.length; i++)
+         {
+            var d:Number = THREAT_AVOID_DISTS[i];
+            var cx:Number = ux + dx * d;
+            var cy:Number = uy + dy * d;
+            if (!tileSolid(loc, cx, cy))
+            {
+               return { x: cx, y: cy };
+            }
+         }
+         return null;
       }
 
       private static function tileSolid(loc:*, x:Number, y:Number):Boolean

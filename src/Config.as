@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.2.0";
+      public static const VER:String = "0.2.1";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -46,6 +46,7 @@ package
       public static const DODGE_TICKS:int = 9;           // 侧移持续（~0.3s）
       public static const DODGE_CD:int = 75;             // 躲避冷却（~2.5s）
       public static const DODGE_DIST:Number = 120;       // 侧移目标距离（需>原版100px接近死区）
+      public static const DODGE_HOP:Number = 0.7;        // 起跳力度系数（×jumpdy）
 
       // ---- Phase 2：慢弹回避 ----
       public static const SLOW_SPEED_THRESH:Number = 60; // 低于此速度的弹体才预测（快弹归瞄准回避）
@@ -68,6 +69,9 @@ package
       public static const RETREAT_MAX:int = 180;         // 最大撤退时长
       public static const RETREAT_DIST:Number = 240;     // 撤退距离
       public static const BACKS_BREACH:Number = 120;     // 玩家逼近改背水一战
+
+      // ---- 声源位置冻结（问题 3 修复）----
+      public static const POSITION_FREEZE:int = 120;     // 无 LOS 声源位置冻结时长（tick）
 
       // ---- 诊断 ----
       public static const LOG_PATH:String = "mods/TDFC/state/logs/tdfc.log";

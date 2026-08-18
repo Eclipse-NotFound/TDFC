@@ -68,12 +68,11 @@ package
                }
                else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
                {
-                  // B. 听觉半径：模糊位置
-                  var ex:Number = px + TdfcMain.jitter(Config.HEAR_ERR);
-                  var ey:Number = py + TdfcMain.jitter(Config.HEAR_ERR);
+                  // B. 听觉半径：模糊位置（冻结：不实时追踪玩家）
+                  var np:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
                   try
                   {
-                     u["alarma"](ex, ey);
+                     u["alarma"](np.x, np.y);
                   }
                   catch (e:Error) {}
                   TdfcLog.line("prop", "vision HEAR nudge " + TdfcMain.tag(u));
@@ -130,7 +129,8 @@ package
             }
             else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
             {
-               try { u["alarma"](px + TdfcMain.jitter(Config.HEAR_ERR), py + TdfcMain.jitter(Config.HEAR_ERR)); } catch (e:Error) {}
+               var np:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
+               try { u["alarma"](np.x, np.y); } catch (e:Error) {}
                nudged++;
             }
             st.cdGunshot = tick;
@@ -185,7 +185,8 @@ package
             }
             else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
             {
-               try { u["alarma"](px + TdfcMain.jitter(Config.HEAR_ERR), py + TdfcMain.jitter(Config.HEAR_ERR)); } catch (e:Error) {}
+               var np:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
+               try { u["alarma"](np.x, np.y); } catch (e:Error) {}
                TdfcLog.line("damage", "hit->HEAR nudge " + TdfcMain.tag(u));
             }
             st.cdDamage = tick;
@@ -209,6 +210,26 @@ package
             }
          }
          catch (e:Error) {}
+      }
+
+      /**
+       * 冻结声源位置（问题 3 修复）：无 LOS 单位在 POSITION_FREEZE 窗口内
+       * 保持上一次声源位置，不随玩家实时移动——听到的是"声音的方向区域"，
+       * 不是玩家的实时坐标。
+       */
+      private static function frozenNudge(st:TacticalState, tick:int,
+         px:Number, py:Number, err:Number):Object
+      {
+         if (tick - st.nudgeTick < Config.POSITION_FREEZE)
+         {
+            return { x: st.nudgeX, y: st.nudgeY };
+         }
+         var nx:Number = px + TdfcMain.jitter(err);
+         var ny:Number = py + TdfcMain.jitter(err);
+         st.nudgeX = nx;
+         st.nudgeY = ny;
+         st.nudgeTick = tick;
+         return { x: nx, y: ny };
       }
    }
 }
