@@ -56,7 +56,6 @@ package
       private static const TOL_RAD:Number = Config.AIM_TOL_DEG * Math.PI / 180;
       private static const COVER_DISTS:Array = [60, 120, 180];
       private static const THREAT_AVOID_DISTS:Array = [90, 160];
-      private static const LEVEL_AIM_DY:Number = 60;   // 平射判定（|玩家-敌|高度差）
       private static const HIT_WINDOW:int = 300;       // 受击窗口（撤退触发）
 
       /** 每帧更新单个单位的 Phase 2 行为。返回 true 表示本帧 TDFC 发出了移动指令。 */
@@ -155,10 +154,16 @@ package
             }
          }
 
-         // ===== A. 瞄准回避 =====
+         // ===== A. 瞄准回避（无冷却：敌人常驻躲弹意识）=====
          if (Config.ENABLE_DODGE_AIM && !inCover && !inRetreat && st.threatT <= 0)
          {
-            var aimed:Boolean = playerAimingAt(u, gg, loc, ux, uy, px, py);
+            var w:* = gg["currentWeapon"];
+            var wrot:Number = NaN;
+            if (w != null && TdfcMain.num(w, "tip", 0) >= 3)
+            {
+               wrot = TdfcMain.num(w, "rot", NaN);
+            }
+            var aimed:Boolean = playerAimingAt(u, gg, loc, wrot, ux, uy, px, py);
             if (aimed)
             {
                st.aimExposed++;
@@ -167,16 +172,17 @@ package
             {
                st.aimExposed = 0;
             }
-            if (st.dodgeT <= 0 && aimed
-               && tick - st.lastDodgeTick >= Config.DODGE_CD
+            if (st.dodgeT <= 0 && aimed && !isNaN(wrot)
                && Math.random() < doct(ucls, "d"))
             {
                st.dodgeT = Config.DODGE_TICKS;
                st.dodgeDir = (ux >= px) ? 1 : -1; // 水平离开玩家方向
                st.lastDodgeTick = tick;
-               // 2D 躲避：水平躲避点（避开实体瓦片）+ Y 轴起跳（平射时越过弹线）
+               // 躲避形态（几何规则）：弹道近水平 → 起跳（水平走位只是沿弹道平移）；
+               // 弹道倾斜（玩家在上/下侧射击）→ 水平走位
                var hop:Boolean = false;
-               if (Math.abs(py - uy) < LEVEL_AIM_DY && u["stay"] == true)
+               if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN
+                  && u["stay"] == true)
                {
                   hop = true;
                }
@@ -242,8 +248,8 @@ package
                         st.threatX = ux + (ux >= px ? 1 : -1) * 120;
                         st.threatY = uy;
                      }
-                     // 平射威胁 + 在地面 → 起跳
-                     if (Math.abs(pvy) < 0.5 && u["stay"] == true)
+                     // 平射威胁 + 在地面 → 起跳（与瞄准回避同一几何规则）
+                     if (Math.abs(pvy) < Config.DODGE_FLAT_SIN && u["stay"] == true)
                      {
                         try
                         {
@@ -355,19 +361,18 @@ package
 
       // ============ 玩家瞄准检测 ============
 
-      /** 玩家武器瞄准线是否指向本敌人（武器 rot、距离、LOS）。 */
-      private static function playerAimingAt(u:*, gg:*, loc:*,
+      /** 玩家武器瞄准线是否指向本敌人（弹道角 wrot、距离、LOS）。 */
+      private static function playerAimingAt(u:*, gg:*, loc:*, wrot:Number,
          ux:Number, uy:Number, px:Number, py:Number):Boolean
       {
+         if (isNaN(wrot))
+         {
+            return false; // 无远程武器
+         }
          var w:* = gg["currentWeapon"];
          if (w == null)
          {
             return false;
-         }
-         var tip:Number = TdfcMain.num(w, "tip", 0);
-         if (tip < 3)
-         {
-            return false; // 近战/空手
          }
          var wx:Number = TdfcMain.num(w, "X", px);
          var wy:Number = TdfcMain.num(w, "Y", py);
@@ -378,9 +383,8 @@ package
          {
             return false;
          }
-         var rot:Number = TdfcMain.num(w, "rot", 0);
          var aim:Number = Math.atan2(dy, dx);
-         var diff:Number = rot - aim;
+         var diff:Number = wrot - aim;
          while (diff > Math.PI) diff -= Math.PI * 2;
          while (diff < -Math.PI) diff += Math.PI * 2;
          if (Math.abs(diff) > TOL_RAD)

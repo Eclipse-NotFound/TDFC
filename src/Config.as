@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.2.1";
+      public static const VER:String = "0.2.2";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -43,10 +43,10 @@ package
       // ---- Phase 2：瞄准回避 ----
       public static const AIM_DODGE_RANGE:Number = 350;  // 玩家瞄准线判定半径
       public static const AIM_TOL_DEG:Number = 8;        // 瞄准夹角容差（度）
-      public static const DODGE_TICKS:int = 9;           // 侧移持续（~0.3s）
-      public static const DODGE_CD:int = 75;             // 躲避冷却（~2.5s）
+      public static const DODGE_TICKS:int = 24;          // 躲避持续（含原版15tick方向延迟+100px死区）
       public static const DODGE_DIST:Number = 120;       // 侧移目标距离（需>原版100px接近死区）
-      public static const DODGE_HOP:Number = 0.7;        // 起跳力度系数（×jumpdy）
+      public static const DODGE_HOP:Number = 0.8;        // 起跳力度系数（×jumpdy）
+      public static const DODGE_FLAT_SIN:Number = 0.5;   // |sin(弹道角)|<此值=平射→跳跃；否则水平走位
 
       // ---- Phase 2：慢弹回避 ----
       public static const SLOW_SPEED_THRESH:Number = 60; // 低于此速度的弹体才预测（快弹归瞄准回避）
