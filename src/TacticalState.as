@@ -74,6 +74,7 @@ package
       public var aimIdle:int = 0;            // 未被瞄准累计 tick
       public var baseSkill:Number = 0;       // 原版 weaponSkill 基线（首次记录）
       public var lastSniperTick:int = -999999; // 狙击走位冷却
+      public var lastHopTick:int = -999999;  // 起跳节奏节拍（防墙边/连续起跳乱跳）
 
       public function TacticalState()
       {

@@ -261,12 +261,16 @@ package
                      var bX:Number = TdfcMain.num(t, "X", ux);
                      var bY:Number = TdfcMain.num(t, "Y", uy);
                      var awayX:Number = (ux >= bX) ? 1 : -1;
-                     var spd2:Number = TdfcMain.num(u, "maxSpeed", 10);
+                     var spd2:Number = TdfcMain.num(u, "runSpeed", 0);
+                     if (spd2 <= 0.5)
+                     {
+                        spd2 = TdfcMain.num(u, "maxSpeed", 10);
+                     }
                      if (spd2 <= 0.5)
                      {
                         spd2 = 10;
                      }
-                     st.threatVX = awayX * spd2;
+                     st.threatVX = pickDartX(loc, ux, uy, awayX) * spd2;
                      if (u["isFly"] == true || u["isPlav"] == true)
                      {
                         var rot2:Number = TdfcMain.num(t, "rot", 0);
@@ -278,7 +282,7 @@ package
                         if (Math.abs(Math.sin(TdfcMain.num(t, "rot", 0)))
                            < Config.DODGE_FLAT_SIN && u["stay"] == true)
                         {
-                           hopKick(u);
+                           hopKick(u, st, tick);
                         }
                      }
                      TdfcLog.line("threat", "PROJ " + TdfcMain.tag(u)
@@ -416,7 +420,12 @@ package
          var isFly:Boolean = (u["isFly"] == true);
          var isPlav:Boolean = (u["isPlav"] == true);
          var onGround:Boolean = (u["stay"] == true);
-         var spd:Number = TdfcMain.num(u, "maxSpeed", 10);
+         // 冲量用 runSpeed（敌人真跑；maxSpeed 写时刻可能是 walkSpeed→"只会走"）
+         var spd:Number = TdfcMain.num(u, "runSpeed", 0);
+         if (spd <= 0.5)
+         {
+            spd = TdfcMain.num(u, "maxSpeed", 10);
+         }
          if (spd <= 0.5)
          {
             spd = 10;
@@ -480,12 +489,13 @@ package
          var flat:Boolean = Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN;
          if (role == R_SHOTGUN || role == R_MELEE)
          {
-            // 霰弹/近战：向玩家方向冲（前冲/逼近），平射顺带一跳
+            // 霰弹/近战：向玩家方向冲（前冲/逼近），平射顺带一跳；方向墙体检
             var toP:Number = (px >= ux) ? 1 : -1;
-            speedX = toP * spd * 1.1;
+            var dart:Number = pickDartX(loc, ux, uy, toP);
+            speedX = dart * spd * 1.1;
             if (flat && onGround)
             {
-               hopKick(u);
+               hopKick(u, st, tick);
             }
             st.dodgeT = Config.DODGE_TICKS;
             st.dodgeVX = speedX;
@@ -498,10 +508,11 @@ package
          // 步枪/投掷/魔法：几何——平射→跳（带一点后退分量），斜射→水平离开
          var away:Number = (ux >= px) ? 1 : -1;
          var hopDo:Boolean = flat && onGround;
-         speedX = away * spd * (hopDo ? 0.5 : 1.0);
+         var dart2:Number = pickDartX(loc, ux, uy, away);
+         speedX = dart2 * spd * (hopDo ? 0.5 : 1.0);
          if (hopDo)
          {
-            hopKick(u);
+            hopKick(u, st, tick);
          }
          st.dodgeT = Config.DODGE_TICKS;
          st.dodgeVX = speedX;
@@ -729,15 +740,37 @@ package
          catch (e:Error) {}
       }
 
-      /** 随机力度起跳（跳高随机化避免僵硬；jumpdy public）。 */
-      private static function hopKick(u:*):void
+      private static const HOP_CD:int = 24; // 起跳节奏节拍（防墙边/连续起跳乱跳）
+
+      /** 随机力度起跳（跳高随机化；带节奏节拍；jumpdy public）。 */
+      private static function hopKick(u:*, st:TacticalState, tick:int):void
       {
+         if (tick - st.lastHopTick < HOP_CD)
+         {
+            return;
+         }
+         st.lastHopTick = tick;
          try
          {
             var mult:Number = Config.DODGE_HOP * (0.7 + Math.random() * 0.5);
             u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * mult;
          }
          catch (e:Error) {}
+      }
+
+      /** 冲量水平方向墙体检：want 侧被挡→翻另一侧→两侧都挡返回 0（只跳不推）。 */
+      private static function pickDartX(loc:*, ux:Number, uy:Number, want:Number):Number
+      {
+         var L:Number = 60;
+         if (!tileSolid(loc, ux + want * L, uy))
+         {
+            return want;
+         }
+         if (!tileSolid(loc, ux - want * L, uy))
+         {
+            return -want;
+         }
+         return 0;
       }
 
       /** 冲量写速度（躲避/威胁用；垂直分量为 0 时不写 dy，让重力/跳跃支配）。 */
