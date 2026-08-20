@@ -36,9 +36,14 @@ package
          for (var i:int = 0; i < units.length; i++)
          {
             var u:* = units[i];
-            if (!TdfcMain.isEnemy(u))
+            var ucls:String = TdfcMain.shortClass(u);
+            if (!TdfcMain.isEnemy(u, ucls))
             {
                continue;
+            }
+            if (TdfcMain.intelTier(ucls) == 2)
+            {
+               continue; // v0.3：动物不接入警戒联动（保留自身原版感知）
             }
             if (u === source)
             {
@@ -101,9 +106,14 @@ package
          for (var i:int = 0; i < units.length; i++)
          {
             var u:* = units[i];
-            if (!TdfcMain.isEnemy(u))
+            var ucls:String = TdfcMain.shortClass(u);
+            if (!TdfcMain.isEnemy(u, ucls))
             {
                continue;
+            }
+            if (TdfcMain.intelTier(ucls) == 2)
+            {
+               continue; // v0.3：动物不接入警戒联动
             }
             if (u["celUnit"] === gg)
             {
@@ -157,9 +167,14 @@ package
          for (var i:int = 0; i < units.length; i++)
          {
             var u:* = units[i];
-            if (!TdfcMain.isEnemy(u))
+            var ucls:String = TdfcMain.shortClass(u);
+            if (!TdfcMain.isEnemy(u, ucls))
             {
                continue;
+            }
+            if (TdfcMain.intelTier(ucls) == 2)
+            {
+               continue; // v0.3：动物不接入警戒联动
             }
             if (u === victim)
             {

@@ -1,57 +1,34 @@
 package
 {
    /**
-    * Phase 2 生存层控制器（瞄准回避 / 慢弹回避 / 掩体评估 / 撤退协议）。
+    * Phase 2 生存层控制器 v0.3.0 —— 瞄准回避重做版。
     *
-    * v0.2.1 修复（用户实测反馈）：
-    *  1. 瞄准回避：弃用 dx 直写（与 brake 摩擦互搏 → 原地抽搐），改为
-    *     cel 躲避点（原版平滑走位）+ Y 轴起跳（dy=-jumpdy×系数，玩家平射时）。
-    *  2. 慢弹回避：弃用 dx 直写（撞墙触发原版自动跳墙 → 惊慌乱跳），改为
-    *     cel 方向性回避点（弹速垂直方向采样非实体点）；PhisBullet（投掷手雷）
-    *     交还原版 findGrenades 恐惧（loc.grenades 数组，1.02 反编译确认），
-    *     TDFC 只处理 Bullet/SmartBullet（榴弹/火箭/导弹）——消除双重惊慌。
-    *  3. 隔墙瞄准：无 LOS 声源位置按单位冻结（POSITION_FREEZE），不再实时
-    *     追踪玩家（配合 2026-08-18 候选机制 D 的冻结部分）。
-    *  4. 撤退：优先级提到掩体之前；低血（<RETREAT_RATIO）时掩体不抢占；
-    *     撤退可打断掩体并复用其掩体点；受击窗口放宽到 300 tick。
+    * v0.3 新增三维决策（用户决策 2026-08-18）：
+    *  1. 智能分层 intel：SAPS(人形+亡灵)/DRONE(机械·僵硬)/BEAST(动物·0)。
+    *     BEAST 完全不接入本层（躲避/掩体/撤退全关，原版行为），
+    *     也不参与传播联动（见 TdfcMain.intelTier）。
+    *  2. 移动形态 mobility：空中(isFly)→弹线垂直的 2D 机动（爬升/俯冲，
+    *     取真垂直向量）；水中(isPlav)→2D 回避；地面→跳/跑。
+    *  3. 武器角色 weaponRole：SNIPER→后撤/找掩体不跳；SHOTGUN→前冲+规避；
+    *     GUN→躲射节奏；THROWER→扔完走；MELEE→纯接近+规避。
+    *  4. 精准接管（仅智能层）：每帧写 owner.weaponSkill（散布公式
+    *     deviation/skillConf/(weaponSkill+0.01) 的除数）——移动/躲时低倍率
+    *     （打不准），站桩开火窗口（settleT）恢复高倍率精准。sniper 恒准。
+    *     mazil 由原版 attack() 每发重写，不可作杠杆；weaponSkill 不会被
+    *     原版逐发覆盖（1.02 反编译确认）。
     *
-    * 机制（见 design/phase2-enemy-survival.md §2）：
-    *  - celX/celY 直写（保留 celUnit=gg，不打断交战）：驱动原版"走向目标点"
-    *    逻辑（|celDX|>100 死区、每 15 tick 更新方向、跳跃爬坡）。
-    *  - dy 直写起跳：jumpdy public，dy=-jumpdy×系数后原版重力自然回落。
-    *  - 行为互斥 + 固定优先级：撤退 > 掩体 > 威胁躲避 > 瞄准躲避。
-    *
+    * 其余机制（cel 直写 / dy 起跳 / 行为互斥优先级）沿用 v0.2.2。
     * 全 public API，不读写 internal。
     */
    public class TacticalCtrl
    {
-      // ---- 按类 doctrine（d=躲避概率 c=掩体 r=撤退血量比例；缺省档 0.2/true/0.3）----
-      private static const DOCTRINE:Object = {
-         UnitRaider:    { d: 0.4,  c: 1, r: 0.25 },
-         UnitMerc:      { d: 0.3,  c: 1, r: 0.3  },
-         UnitSlaver:    { d: 0.35, c: 1, r: 0.3  },
-         UnitZebra:     { d: 0.35, c: 1, r: 0.3  },
-         UnitEncl:      { d: 0.25, c: 1, r: 0.3  },
-         UnitPon:       { d: 0.3,  c: 1, r: 0.3  },
-         UnitMsp:       { d: 0.3,  c: 1, r: 0.3  },
-         UnitMonstrik:  { d: 0.5,  c: 0, r: 0.15 },
-         UnitHellhound: { d: 0.5,  c: 0, r: 0.15 },
-         UnitBat:       { d: 0.5,  c: 0, r: 0.15 },
-         UnitAnt:       { d: 0.5,  c: 0, r: 0.15 },
-         UnitSpectre:   { d: 0.5,  c: 0, r: 0.1  },
-         UnitNecros:    { d: 0.3,  c: 0, r: 0.2  },
-         UnitSlime:     { d: 0.2,  c: 0, r: 0.1  },
-         UnitGutsy:     { d: 0,    c: 0, r: 0.05 },
-         UnitBloat:     { d: 0,    c: 0, r: 0.05 },
-         UnitAIRobot:   { d: 0,    c: 0, r: 0.1  },
-         UnitRobobrain: { d: 0,    c: 0, r: 0.1  },
-         UnitDron:      { d: 0,    c: 0, r: 0.1  },
-         UnitSentinel:  { d: 0,    c: 0, r: 0.1  },
-         UnitThunderHead:    { d: 0, c: 0, r: 0.1 },
-         UnitThunderTurret:  { d: 0, c: 0, r: 0.1 },
-         UnitTurret:    { d: 0,    c: 0, r: 0.1  },
-         UnitTrain:     { d: 0,    c: 0, r: 0.1  }
-      };
+      // ---- 武器角色 ----
+      private static const R_MELEE:int = 0;
+      private static const R_GUN:int = 1;
+      private static const R_SNIPER:int = 2;
+      private static const R_SHOTGUN:int = 3;
+      private static const R_THROWER:int = 4;
+      private static const R_MAGIC:int = 5;
 
       private static const TOL_RAD:Number = Config.AIM_TOL_DEG * Math.PI / 180;
       private static const COVER_DISTS:Array = [60, 120, 180];
@@ -72,26 +49,110 @@ package
          var inRetreat:Boolean = st.retreatT > 0;
          var inCover:Boolean = st.coverPhase > 0;
 
-         // ---- 活跃门控：交战 / 最近目击 / 最近受击，否则清空临时状态 ----
+         // ---- 智能门控：BEAST 完全不接入 ----
+         if (TdfcMain.intelTier(ucls) == 2)
+         {
+            st.dodgeT = 0; st.threatT = 0; st.coverPhase = 0;
+            st.retreatT = 0; st.aimExposed = 0; st.settleT = 0;
+            return false;
+         }
+
+         // ---- 持久运动速度（供精准接管与 idle 判定）----
+         var speed:Number = Math.abs(TdfcMain.num(u, "dx", 0))
+            + Math.abs(TdfcMain.num(u, "dy", 0));
+
+         // ---- 武器角色与智能层 ----
+         var role:int = weaponRole(u);
+         var tier:int = TdfcMain.intelTier(ucls); // 0 SAPS 1 DRONE
+         var allowTactical:Boolean = !inCover && !inRetreat && st.threatT <= 0;
+
+         // ---------- 精准接管（仅智能层；SNIPER 恒准，MELEE 无关）----------
+         if (tier <= 1 && role != R_MELEE)
+         {
+            if (st.baseSkill <= 0)
+            {
+               st.baseSkill = TdfcMain.num(u, "weaponSkill", 1);
+               if (st.baseSkill <= 0.01)
+               {
+                  st.baseSkill = 1;
+               }
+            }
+            var accurate:Boolean = (role == R_SNIPER) || (st.settleT > 0);
+            if (!accurate)
+            {
+               var busy:Boolean = st.dodgeT > 0 || st.threatT > 0 || inCover || inRetreat
+                  || speed > 3;
+               if (busy)
+               {
+                  try { u["weaponSkill"] = st.baseSkill * Config.ACC_MOVE_MULT; }
+                  catch (e:Error) {}
+               }
+               else
+               {
+                  try { u["weaponSkill"] = st.baseSkill; }
+                  catch (e:Error) {}
+               }
+            }
+            else
+            {
+               try { u["weaponSkill"] = st.baseSkill; }
+               catch (e:Error) {}
+            }
+         }
+
+         // ---- 活跃门控 ----
          var active:Boolean = (u["celUnit"] === gg)
             || (tick - st.lastHitTick) < 300
             || (tick - st.lastSeenTick) < 300;
          if (!active)
          {
             st.dodgeT = 0; st.threatT = 0; st.coverPhase = 0;
-            st.retreatT = 0; st.aimExposed = 0;
+            st.retreatT = 0; st.aimExposed = 0; st.settleT = 0;
             return false;
+         }
+
+         // ===== 开火窗口状态机（settle）=====
+         if (st.settleT > 0)
+         {
+            st.settleT--;
+         }
+         else
+         {
+            var aimedNow:Boolean = (gg["currentWeapon"] != null);
+            if (aimedNow)
+            {
+               st.aimIdle = 0;
+               // 顶着瞄准"放冷枪"：小概率强行站桩开一枪
+               if (role == R_GUN || role == R_MAGIC)
+               {
+                  if (Math.random() < Config.SETTLE_FORCE_CHANCE && st.dodgeT <= 0)
+                  {
+                     st.settleT = Config.ACC_SETTLE_TICKS;
+                     TdfcLog.line("aim", "SETTLE force " + TdfcMain.tag(u));
+                  }
+               }
+            }
+            else
+            {
+               st.aimIdle++;
+               if (st.aimIdle >= Config.ACC_SETTLE_IDLE && role != R_MELEE
+                  && Math.random() < 0.5)
+               {
+                  st.settleT = Config.ACC_SETTLE_TICKS;
+                  st.aimIdle = 0;
+                  TdfcLog.line("aim", "SETTLE idle " + TdfcMain.tag(u));
+               }
+            }
          }
 
          // ===== D. 撤退（优先于掩体：低血时离开而不是就近躲）=====
          if (Config.ENABLE_RETREAT && st.threatT <= 0 && st.dodgeT <= 0
-            && doct(ucls, "r") > 0)
+            && tier <= 1 && doctRetreat(ucls, role) > 0)
          {
             if (!inRetreat && hpRatio < Config.RETREAT_RATIO
                && (tick - st.lastHitTick) < HIT_WINDOW
                && Los.toPlayer(u, loc, gg, 900))
             {
-               // 打断掩体并复用掩体点；无掩体点则朝远离玩家方向
                var hadCover:Boolean = inCover;
                if (hadCover)
                {
@@ -109,7 +170,7 @@ package
                      rx = ux + side * 140;
                      if (tileSolid(loc, rx, ry))
                      {
-                        rx = ux - side * 120; // 反方向兜底
+                        rx = ux - side * 120;
                      }
                   }
                   st.retreatX = rx;
@@ -124,7 +185,6 @@ package
             if (inRetreat)
             {
                st.retreatT--;
-               // 玩家逼近 → 背水一战
                if (dist2(u, gg) < Config.BACKS_BREACH * Config.BACKS_BREACH)
                {
                   st.retreatT = 0;
@@ -133,18 +193,17 @@ package
                else if (st.retreatT <= 0)
                {
                   TdfcLog.line("retreat", "END " + TdfcMain.tag(u));
-                  // 撤退结束仍低血且可掩体 → 转入掩体固守
-                  if (Config.ENABLE_COVER && doct(ucls, "c") > 0
+                  if (Config.ENABLE_COVER && tier <= 1
                      && hpRatio < Config.RETREAT_RATIO * 1.4
                      && tick - st.lastCoverTick >= Config.COVER_CD)
                   {
-                     var cp:* = findCoverPoint(loc, u, ux, uy, px, py);
-                     if (cp != null)
+                     var cpR:* = findCoverPoint(loc, u, ux, uy, px, py);
+                     if (cpR != null)
                      {
                         st.coverPhase = 1;
                         st.coverT = Config.COVER_MAX_TICKS;
-                        st.coverX = cp.x;
-                        st.coverY = cp.y;
+                        st.coverX = cpR.x;
+                        st.coverY = cpR.y;
                         st.peekT = Config.PEEK_MIN;
                         st.peekOn = false;
                         TdfcLog.line("cover", "SEEK(after retreat) " + TdfcMain.tag(u));
@@ -154,8 +213,9 @@ package
             }
          }
 
-         // ===== A. 瞄准回避（无冷却：敌人常驻躲弹意识）=====
-         if (Config.ENABLE_DODGE_AIM && !inCover && !inRetreat && st.threatT <= 0)
+         // ===== A. 瞄准反应（按武器角色分派）=====
+         if (Config.ENABLE_DODGE_AIM && allowTactical && tier <= 1
+            && st.settleT <= 0 && st.dodgeT <= 0)
          {
             var w:* = gg["currentWeapon"];
             var wrot:Number = NaN;
@@ -172,42 +232,11 @@ package
             {
                st.aimExposed = 0;
             }
-            if (st.dodgeT <= 0 && aimed && !isNaN(wrot)
-               && Math.random() < doct(ucls, "d"))
+            if (aimed && !isNaN(wrot)
+               && Math.random() < dodgeChance(ucls, role, tier))
             {
-               st.dodgeT = Config.DODGE_TICKS;
-               st.dodgeDir = (ux >= px) ? 1 : -1; // 水平离开玩家方向
                st.lastDodgeTick = tick;
-               // 躲避形态（几何规则）：弹道近水平 → 起跳（水平走位只是沿弹道平移）；
-               // 弹道倾斜（玩家在上/下侧射击）→ 水平走位
-               var hop:Boolean = false;
-               if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN
-                  && u["stay"] == true)
-               {
-                  hop = true;
-               }
-               var ddx:Number = ux + st.dodgeDir * Config.DODGE_DIST;
-               if (tileSolid(loc, ddx, uy))
-               {
-                  ddx = ux - st.dodgeDir * Config.DODGE_DIST;
-                  st.dodgeDir = -st.dodgeDir;
-                  if (tileSolid(loc, ddx, uy))
-                  {
-                     ddx = ux; // 两侧都被挡：只起跳（或原地）
-                  }
-               }
-               st.dodgeX = ddx;
-               st.dodgeY = uy;
-               if (hop)
-               {
-                  try
-                  {
-                     u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP;
-                  }
-                  catch (e:Error) {}
-               }
-               TdfcLog.line("dodge", "AIM " + TdfcMain.tag(u)
-                  + " hop=" + (hop ? 1 : 0) + " to " + int(ddx));
+               dispatchDodge(u, st, loc, role, wrot, px, py, ux, uy, tick);
             }
             if (st.dodgeT > 0)
             {
@@ -216,27 +245,26 @@ package
          }
 
          // ===== B. 慢弹威胁躲避 =====
-         if (Config.ENABLE_DODGE_THREAT && !inCover && !inRetreat)
+         if (Config.ENABLE_DODGE_THREAT && allowTactical && tier <= 1)
          {
             st.threatScan--;
             if (st.threatScan <= 0)
             {
                st.threatScan = Config.THREAT_SCAN_CD;
-               if (st.threatT <= 0)
+               if (st.threatT <= 0 && st.settleT <= 0)
                {
                   var t:* = findThreat(loc, u, ux, uy);
                   if (t != null)
                   {
                      st.threatT = Config.THREAT_DODGE_TICKS;
                      st.lastDodgeTick = tick;
-                     // 垂直弹速方向采样躲避点（cel 引导，原版平滑绕行）
                      var rot:Number = TdfcMain.num(t, "rot", 0);
                      var pvx:Number = Math.cos(rot);
                      var pvy:Number = Math.sin(rot);
-                     var pt:* = pickSafePoint(loc, ux, uy, pvy, -pvx); // 垂直一侧
+                     var pt:* = pickSafePoint(loc, ux, uy, pvy, -pvx);
                      if (pt == null)
                      {
-                        pt = pickSafePoint(loc, ux, uy, -pvy, pvx);    // 另一侧
+                        pt = pickSafePoint(loc, ux, uy, -pvy, pvx);
                      }
                      if (pt != null)
                      {
@@ -248,13 +276,9 @@ package
                         st.threatX = ux + (ux >= px ? 1 : -1) * 120;
                         st.threatY = uy;
                      }
-                     // 平射威胁 + 在地面 → 起跳（与瞄准回避同一几何规则）
                      if (Math.abs(pvy) < Config.DODGE_FLAT_SIN && u["stay"] == true)
                      {
-                        try
-                        {
-                           u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP;
-                        }
+                        try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
                         catch (e:Error) {}
                      }
                      TdfcLog.line("threat", "PROJ " + TdfcMain.tag(u)
@@ -270,18 +294,18 @@ package
 
          // ===== C. 掩体（低血由撤退接管）=====
          if (Config.ENABLE_COVER && !inRetreat && st.threatT <= 0 && st.dodgeT <= 0
-            && doct(ucls, "c") > 0)
+            && tier <= 1 && doctCover(ucls, role) > 0)
          {
             var hitRecently:Boolean = (tick - st.lastHitTick) < 90;
             if (st.coverPhase == 0
-               && hpRatio >= Config.RETREAT_RATIO // 低血不抢占（留给撤退）
+               && hpRatio >= Config.RETREAT_RATIO
                && (hitRecently || st.aimExposed >= Config.EXPOSED_TICKS)
                && tick - st.lastCoverTick >= Config.COVER_CD)
             {
                var cp:* = findCoverPoint(loc, u, ux, uy, px, py);
                if (cp != null)
                {
-                  st.coverPhase = 1; // SEEK
+                  st.coverPhase = 1;
                   st.coverT = Config.COVER_MAX_TICKS;
                   st.coverX = cp.x;
                   st.coverY = cp.y;
@@ -299,7 +323,7 @@ package
                if (ddx * ddx + ddy * ddy < Config.COVER_ARRIVE * Config.COVER_ARRIVE
                   || st.coverT <= 0)
                {
-                  st.coverPhase = 2; // HIDE
+                  st.coverPhase = 2;
                   TdfcLog.line("cover", "HIDE " + TdfcMain.tag(u));
                }
             }
@@ -338,11 +362,11 @@ package
          {
             if (st.coverPhase == 2 && st.peekOn && u["currentWeapon"] != null)
             {
-               writeCel(u, px, py); // 探头：指向玩家开火
+               writeCel(u, px, py);
             }
             else
             {
-               writeCel(u, st.coverX, st.coverY); // 缩回/移动
+               writeCel(u, st.coverX, st.coverY);
             }
             acted = true;
          }
@@ -359,6 +383,227 @@ package
          return acted;
       }
 
+      // ============ 角色分派（瞄准反应） ============
+
+      /**
+       * 按武器角色与移动形态执行躲避/走位动作，并写出躲避点与（可选的）起跳。
+       * 空中(isFly)取弹线真实垂直向量（2D 机动）；地面限水平+跳跃；
+       * 水中(isPlav)取 2D。
+       */
+      private static function dispatchDodge(u:*, st:TacticalState, loc:*,
+         role:int, wrot:Number, px:Number, py:Number, ux:Number, uy:Number,
+         tick:int):void
+      {
+         var isFly:Boolean = (u["isFly"] == true);
+         var isPlav:Boolean = (u["isPlav"] == true);
+         var onGround:Boolean = (u["stay"] == true);
+
+         // 弹线垂直向量（真 2D 躲避方向；旋转 90°）
+         var pdx:Number = -Math.sin(wrot);
+         var pdy:Number = Math.cos(wrot);
+
+         if (role == R_SNIPER)
+         {
+            // 狙击：优先找掩体/拉距离，不跳；有走位冷却
+            if (tick - st.lastSniperTick >= 90
+               && applySniperReposition(u, st, loc, px, py, ux, uy))
+            {
+               st.lastSniperTick = tick;
+               TdfcLog.line("dodge", "SNIPER cover " + TdfcMain.tag(u));
+               return;
+            }
+            // 无掩体可去：直线后撤（水平离开玩家）
+            var rSide:Number = (ux >= px) ? 1 : -1;
+            st.dodgeT = Config.DODGE_TICKS;
+            st.dodgeX = ux + rSide * 160;
+            st.dodgeY = uy;
+            TdfcLog.line("dodge", "SNIPER retreat " + TdfcMain.tag(u));
+            return;
+         }
+
+         if (role == R_SHOTGUN)
+         {
+            // 霰弹：前冲逼近 + 横抖；平射也跳
+            var adv:Number = 0.55; // 贴上玩家 55%
+            var tx:Number = ux + (px - ux) * adv;
+            var ty:Number = uy + (py - uy) * adv;
+            // 横向抖动
+            var j:Number = (Math.random() > 0.5 ? 1 : -1) * 45;
+            st.dodgeT = Config.DODGE_TICKS;
+            st.dodgeX = tx + j;
+            st.dodgeY = ty;
+            if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN && onGround)
+            {
+               try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
+               catch (e:Error) {}
+            }
+            TdfcLog.line("dodge", "SHOTGUN charge " + TdfcMain.tag(u));
+            return;
+         }
+
+         if (role == R_MELEE)
+         {
+            // 近战：直线逼近 + 侧抖 + 靠近时跳
+            var tx2:Number = px + (ux > px ? 1 : -1) * 30;
+            var ty2:Number = py;
+            st.dodgeT = Config.DODGE_TICKS;
+            st.dodgeX = tx2;
+            st.dodgeY = ty2;
+            if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN && onGround)
+            {
+               try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
+               catch (e:Error) {}
+            }
+            TdfcLog.line("dodge", "MELEE close " + TdfcMain.tag(u));
+            return;
+         }
+
+         // ---- GUN / THROWER / MAGIC：标准几何躲避 ----
+         if (isFly)
+         {
+            // 空中机动：弹线垂直向量（含高度分量）
+            var fd:Number = 120;
+            st.dodgeT = Config.DODGE_TICKS;
+            st.dodgeX = ux + pdx * fd;
+            st.dodgeY = uy + pdy * fd;
+            if (Math.abs(pdy) > 0.3)
+            {
+               try { u["dy"] = pdy * 4; } catch (e:Error) {} // 高度机动
+            }
+            TdfcLog.line("dodge", "FLY " + TdfcMain.tag(u));
+            return;
+         }
+         if (isPlav)
+         {
+            st.dodgeT = Config.DODGE_TICKS;
+            st.dodgeX = ux + pdx * 90;
+            st.dodgeY = uy + pdy * 90;
+            TdfcLog.line("dodge", "SWIM " + TdfcMain.tag(u));
+            return;
+         }
+         // 地面：平射→跳；斜射→水平走位（v0.2.2 几何规则）
+         var side2:Number = (ux >= px) ? 1 : -1;
+         var hop:Boolean = false;
+         if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN && onGround)
+         {
+            hop = true;
+         }
+         var dd:Number = ux + side2 * Config.DODGE_DIST;
+         if (tileSolid(loc, dd, uy))
+         {
+            dd = ux - side2 * Config.DODGE_DIST;
+            if (tileSolid(loc, dd, uy))
+            {
+               dd = ux;
+            }
+         }
+         st.dodgeT = Config.DODGE_TICKS;
+         st.dodgeX = dd;
+         st.dodgeY = uy;
+         if (hop)
+         {
+            try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
+            catch (e:Error) {}
+         }
+         TdfcLog.line("dodge", "GROUND " + TdfcMain.tag(u)
+            + " hop=" + (hop ? 1 : 0));
+      }
+
+      /** 狙击走位：优先掩体点，无则返回 false（由调用方做直线后撤）。 */
+      private static function applySniperReposition(u:*, st:TacticalState, loc:*,
+         px:Number, py:Number, ux:Number, uy:Number):Boolean
+      {
+         if (st.dodgeT > 0)
+         {
+            return false; // 已在走位
+         }
+         var cp:* = findCoverPoint(loc, u, ux, uy, px, py);
+         if (cp != null)
+         {
+            st.dodgeT = Config.DODGE_TICKS + 12;
+            st.dodgeX = cp.x;
+            st.dodgeY = cp.y;
+            return true;
+         }
+         return false;
+      }
+
+      // ============ 武器角色与概率 ============
+
+      /** 武器角色：由 public 武器字段推断（tip/kol/rapid/precision/sniper）。 */
+      private static function weaponRole(u:*):int
+      {
+         var w:* = u["currentWeapon"];
+         if (w == null)
+         {
+            return R_MELEE;
+         }
+         var tip:Number = TdfcMain.num(w, "tip", 0);
+         if (tip < 3)
+         {
+            return R_MELEE;
+         }
+         if (tip == 4)
+         {
+            return R_THROWER;
+         }
+         if (tip == 5)
+         {
+            return R_MAGIC;
+         }
+         if (TdfcMain.num(w, "kol", 1) > 1)
+         {
+            return R_SHOTGUN;
+         }
+         if (u["sniper"] == true
+            || (TdfcMain.num(w, "rapid", 5) <= 2 && TdfcMain.num(w, "precision", 0) >= 60))
+         {
+            return R_SNIPER;
+         }
+         return R_GUN;
+      }
+
+      /** 触发概率：智能层人形 0.4；机械僵硬 0.15；按角色微调。 */
+      private static function dodgeChance(cls:String, role:int, tier:int):Number
+      {
+         if (tier == 1)
+         {
+            return 0.15; // DRONE 僵硬
+         }
+         switch (role)
+         {
+            case R_SHOTGUN: return 0.6;
+            case R_MELEE:   return 0.5;
+            case R_THROWER: return 0.4;
+            case R_SNIPER:  return 0.5; // 走位频率
+            default:        return 0.4;
+         }
+      }
+
+      /** 撤退比例（按类近似原 doctrine）；BEAST 由外部 intel 门控。 */
+      private static function doctRetreat(cls:String, role:int):Number
+      {
+         if (role == R_MELEE)
+         {
+            return 0.15; // 近战型少撤
+         }
+         if (role == R_SNIPER)
+         {
+            return 0.3;
+         }
+         return 0.3;
+      }
+
+      /** 掩体可用性：近战不掩体；其余可用。 */
+      private static function doctCover(cls:String, role:int):Number
+      {
+         if (role == R_MELEE)
+         {
+            return 0;
+         }
+         return 1;
+      }
+
       // ============ 玩家瞄准检测 ============
 
       /** 玩家武器瞄准线是否指向本敌人（弹道角 wrot、距离、LOS）。 */
@@ -367,7 +612,7 @@ package
       {
          if (isNaN(wrot))
          {
-            return false; // 无远程武器
+            return false;
          }
          var w:* = gg["currentWeapon"];
          if (w == null)
@@ -396,13 +641,7 @@ package
 
       // ============ 慢弹威胁扫描 ============
 
-      /**
-       * 在 firstObj 链上找威胁弹体：慢速（vel<阈值）且相对运动扫掠会命中本敌。
-       * 只处理 Bullet（榴弹/火箭直射）与 SmartBullet（导弹）——PhisBullet
-       * （投掷手雷）交还原版 findGrenades 恐惧，避免双重反应。
-       * 相对速度扫掠（shared-knowledge projectile-step-sweep）：
-       * O=弹-敌起点差，RV=弹速-敌速，最近点 t*∈[0,1] 距离 < 命中半径 → 威胁。
-       */
+      /** 同 v0.2.1：只处理 Bullet/SmartBullet（PhisBullet 交还原版 findGrenades）。 */
       private static function findThreat(loc:*, u:*, ux:Number, uy:Number):Object
       {
          var uvx:Number = TdfcMain.num(u, "dx", 0);
@@ -432,14 +671,14 @@ package
                      var rvx:Number = vx - uvx;
                      var rvy:Number = vy - uvy;
                      var len2:Number = rvx * rvx + rvy * rvy;
-                     var t:Number = 0;
+                     var tt:Number = 0;
                      if (len2 > 0)
                      {
                         var dot:Number = ox * rvx + oy * rvy;
-                        t = Math.max(0, Math.min(1, -dot / len2));
+                        tt = Math.max(0, Math.min(1, -dot / len2));
                      }
-                     var cx:Number = ox + t * rvx;
-                     var cy:Number = oy + t * rvy;
+                     var cx:Number = ox + tt * rvx;
+                     var cy:Number = oy + tt * rvy;
                      var dmin:Number = Math.sqrt(cx * cx + cy * cy);
                      var rr:Number = hitR + TdfcMain.num(proj, "explRadius", 0);
                      if (dmin < rr)
@@ -457,10 +696,6 @@ package
 
       // ============ 掩体点搜索 ============
 
-      /**
-       * 8 方向 × 3 距离采样候选点；候选点自身非实体，且候选→玩家线段被瓦片遮挡
-       * （掩体语义）。返回最近者。仅瓦片（用户确认：念力箱不挡视线）。
-       */
       private static function findCoverPoint(loc:*, u:*, ux:Number, uy:Number,
          px:Number, py:Number):Object
       {
@@ -488,7 +723,7 @@ package
                      bestX = dx;
                      bestY = dy;
                   }
-                  break; // 同方向取最近距离即可
+                  break;
                }
             }
          }
@@ -501,7 +736,6 @@ package
 
       // ============ 写入与工具 ============
 
-      /** cel 直写（保留 celUnit，不打断交战；原版移动/瞄准消费 celX/celY）。 */
       private static function writeCel(u:*, x:Number, y:Number):void
       {
          try
@@ -512,7 +746,6 @@ package
          catch (e:Error) {}
       }
 
-      /** 沿 (dx,dy) 方向采样躲避点：多个距离取第一个非实体瓦片点。 */
       private static function pickSafePoint(loc:*, ux:Number, uy:Number,
          dx:Number, dy:Number):Object
       {
@@ -538,7 +771,7 @@ package
 
       private static function tileSolid(loc:*, x:Number, y:Number):Boolean
       {
-         var solid:Boolean = true; // 保守：探测失败按实体处理
+         var solid:Boolean = true;
          try
          {
             var t:* = loc["getAbsTile"](x, y);
@@ -556,17 +789,6 @@ package
          var dx:Number = TdfcMain.num(u, "X", 0) - TdfcMain.num(v, "X", 0);
          var dy:Number = TdfcMain.num(u, "Y", 0) - TdfcMain.num(v, "Y", 0);
          return dx * dx + dy * dy;
-      }
-
-      /** doctrine 取值：d=躲避概率 c=掩体开关 r=撤退血量比例。 */
-      private static function doct(cls:String, key:String):Number
-      {
-         var e:Object = DOCTRINE[cls];
-         if (e == null)
-         {
-            e = { d: 0.2, c: 1, r: 0.3 }; // 缺省档
-         }
-         return e[key];
       }
    }
 }

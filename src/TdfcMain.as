@@ -264,6 +264,31 @@ package
          UnitMWall: 1, Mine: 1, UnitVortex: 1
       };
 
+      /** 智能视觉层（v0.3）：0=人形/亡灵等智能，1=机械（僵硬），2=动物/无智能（不接入）。 */
+      private static const INTEL_SAPS:Object = {
+         UnitRaider: 1, UnitMerc: 1, UnitSlaver: 1, UnitZebra: 1,
+         UnitEncl: 1, UnitPon: 1, UnitMsp: 1, UnitNecros: 1,
+         UnitAlicorn: 1, UnitBossAlicorn: 1, UnitBossRaider: 1,
+         UnitBossEncl: 1, UnitBossNecr: 1, UnitBossUltra: 1
+      };
+      private static const INTEL_DRONE:Object = {
+         UnitGutsy: 1, UnitRobobrain: 1, UnitDron: 1, UnitSentinel: 1
+      };
+
+      /** 智能层判定：0=智能人形/亡灵，1=机械（僵硬公式化），2=动物（无智能，不接入）。 */
+      public static function intelTier(cls:String):int
+      {
+         if (INTEL_SAPS[cls] === 1)
+         {
+            return 0;
+         }
+         if (INTEL_DRONE[cls] === 1)
+         {
+            return 1;
+         }
+         return 2;
+      }
+
       /** 短类名（fe.unit::UnitRaider → UnitRaider）。 */
       public static function shortClass(u:*):String
       {

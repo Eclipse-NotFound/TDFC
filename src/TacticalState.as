@@ -65,6 +65,12 @@ package
       public var retreatX:Number = 0;        // 撤退点
       public var retreatY:Number = 0;
 
+      // ---- v0.3：开火窗口与精准接管 ----
+      public var settleT:int = 0;            // 站桩开火窗口剩余 tick
+      public var aimIdle:int = 0;            // 未被瞄准累计 tick
+      public var baseSkill:Number = 0;       // 原版 weaponSkill 基线（首次记录）
+      public var lastSniperTick:int = -999999; // 狙击走位冷却
+
       public function TacticalState()
       {
       }

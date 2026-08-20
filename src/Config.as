@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.2.2";
+      public static const VER:String = "0.3.0";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -72,6 +72,12 @@ package
 
       // ---- 声源位置冻结（问题 3 修复）----
       public static const POSITION_FREEZE:int = 120;     // 无 LOS 声源位置冻结时长（tick）
+
+      // ---- v0.3：精准接管（仅智能层）----
+      public static const ACC_MOVE_MULT:Number = 0.35;   // 移动/躲时 weaponSkill 倍率（散布反比）
+      public static const ACC_SETTLE_TICKS:int = 12;     // 站桩开火窗口长度（tick）
+      public static const ACC_SETTLE_IDLE:int = 20;      // 未被瞄准多久可进入站桩
+      public static const SETTLE_FORCE_CHANCE:Number = 0.05; // 顶着瞄准放冷枪概率（每帧）
 
       // ---- 诊断 ----
       public static const LOG_PATH:String = "mods/TDFC/state/logs/tdfc.log";
