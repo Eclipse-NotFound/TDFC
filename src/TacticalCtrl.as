@@ -380,6 +380,12 @@ package
             writeCel(u, st.dodgeX, st.dodgeY);
             acted = true;
          }
+         else if (u["celUnit"] === gg && tier <= 1)
+         {
+            // v0.3.1：空闲瞄准锚定——交战中的智能单位枪口永远对准玩家
+            // （原版 findCel 每 10 tick 才重锁 cel，缺锚定会让枪口停在旧躲避点）
+            writeCel(u, px, py);
+         }
          return acted;
       }
 
@@ -427,15 +433,13 @@ package
             var adv:Number = 0.55; // 贴上玩家 55%
             var tx:Number = ux + (px - ux) * adv;
             var ty:Number = uy + (py - uy) * adv;
-            // 横向抖动
-            var j:Number = (Math.random() > 0.5 ? 1 : -1) * 45;
+            var j:Number = (Math.random() > 0.5 ? 1 : -1) * (30 + Math.random() * 30);
             st.dodgeT = Config.DODGE_TICKS;
             st.dodgeX = tx + j;
             st.dodgeY = ty;
             if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN && onGround)
             {
-               try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
-               catch (e:Error) {}
+               hopKick(u);
             }
             TdfcLog.line("dodge", "SHOTGUN charge " + TdfcMain.tag(u));
             return;
@@ -451,8 +455,7 @@ package
             st.dodgeY = ty2;
             if (Math.abs(Math.sin(wrot)) < Config.DODGE_FLAT_SIN && onGround)
             {
-               try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
-               catch (e:Error) {}
+               hopKick(u);
             }
             TdfcLog.line("dodge", "MELEE close " + TdfcMain.tag(u));
             return;
@@ -488,10 +491,11 @@ package
          {
             hop = true;
          }
-         var dd:Number = ux + side2 * Config.DODGE_DIST;
+         var dOff:Number = Config.DODGE_DIST + Math.random() * 50; // 110-160 >100 死区
+         var dd:Number = ux + side2 * dOff;
          if (tileSolid(loc, dd, uy))
          {
-            dd = ux - side2 * Config.DODGE_DIST;
+            dd = ux - side2 * dOff;
             if (tileSolid(loc, dd, uy))
             {
                dd = ux;
@@ -502,8 +506,7 @@ package
          st.dodgeY = uy;
          if (hop)
          {
-            try { u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * Config.DODGE_HOP; }
-            catch (e:Error) {}
+            hopKick(u);
          }
          TdfcLog.line("dodge", "GROUND " + TdfcMain.tag(u)
             + " hop=" + (hop ? 1 : 0));
@@ -736,12 +739,24 @@ package
 
       // ============ 写入与工具 ============
 
+      /** cel 直写（保留 celUnit，不打断交战；原版移动/瞄准消费 celX/celY）。 */
       private static function writeCel(u:*, x:Number, y:Number):void
       {
          try
          {
             u["celX"] = x;
             u["celY"] = y;
+         }
+         catch (e:Error) {}
+      }
+
+      /** 随机力度起跳（跳高随机化避免僵硬；jumpdy public）。 */
+      private static function hopKick(u:*):void
+      {
+         try
+         {
+            var mult:Number = Config.DODGE_HOP * (0.7 + Math.random() * 0.5);
+            u["dy"] = -TdfcMain.num(u, "jumpdy", 15) * mult;
          }
          catch (e:Error) {}
       }

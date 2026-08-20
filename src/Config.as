@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.3.0";
+      public static const VER:String = "0.3.1";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -43,16 +43,16 @@ package
       // ---- Phase 2：瞄准回避 ----
       public static const AIM_DODGE_RANGE:Number = 350;  // 玩家瞄准线判定半径
       public static const AIM_TOL_DEG:Number = 8;        // 瞄准夹角容差（度）
-      public static const DODGE_TICKS:int = 24;          // 躲避持续（含原版15tick方向延迟+100px死区）
-      public static const DODGE_DIST:Number = 120;       // 侧移目标距离（需>原版100px接近死区）
-      public static const DODGE_HOP:Number = 0.8;        // 起跳力度系数（×jumpdy）
+      public static const DODGE_TICKS:int = 10;          // 短促躲避窗口（<原版10tick findCel 周期,防翻转抽搐）
+      public static const DODGE_DIST:Number = 110;       // 侧移目标距离（略>100px 死区以启动走路）
+      public static const DODGE_HOP:Number = 0.8;        // 起跳力度系数（×jumpdy，每跳随机 ±）
       public static const DODGE_FLAT_SIN:Number = 0.5;   // |sin(弹道角)|<此值=平射→跳跃；否则水平走位
 
       // ---- Phase 2：慢弹回避 ----
       public static const SLOW_SPEED_THRESH:Number = 60; // 低于此速度的弹体才预测（快弹归瞄准回避）
       public static const THREAT_SCAN_CD:int = 15;       // 每敌威胁扫描间隔
       public static const THREAT_HIT_R:Number = 24;      // 命中判定半径（敌半径近似）
-      public static const THREAT_DODGE_TICKS:int = 12;
+      public static const THREAT_DODGE_TICKS:int = 8;    // 短促威胁躲避窗口
 
       // ---- Phase 2：掩体 ----
       public static const EXPOSED_TICKS:int = 30;        // 被瞄准暴露累计触发掩体
