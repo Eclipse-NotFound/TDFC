@@ -34,17 +34,16 @@ package
 
       // ---- Phase 2：瞄准回避 ----
       public var lastDodgeTick:int = -999999;// 最近一次躲避开始帧
-      public var dodgeT:int = 0;             // 剩余躲避 tick（>0 活动）
-      public var dodgeDir:int = 0;           // 侧移方向 ±1
-      public var dodgeX:Number = 0;          // 躲避点（cel 引导）
-      public var dodgeY:Number = 0;
+      public var dodgeT:int = 0;             // 剩余躲避冲量窗口 tick（>0 活动）
+      public var dodgeVX:Number = 0;         // 躲避冲量速度分量（每帧写 dx）
+      public var dodgeVY:Number = 0;         // 垂直分量（飞行/游泳用，地面=0）
       public var aimExposed:int = 0;         // 被玩家瞄准累计 tick
 
       // ---- Phase 2：慢弹回避 ----
       public var threatScan:int = 0;         // 威胁扫描节拍
-      public var threatT:int = 0;            // 剩余威胁躲避 tick
-      public var threatX:Number = 0;         // 威胁回避点（cel 引导）
-      public var threatY:Number = 0;
+      public var threatT:int = 0;            // 剩余威胁躲避冲量窗口
+      public var threatVX:Number = 0;        // 威胁躲避冲量速度分量
+      public var threatVY:Number = 0;
 
       // ---- 声源位置冻结（问题 3：防无 LOS 隔墙实时追踪）----
       public var nudgeTick:int = -999999;    // 最近一次声源位置更新时间
@@ -64,6 +63,11 @@ package
       public var retreatT:int = 0;           // 剩余撤退 tick
       public var retreatX:Number = 0;        // 撤退点
       public var retreatY:Number = 0;
+
+      // ---- cel 位移（狙击走位等需要真的移动到某点）----
+      public var relocT:int = 0;             // 剩余 cel 位移 tick
+      public var relocX:Number = 0;          // 位移目标点
+      public var relocY:Number = 0;
 
       // ---- v0.3：开火窗口与精准接管 ----
       public var settleT:int = 0;            // 站桩开火窗口剩余 tick
