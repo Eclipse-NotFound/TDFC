@@ -55,6 +55,9 @@ package
       public var pendX:Number = 0;           // 警报内容（玩家位置）
       public var pendY:Number = 0;
 
+      // ---- v0.4.2：墙角固守 ----
+      public var corneredT:int = 0;          // 墙角锁位剩余 tick（期间不躲不跳）
+
       // ---- Phase 2：掩体 ----
       public var coverPhase:int = 0;         // 0=无 1=SEEK 2=HIDE
       public var coverT:int = 0;             // 掩体剩余总时长

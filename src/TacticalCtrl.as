@@ -213,8 +213,12 @@ package
          }
 
          // ===== A. 瞄准反应（按武器角色分派）=====
+         if (st.corneredT > 0)
+         {
+            st.corneredT--; // 墙角锁位倒计时（在门控外递减）
+         }
          if (Config.ENABLE_DODGE_AIM && allowTactical && tier <= 1
-            && st.settleT <= 0 && st.dodgeT <= 0)
+            && st.settleT <= 0 && st.dodgeT <= 0 && st.corneredT <= 0)
          {
             var w:* = gg["currentWeapon"];
             var wrot:Number = NaN;
@@ -270,7 +274,8 @@ package
                      {
                         spd2 = 10;
                      }
-                     st.threatVX = pickDartX(loc, ux, uy, awayX) * spd2;
+                     var tdx:Number = pickDartX(loc, ux, uy, awayX);
+                     st.threatVX = tdx * spd2;
                      if (u["isFly"] == true || u["isPlav"] == true)
                      {
                         var rot2:Number = TdfcMain.num(t, "rot", 0);
@@ -279,8 +284,10 @@ package
                      else
                      {
                         st.threatVY = 0;
-                        if (Math.abs(Math.sin(TdfcMain.num(t, "rot", 0)))
-                           < Config.DODGE_FLAT_SIN && u["stay"] == true)
+                        // 墙角(tdx==0)不跳——避免原地跳；角落即掩体
+                        if (tdx != 0
+                           && Math.abs(Math.sin(TdfcMain.num(t, "rot", 0)))
+                              < Config.DODGE_FLAT_SIN && u["stay"] == true)
                         {
                            hopKick(u, st, tick);
                         }
@@ -493,6 +500,14 @@ package
             // 霰弹/近战：向玩家方向冲（前冲/逼近），平射顺带一跳；方向墙体检
             var toP:Number = (px >= ux) ? 1 : -1;
             var dart:Number = pickDartX(loc, ux, uy, toP);
+            if (dart == 0)
+            {
+               // 墙角：无可动方向 → 锁位固守
+               st.corneredT = Config.CORNERED_LOCK;
+               st.dodgeT = 0;
+               TdfcLog.line("dodge", "CHARGE cornered " + TdfcMain.tag(u));
+               return;
+            }
             speedX = dart * spd * 1.1;
             if (flat && onGround)
             {
@@ -510,10 +525,13 @@ package
          var away:Number = (ux >= px) ? 1 : -1;
          var hopDo:Boolean = flat && onGround;
          var dart2:Number = pickDartX(loc, ux, uy, away);
-         if (dart2 == 0 && onGround)
+         if (dart2 == 0)
          {
-            // 墙角：两侧被挡 → 起跳尝试脱离，不站死
-            hopKick(u, st, tick);
+            // 墙角：无可动方向 → 锁位固守（角落即掩体，不跳不躲）
+            st.corneredT = Config.CORNERED_LOCK;
+            st.dodgeT = 0;
+            TdfcLog.line("dodge", "GROUND cornered " + TdfcMain.tag(u));
+            return;
          }
          speedX = dart2 * spd * (hopDo ? 0.5 : 1.0);
          if (hopDo)

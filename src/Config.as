@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.4.1";
+      public static const VER:String = "0.4.2";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -90,6 +90,9 @@ package
       public static const SPOT_CONFIRM_TICKS:int = 12;   // 目击确认窗口（~0.4s，持续目击才报信）
       public static const PROP_DELAY_SPEED:Number = 20;  // 传播速度 px/tick（距离/速度=延迟）
       public static const PROP_DELAY_MAX:int = 60;       // 传播延迟上限 tick
+
+      // ---- v0.4.2：墙角固守 ----
+      public static const CORNERED_LOCK:int = 60;        // 墙角锁位时长（tick），期间不躲不跳
 
       // ---- 诊断 ----
       public static const LOG_PATH:String = "mods/TDFC/state/logs/tdfc.log";
