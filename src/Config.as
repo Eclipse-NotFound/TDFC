@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.3.3";
+      public static const VER:String = "0.4.0";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -74,9 +74,17 @@ package
 
       // ---- v0.3：精准接管（仅智能层）----
       public static const ACC_MOVE_MULT:Number = 0.35;   // 移动/躲时 weaponSkill 倍率（散布反比）
-      public static const ACC_SETTLE_TICKS:int = 12;     // 站桩开火窗口长度（tick）
+      public static const ACC_SETTLE_TICKS:int = 8;      // 站桩开火窗口长度（tick）
       public static const ACC_SETTLE_IDLE:int = 20;      // 未被瞄准多久可进入站桩
-      public static const SETTLE_FORCE_CHANCE:Number = 0.05; // 顶着瞄准放冷枪概率（每帧）
+      public static const SETTLE_FORCE_CHANCE:Number = 0.02; // 顶着瞄准放冷枪概率（每帧）
+
+      // ---- v0.4：感知层（噪声治理 + 视野）----
+      public static const NOISE_RUN:Number = 150;        // 跑动噪声（原版 200 下调）
+      public static const NOISE_WALK:Number = 80;        // 行走噪声（原版 100 下调）
+      public static const NOISE_SLOW:Number = 25;        // 慢走噪声（原版 50 下调）
+      public static const NOISE_SNEAK:Number = 0;        // 趴行/坐姿：无声
+      public static const NOISE_WEAPON_CAP:Number = 500; // 武器噪声封顶（原版可达 1000+）
+      public static const VISION_CONE:Number = 2.4;      // 智能层视野锥（弧度，±68.7° 正面）
 
       // ---- 诊断 ----
       public static const LOG_PATH:String = "mods/TDFC/state/logs/tdfc.log";

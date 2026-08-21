@@ -117,6 +117,9 @@ package
             return;
          }
 
+         // ---- 感知层：玩家噪声治理（跑>走>慢>趴行无声，武器封顶）----
+         Perception.governPlayerNoise(gg);
+
          // ---- 枪声事件（全局，先于单位循环）----
          if (Config.ENABLE_PROP_GUNSHOT)
          {
@@ -134,6 +137,8 @@ package
             {
                continue;
             }
+            // 感知层：背后盲区（overLook=false）+ 智能层锥形视野
+            Perception.governEnemySense(u, ucls);
             var st:TacticalState = state(u);
             var nowCelGG:Boolean = (u["celUnit"] === gg);
 

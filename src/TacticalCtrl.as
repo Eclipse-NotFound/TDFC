@@ -384,8 +384,9 @@ package
             relocating = true;
             acted = true;
          }
-         // 瞄准锚定：非位移中、交战中的智能单位，枪口永远对准玩家
-         if (!relocating && u["celUnit"] === gg && tier <= 1)
+         // 瞄准锚定：非位移中、交战中的智能单位，且**对玩家有视线**（隔墙不瞄）
+         if (!relocating && u["celUnit"] === gg && tier <= 1
+            && Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
          {
             writeCel(u, px, py);
          }
@@ -509,6 +510,11 @@ package
          var away:Number = (ux >= px) ? 1 : -1;
          var hopDo:Boolean = flat && onGround;
          var dart2:Number = pickDartX(loc, ux, uy, away);
+         if (dart2 == 0 && onGround)
+         {
+            // 墙角：两侧被挡 → 起跳尝试脱离，不站死
+            hopKick(u, st, tick);
+         }
          speedX = dart2 * spd * (hopDo ? 0.5 : 1.0);
          if (hopDo)
          {
@@ -740,7 +746,7 @@ package
          catch (e:Error) {}
       }
 
-      private static const HOP_CD:int = 24; // 起跳节奏节拍（防墙边/连续起跳乱跳）
+      private static const HOP_CD:int = 14; // 起跳节奏节拍（防墙边/连续起跳乱跳）
 
       /** 随机力度起跳（跳高随机化；带节奏节拍；jumpdy public）。 */
       private static function hopKick(u:*, st:TacticalState, tick:int):void
