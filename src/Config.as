@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.4.0";
+      public static const VER:String = "0.4.1";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -85,6 +85,11 @@ package
       public static const NOISE_SNEAK:Number = 0;        // 趴行/坐姿：无声
       public static const NOISE_WEAPON_CAP:Number = 500; // 武器噪声封顶（原版可达 1000+）
       public static const VISION_CONE:Number = 2.4;      // 智能层视野锥（弧度，±68.7° 正面）
+
+      // ---- v0.4.1：目击确认 + 传播延迟 ----
+      public static const SPOT_CONFIRM_TICKS:int = 12;   // 目击确认窗口（~0.4s，持续目击才报信）
+      public static const PROP_DELAY_SPEED:Number = 20;  // 传播速度 px/tick（距离/速度=延迟）
+      public static const PROP_DELAY_MAX:int = 60;       // 传播延迟上限 tick
 
       // ---- 诊断 ----
       public static const LOG_PATH:String = "mods/TDFC/state/logs/tdfc.log";

@@ -3,33 +3,120 @@ package
    import flash.utils.Dictionary;
 
    /**
-    * 分级传播引擎（Phase 1 信息层）。
+    * 分级传播引擎 v0.4.1（Phase 1 信息层 + 感知层补完）。
     *
-    * 通道说明（原版机制，见 design/brainstorm-01-enemy-ai.md 调研记录）：
-    *  - 起疑通道：玩家噪声 gg.noise（public，每世界步衰减 20）。
-    *    敌人 findCel→listen(gg) 听到噪声才把 aiSpok 抬到 maxSpok-1（internal 内部逻辑）。
-    *    因此"唤醒"只能通过向 gg.noise 写入战斗噪声脉冲实现；该通道无阵营过滤，
-    *    半径 = noise×ear×earMult（现实语义：战斗声很大）。
-    *  - 位置通道：u.alarma(x,y) / u.setCel(null,x,y)（public）。只在敌人 aiSpok>0
-    *    时有效（平静单位 cel 每帧被原版重置回自身）。用于给已起疑/已交战的盟友
-    *    指路。
-    *  - 交战通道：u.setCel(gg)（public）——直接指定玩家为目标，绕过察觉条累积。
-    *    仅对 LOS 清晰的盟友使用（"看见即通知"）。
+    * v0.4.1 新增（候选机制 B+C）：
+    *  - B 目击确认：目击事件先进确认队列（SPOT_CONFIRM_TICKS），期间持续核验
+    *    目击者对玩家的 LOS；断线即取消——玩家有"处理目击者/断视线"的窗口。
+    *  - C 传播延迟：确认后的目击/受击传播不再瞬间送达，按
+    *    距离/PROP_DELAY_SPEED 计算每个盟友的延迟（上限 PROP_DELAY_MAX），
+    *    远处队友"一波波"觉醒。
+    *
+    * 通道说明（原版机制）：
+    *  - 起疑通道：玩家噪声 gg.noise（见 Perception）；位置通道 alarma/setCel；
+    *    交战通道 setCel(gg)（仅 LOS 清晰者，见 enemy-ai-drive-interfaces）。
     */
    public class Propagation
    {
+      /** 目击确认队列：{u, x, y, t}，帧内衰减，t<=0 且仍 LOS 才传播。 */
+      private static var spots:Array = [];
+
       /**
-       * 目击传播：单位 source 刚发现玩家。
-       * 对同阵营盟友分级：
-       *  A. LOS 清晰 → setCel(gg) 直接交战；
-       *  B. 无 LOS 但在听觉半径 → alarma(±HEAR_ERR)；
+       * 目击事件入队（TdfcMain 检测到 celUnit false→true 时调用）。
+       */
+      public static function queueSpot(u:*, x:Number, y:Number):void
+      {
+         spots.push({ u: u, x: x, y: y, t: Config.SPOT_CONFIRM_TICKS });
+         if (spots.length > 8)
+         {
+            spots.shift(); // 队列上限，防刷
+         }
+      }
+
+      /**
+       * 每帧处理：确认队列 + 待送达警报（TdfcMain 单位循环后调用）。
+       */
+      public static function frameTick(units:Array, gg:*, loc:*, tick:int):void
+      {
+         // ---- 目击确认 ----
+         for (var i:int = spots.length - 1; i >= 0; i--)
+         {
+            var s:Object = spots[i];
+            s.t--;
+            if (s.t <= 0)
+            {
+               spots.splice(i, 1);
+               var sp:* = s.u;
+               if (sp != null && TdfcMain.num(sp, "sost", 0) == 1
+                  && Los.toPlayer(sp, loc, gg, Config.SIGHT_RANGE))
+               {
+                  // 确认通过：目击者仍看着玩家 → 正式传播（内部按距离延迟）
+                  vision(units, sp, gg, loc, tick);
+                  TdfcLog.line("confirm", "OK " + TdfcMain.tag(sp));
+               }
+               else
+               {
+                  TdfcLog.line("confirm", "CANCEL "
+                     + (sp != null ? TdfcMain.tag(sp) : "?"));
+               }
+            }
+         }
+
+         // ---- 待送达警报 ----
+         for (var j:int = 0; j < units.length; j++)
+         {
+            var u:* = units[j];
+            var st:TacticalState = TdfcMain.state(u);
+            if (st.pendT > 0)
+            {
+               st.pendT--;
+               if (st.pendT <= 0)
+               {
+                  deliverPending(u, st, gg, loc, tick);
+               }
+            }
+         }
+      }
+
+      /** 送达待定警报：送达时按当前 LOS 分级（有视线→直接交战；否则模糊位置）。 */
+      private static function deliverPending(u:*, st:TacticalState, gg:*, loc:*, tick:int):void
+      {
+         if (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
+         {
+            try { u["setCel"](gg); } catch (e:Error) {}
+            TdfcLog.line("prop", "DELIVER LOS " + TdfcMain.tag(u));
+         }
+         else
+         {
+            var np:* = frozenNudge(st, tick, st.pendX, st.pendY, Config.HEAR_ERR);
+            try { u["alarma"](np.x, np.y); } catch (e:Error) {}
+            TdfcLog.line("prop", "DELIVER HEAR " + TdfcMain.tag(u));
+         }
+      }
+
+      /** 按距离计算传播延迟 tick（距离/速度，钳制上限）。 */
+      private static function propDelay(ux:Number, uy:Number, px:Number, py:Number):int
+      {
+         var dx:Number = ux - px;
+         var dy:Number = uy - py;
+         var d:Number = Math.sqrt(dx * dx + dy * dy);
+         var t:int = int(d / Config.PROP_DELAY_SPEED);
+         if (t > Config.PROP_DELAY_MAX)
+         {
+            t = Config.PROP_DELAY_MAX;
+         }
+         return t;
+      }
+
+      /**
+       * 目击传播（确认后调用）：对同阵营盟友分级调度（延迟送达）：
+       *  A. LOS 清晰 → 送达时 setCel(gg) 直接交战；
+       *  B. 无 LOS 但在听觉半径 → 送达时 alarma(±HEAR_ERR)；
        *  C. 之外 → 无效果。
-       * 同时向 gg.noise 写 SPREAD_NOISE 战斗噪声脉冲（唤醒听觉半径内全体）。
+       * 同时发战斗噪声脉冲（唤醒听觉半径内全体）。
        */
       public static function vision(units:Array, source:*, gg:*, loc:*, tick:int):void
       {
-         var sx:Number = source["X"];
-         var sy:Number = source["Y"];
          var px:Number = gg["X"];
          var py:Number = gg["Y"];
 
@@ -58,31 +145,16 @@ package
             var dy:Number = u["Y"] - py;
             var dist2:Number = dx * dx + dy * dy;
             var ear:Number = TdfcMain.num(u, "ear", 1);
-            if (dist2 < Config.SIGHT_RANGE * Config.SIGHT_RANGE)
+            if (dist2 < Config.SIGHT_RANGE * Config.SIGHT_RANGE
+               && (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE)
+                  || dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear)))
             {
-               if (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
-               {
-                  // A. 有视线：直接交战
-                  try
-                  {
-                     u["setCel"](gg);
-                  }
-                  catch (e:Error) {}
-                  TdfcLog.line("prop", "vision LOS engage " + TdfcMain.tag(u));
-                  st.cdVision = tick;
-               }
-               else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
-               {
-                  // B. 听觉半径：模糊位置（冻结：不实时追踪玩家）
-                  var np:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
-                  try
-                  {
-                     u["alarma"](np.x, np.y);
-                  }
-                  catch (e:Error) {}
-                  TdfcLog.line("prop", "vision HEAR nudge " + TdfcMain.tag(u));
-                  st.cdVision = tick;
-               }
+               st.pendT = propDelay(u["X"], u["Y"], px, py);
+               st.pendX = px;
+               st.pendY = py;
+               st.cdVision = tick;
+               TdfcLog.line("prop", "vision SCHEDULE " + TdfcMain.tag(u)
+                  + " delay=" + st.pendT);
             }
          }
 
@@ -93,9 +165,9 @@ package
       /**
        * 枪声事件：玩家开火。
        * vanilla 已通过 weapon.makeNoise 覆盖"听觉唤醒"，TDFC 在此补充：
-       *  - 对已起疑/已交战的同阵营盟友做位置提示（分级）；
+       *  - 对已起疑/已交战的同阵营盟友做位置提示（立即，带冻结位置）；
        *  - 诊断记录（Phase 2 的躲避钩子在此挂接）。
-       * 注意：枪声不做噪声脉冲放大——保持消音武器的潜行语义。
+       * 枪声不做噪声脉冲放大——保持消音武器的潜行语义。
        */
       public static function gunshot(units:Array, gg:*, loc:*, tick:int, radius:Number):void
       {
@@ -134,13 +206,14 @@ package
             var ear:Number = TdfcMain.num(u, "ear", 1);
             if (Los.toPlayer(u, loc, gg, Config.GUNSHOT_RANGE))
             {
-               try { u["alarma"](px + TdfcMain.jitter(Config.PRECISE_ERR), py + TdfcMain.jitter(Config.PRECISE_ERR)); } catch (e:Error) {}
+               var npL:* = frozenNudge(st, tick, px, py, Config.PRECISE_ERR);
+               try { u["alarma"](npL.x, npL.y); } catch (e:Error) {}
                nudged++;
             }
             else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
             {
-               var np:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
-               try { u["alarma"](np.x, np.y); } catch (e:Error) {}
+               var npH:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
+               try { u["alarma"](npH.x, npH.y); } catch (e:Error) {}
                nudged++;
             }
             st.cdGunshot = tick;
@@ -153,11 +226,9 @@ package
       }
 
       /**
-       * 受击传播：单位 victim 被击中。
-       * 受害者知道玩家位置 → 对附近同阵营盟友：
-       *  A. LOS 清晰 → setCel(gg) 直接交战；
-       *  B. 无 LOS 但在受击半径 → alarma(±HEAR_ERR)。
-       * 同时发战斗噪声脉冲（"挨打会喊"）。
+       * 受击传播：单位 victim 被击中 → 对附近同阵营盟友按距离延迟调度。
+       * 受害者知道玩家位置；送达时 LOS 清晰→直接交战，否则模糊位置。
+       * 同时发战斗噪声脉冲（"挨打会喊"，立即）。
        */
       public static function damage(units:Array, victim:*, gg:*, loc:*, tick:int):void
       {
@@ -193,18 +264,16 @@ package
                continue;
             }
             var ear:Number = TdfcMain.num(u, "ear", 1);
-            if (Los.toPlayer(u, loc, gg, Config.DAMAGE_RANGE))
+            if (Los.toPlayer(u, loc, gg, Config.DAMAGE_RANGE)
+               || dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
             {
-               try { u["setCel"](gg); } catch (e:Error) {}
-               TdfcLog.line("damage", "hit->LOS engage " + TdfcMain.tag(u));
+               st.pendT = propDelay(u["X"], u["Y"], px, py);
+               st.pendX = px;
+               st.pendY = py;
+               st.cdDamage = tick;
+               TdfcLog.line("damage", "hit->SCHEDULE " + TdfcMain.tag(u)
+                  + " delay=" + st.pendT);
             }
-            else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
-            {
-               var np:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
-               try { u["alarma"](np.x, np.y); } catch (e:Error) {}
-               TdfcLog.line("damage", "hit->HEAR nudge " + TdfcMain.tag(u));
-            }
-            st.cdDamage = tick;
          }
 
          noisePulse(gg, Config.SPREAD_NOISE);

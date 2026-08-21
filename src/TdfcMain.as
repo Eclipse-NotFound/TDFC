@@ -142,10 +142,10 @@ package
             var st:TacticalState = state(u);
             var nowCelGG:Boolean = (u["celUnit"] === gg);
 
-            // 目击传播：celUnit 由非玩家变为玩家 = 刚发现
+            // 目击传播（B 目击确认）：刚发现玩家 → 入确认队列，持续目击才报信
             if (Config.ENABLE_PROP_VISION && !st.prevCelGG && nowCelGG)
             {
-               Propagation.vision(units, u, gg, loc, tick);
+               Propagation.queueSpot(u, u["X"], u["Y"]);
             }
 
             // 受击传播：hp 下降
@@ -175,6 +175,9 @@ package
             st.prevCelGG = nowCelGG;
             st.prevHp = num(u, "hp", 0);
          }
+
+         // ---- 传播调度（C 传播延迟）：目击确认 + 待送达警报 ----
+         Propagation.frameTick(units, gg, loc, tick);
 
          // ---- 心跳 + 内存清扫 ----
          if (tick % Config.HEARTBEAT_EVERY == 0)

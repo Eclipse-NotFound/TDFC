@@ -50,6 +50,11 @@ package
       public var nudgeX:Number = 0;          // 冻结的声源位置
       public var nudgeY:Number = 0;
 
+      // ---- v0.4.1：待送达警报（传播延迟）----
+      public var pendT:int = 0;              // 送达倒计时；>0 表示有待送达警报
+      public var pendX:Number = 0;           // 警报内容（玩家位置）
+      public var pendY:Number = 0;
+
       // ---- Phase 2：掩体 ----
       public var coverPhase:int = 0;         // 0=无 1=SEEK 2=HIDE
       public var coverT:int = 0;             // 掩体剩余总时长
