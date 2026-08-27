@@ -74,6 +74,7 @@ package
          {
             stage.addEventListener(KeyboardEvent.KEY_DOWN, onKey);
          }
+         AutoTest.init();
       }
 
       // ============ 每帧 ============
@@ -91,6 +92,8 @@ package
          {
             return;
          }
+         // 自动化测试钩子（仅测试实例激活）：先于一切门控（放行菜单/自动开局）
+         AutoTest.frame(world, tick);
          // 主菜单打开时 World.step 不运行（菜单门控事实），本层同样暂停
          var mm:* = world["mm"];
          if (mm != null && mm["active"] == true)
@@ -116,6 +119,9 @@ package
          {
             return;
          }
+
+         // 自动化测试钩子（交战段）：回血/补怪/打残，仅测试实例激活
+         AutoTest.combat(loc, gg, units, tick);
 
          // ---- 感知层：玩家噪声治理（跑>走>慢>趴行无声，武器封顶）----
          Perception.governPlayerNoise(gg);
@@ -158,6 +164,7 @@ package
             if (!isNaN(st.prevHp) && num(u, "hp", 0) < st.prevHp)
             {
                st.lastHitTick = tick; // 受击记忆（Phase 2 掩体/撤退触发用）
+               st.lastAlertTick = tick; // 警觉记忆（v0.5 配合层活跃判定）
                if (Config.ENABLE_PROP_DAMAGE)
                {
                   Propagation.damage(units, u, gg, loc, tick);
@@ -494,31 +501,71 @@ package
          spawnTestRaider();
       }
 
-      private static function spawnTestRaider():void
+      // ============ 测试生成（F9 手动 + AutoTest 圈养共用）============
+
+      /** 测试用枪械池：全部 tip=3 枪械（weapon-model.md；id 已在 AllData 核对）。 */
+      private static const TEST_GUNS:Array = ["lmg", "autor", "aglau", "mlau", "bel"];
+      private static var testGunIdx:int = 0;
+
+      /**
+       * 生成测试掠夺者：UnitRaider 构造器 opts.weap 直接发指定枪
+       * （反编译 UnitRaider 构造器：param4.weap → Weapon.create → 自动接线
+       * childObjs/弹药；模板 'raider' 无 <w> 条目，不传则永远徒手）。
+       * 高血（200）保证足够交战窗口；tr 随机外观变体。
+       */
+      internal static function spawnRaider(loc:*, gg:*, ox:Number, oy:Number):*
       {
          if (raiderCls == null)
          {
             TdfcLog.line("spawn", "no raider class");
-            return;
+            return null;
          }
+         var gunId:String = TEST_GUNS[testGunIdx % TEST_GUNS.length];
+         testGunIdx++;
+         var r:* = null;
+         try
+         {
+            r = new raiderCls("raider", 100, null, {weap: gunId, tr: 1 + int(Math.random() * 9)});
+         }
+         catch (e:Error)
+         {
+            TdfcLog.line("spawn", "ctor FAILED: " + e.message);
+            return null;
+         }
+         if (r == null)
+         {
+            TdfcLog.line("spawn", "ctor returned null");
+            return null;
+         }
+         try
+         {
+            r["fraction"] = 1; // 显式敌性（XML 节点缺失时兜底）
+            r["maxhp"] = 200;
+            r["hp"] = 200;
+            r["putLoc"](loc, gg["X"] + ox, gg["Y"] + oy);
+            loc["addObj"](r);
+            (loc["units"] as Array).push(r);
+         }
+         catch (e2:Error)
+         {
+            TdfcLog.line("spawn", "putLoc FAILED: " + e2.message);
+            return null;
+         }
+         var w:* = r["currentWeapon"];
+         TdfcLog.line("spawn", "raider(" + gunId + ") at "
+            + int(r["X"]) + "," + int(r["Y"]) + " hp=200 weapon="
+            + (w == null ? "NONE" : "tip" + int(num(w, "tip", 0)) + " " + w["id"]));
+         return r;
+      }
+
+      private static function spawnTestRaider():void
+      {
          try
          {
             var world:* = worldCls["w"];
             var loc:* = world["loc"];
             var gg:* = loc["gg"];
-            var r:* = new raiderCls("raider", 100, null, null);
-            if (r == null)
-            {
-               TdfcLog.line("spawn", "ctor returned null");
-               return;
-            }
-            r["fraction"] = 1; // 显式敌性（XML 节点缺失时兜底）
-            r["putLoc"](loc, gg["X"] + 260, gg["Y"] + 40);
-            loc["addObj"](r);
-            (loc["units"] as Array).push(r);
-            var hasWep:* = r["currentWeapon"] != null;
-            TdfcLog.line("spawn", "raider spawned at "
-               + int(r["X"]) + "," + int(r["Y"]) + " weapon=" + hasWep);
+            spawnRaider(loc, gg, 260, 40);
          }
          catch (e:Error)
          {

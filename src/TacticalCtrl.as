@@ -156,6 +156,7 @@ package
          {
             if (!inRetreat && hpRatio < Config.RETREAT_RATIO
                && (tick - st.lastHitTick) < HIT_WINDOW
+               && tick - st.lastRetreatAbort >= 180
                && Los.toPlayer(u, loc, gg, 900))
             {
                var hadCover:Boolean = inCover;
@@ -193,6 +194,7 @@ package
                if (dist2(u, gg) < Config.BACKS_BREACH * Config.BACKS_BREACH)
                {
                   st.retreatT = 0;
+                  st.lastRetreatAbort = tick; // 冷却：防"GO→玩家逼近→ABORT"每帧循环
                   TdfcLog.line("retreat", "ABORT breach " + TdfcMain.tag(u));
                }
                else if (st.retreatT <= 0)

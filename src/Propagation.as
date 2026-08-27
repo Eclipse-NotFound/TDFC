@@ -90,6 +90,7 @@ package
          {
             var np:* = frozenNudge(st, tick, st.pendX, st.pendY, Config.HEAR_ERR);
             try { u["alarma"](np.x, np.y); } catch (e:Error) {}
+            st.lastAlertTick = tick;
             TdfcLog.line("prop", "DELIVER HEAR " + TdfcMain.tag(u));
          }
       }
@@ -153,6 +154,7 @@ package
                st.pendX = px;
                st.pendY = py;
                st.cdVision = tick;
+               st.lastAlertTick = tick;
                TdfcLog.line("prop", "vision SCHEDULE " + TdfcMain.tag(u)
                   + " delay=" + st.pendT);
             }
@@ -208,12 +210,14 @@ package
             {
                var npL:* = frozenNudge(st, tick, px, py, Config.PRECISE_ERR);
                try { u["alarma"](npL.x, npL.y); } catch (e:Error) {}
+               st.lastAlertTick = tick;
                nudged++;
             }
             else if (dist2 < (Config.HEAR_RANGE * ear) * (Config.HEAR_RANGE * ear))
             {
                var npH:* = frozenNudge(st, tick, px, py, Config.HEAR_ERR);
                try { u["alarma"](npH.x, npH.y); } catch (e:Error) {}
+               st.lastAlertTick = tick;
                nudged++;
             }
             st.cdGunshot = tick;
@@ -271,6 +275,7 @@ package
                st.pendX = px;
                st.pendY = py;
                st.cdDamage = tick;
+               st.lastAlertTick = tick;
                TdfcLog.line("damage", "hit->SCHEDULE " + TdfcMain.tag(u)
                   + " delay=" + st.pendT);
             }

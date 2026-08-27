@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<application xmlns="http://ns.adobe.com/air/application/30.0">
+  <id>pfe-tdfc-test</id>
+  <versionNumber>1.0</versionNumber>
+  <filename>Remains</filename>
+  <description/>
+  <name>Remains-TDFC-Test</name>
+  <copyright>Empalu</copyright>
+  <initialWindow>
+    <content>pfe.swf</content>
+    <systemChrome>standard</systemChrome>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <fullScreen>false</fullScreen>
+    <aspectRatio>portrait</aspectRatio>
+    <renderMode>direct</renderMode>
+    <maximizable>true</maximizable>
+    <minimizable>true</minimizable>
+    <resizable>true</resizable>
+    <autoOrients>false</autoOrients>
+    <depthAndStencil>true</depthAndStencil>
+  </initialWindow>
+  <icon>
+    <image128x128>Texture/ico/ico128.png</image128x128>
+    <image48x48>Texture/ico/ico48.png</image48x48>
+    <image32x32>Texture/ico/ico32.png</image32x32>
+  </icon>
+  <customUpdateUI>false</customUpdateUI>
+  <allowBrowserInvocation>false</allowBrowserInvocation>
+  <versionLabel/>
+  <supportedProfiles>desktop extendedDesktop mobileDevice tv extendedTV</supportedProfiles>
+</application>

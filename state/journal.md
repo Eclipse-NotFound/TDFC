@@ -2,6 +2,17 @@
 
 > 协议见 GOVERNANCE.md §8：只追加不改写，**新条目插在最上面**。
 
+## 2026-08-27 v0.5.1 测试生成改造 + AutoTest 自动化实测（配合层首次实机验证）
+
+- 做了什么：①F9 测试生成改造（spawnRaider：UnitRaider 构造器 opts.weap 直接发指定枪，枪械池 lmg/autor/aglau/mlau/bel 轮换 + maxhp/hp=200 + tr 随机外观——模板 'raider' 无 <w> 条目，原实现永远徒手）；②新增 AutoTest.as 自动化测试钩子（applicationID != "pfe" 才激活，用户实例零影响）：自动等开机→放菜单→newGame→圈养带枪掠夺者→周期照料靶机→玩家回血，一切可验证现象落日志；③测试描述符 app_tdfc_test_pfe.xml 收进 build/（id=pfe-tdfc-test）；④隔离实例实测 11 轮迭代，配合层全绿：squad 编队/压制者分配、supp START 多轮循环、心跳 supp=1、retreat GO/背水 ABORT 带冷却、space SEP、零崩溃。
+- 关键决定/发现（前三条已回填 remains-auto-testing 技能）：
+  - **newGame(-1) 才是新档**：nload<0 走 ng 分支；传 0 是读档分支，空存储永远开不出世界（RConnect 文档的 newGame(0) 依赖预置存档模板）。
+  - **boot 时序**：landData 未就绪就放主菜单 → Game 构造器访问 World.w.landData 直接 #1009；必须等 landData != null 再放菜单。
+  - **verror 对话框冻结 World.step**（step 首行 return）：读 verror.txt.text 可诊断，visible=false 可解冻。
+  - **配合层修复**：小队"活跃"判定纳入 lastAlertTick（被警报/受击唤醒即算，否则凑不齐 n≥2）；狙击型（R_SNIPER）纳入压制候选（lmg 被判 sniper 型曾被排除→sup=-）；压制目标三级获取（自身 LOS→玩家实时位 / 自身 lastSeen / **脆弱同伴报点**），盲射时长按目标新鲜度封顶 POSITION_FREEZE；retreat 背水中止加 180t 冷却（防 GO/ABORT 每帧抖动循环）。
+  - 玩家挂机会被后坐力逐渐推走（gg 坐标漂移数百 px）——自动化测试注意重锚定。
+- 遗留/下一步：瞄准回避/掩体/交叉火力落点需要玩家主动瞄准射击，无法挂机断言——待用户实测；压制盲射路径（压制者无 LOS 场景）已实现未断言；v0.4.x 手感复测仍欠。
+
 ## 2026-08-27 v0.5.0 Phase 3 配合层（设计+实现+构建+门禁）
 
 - 做了什么：设计并实现配合层四件套——①小队扫描/角色分配（SquadCtrl.scan：同 fraction 智能层、战斗圈内；ASSAULT/SUPPRESS≤1/HOLD 三槽 + crossSide 交替侧位 + 同伴位置快照防跨帧引用）②压制协议（同伴濒死受击或换弹且玩家逼近 → 指定压制者 cel 锚定 + attack() 命令开火，无 LOS 盲射 lastSeen，精度 0.45×，窗口 150t/冷却 300t/每队 1 人）③散开间距（<70px 分散冲量，ASSAULT 与贴身混战豁免）④交叉火力（findCoverPoint 按 crossSide 选边，掩体/狙击走位落点生效）。TdfcMain 挂接：扫描在单位循环前，update/apply 双调用点（apply 最后写 cel 覆盖锚点），心跳加 supp 计数。

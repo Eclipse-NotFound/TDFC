@@ -60,8 +60,12 @@ package
                st.mateNearD2 = 0;
                continue;
             }
+            // 活跃 = 交战中 / 刚失去目标 / 近期收到过 TDFC 警报（目击/枪声/
+            // 受击传播、自身受击）——只认"见过玩家"会让被警报唤醒的同伴
+            // 永远入不了队，班组凑不齐（v0.5.0 实测教训）
             var active:Boolean = (u["celUnit"] === gg)
-               || (tick - st.lastSeenTick) < 300;
+               || (tick - st.lastSeenTick) < 300
+               || (tick - st.lastAlertTick) < 600;
             var dx:Number = TdfcMain.num(u, "X", 0) - px;
             var dy:Number = TdfcMain.num(u, "Y", 0) - py;
             if (!active || dx * dx + dy * dy > ring2)
@@ -119,6 +123,7 @@ package
                continue;
             }
             var supAssigned:Boolean = false;
+            var memberInfo:String = "";
             for (i = 0; i < n; i++)
             {
                var mu:* = m[i];
@@ -138,6 +143,7 @@ package
                   }
                }
                mst.squadRole = role;
+               memberInfo += " m" + i + "=" + roleTag(mu, role);
             }
             // 同伴快照 O(n²)：跨帧只留标量，不留对象引用
             for (i = 0; i < n; i++)
@@ -169,11 +175,48 @@ package
                ast.mateNearX = bx;
                ast.mateNearY = by;
             }
-            TdfcLog.line("squad", "f=" + k + " n=" + n + " sup=" + supTag);
+            TdfcLog.line("squad", "f=" + k + " n=" + n + " sup=" + supTag
+               + memberInfo);
          }
       }
 
-      /** 角色分型：近战/霰弹=ASSAULT；枪械且半血以上=SUPPRESS 候选；其余=HOLD。 */
+      /** 诊断：压制触发被挡原因（每单位 150t 一条，防刷屏）。 */
+      private static function blockLog(st:TacticalState, tick:int, why:String):void
+      {
+         if (tick - st.lastBlockLog < 150)
+         {
+            return;
+         }
+         st.lastBlockLog = tick;
+         TdfcLog.line("supp", "BLOCK " + why);
+      }
+
+      /** 诊断用：成员武器角色/血量快照。 */
+      private static function roleTag(u:*, role:int):String
+      {
+         var wr:String = "?";
+         var wrole:int = TacticalCtrl.weaponRole(u);
+         if (wrole == TacticalCtrl.R_MELEE) wr = "melee";
+         else if (wrole == TacticalCtrl.R_GUN) wr = "gun";
+         else if (wrole == TacticalCtrl.R_SNIPER) wr = "sniper";
+         else if (wrole == TacticalCtrl.R_SHOTGUN) wr = "shotgun";
+         else if (wrole == TacticalCtrl.R_THROWER) wr = "thrower";
+         else if (wrole == TacticalCtrl.R_MAGIC) wr = "magic";
+         var mhp:Number = TdfcMain.num(u, "maxhp", 1);
+         var hpR:Number = mhp > 0 ? TdfcMain.num(u, "hp", 0) / mhp : 1;
+         var wepId:String = "?";
+         try
+         {
+            if (u["currentWeapon"] != null)
+            {
+               wepId = String(u["currentWeapon"]["id"]);
+            }
+         }
+         catch (e:Error) {}
+         return wr + ":" + int(hpR * 100) + "%:" + wepId + ":r" + role;
+      }
+
+      /** 角色分型：近战/霰弹=ASSAULT；步枪/狙击且半血以上=SUPPRESS 候选；其余=HOLD。 */
       private static function classify(u:*):int
       {
          var role:int = TacticalCtrl.weaponRole(u);
@@ -181,7 +224,7 @@ package
          {
             return ROLE_ASSAULT;
          }
-         if (role == TacticalCtrl.R_GUN)
+         if (role == TacticalCtrl.R_GUN || role == TacticalCtrl.R_SNIPER)
          {
             var mhp:Number = TdfcMain.num(u, "maxhp", 1);
             var hpR:Number = mhp > 0 ? TdfcMain.num(u, "hp", 0) / mhp : 1;
@@ -329,17 +372,16 @@ package
             var mhp:Number = TdfcMain.num(u, "maxhp", 1);
             var hpR:Number = mhp > 0 ? TdfcMain.num(u, "hp", 0) / mhp : 1;
             var w:* = u["currentWeapon"];
-            // 自身告危→撤退优先；目标失鲜（盲射 120t 内无新目击）→收工
-            if (w == null || hpR < Config.RETREAT_RATIO || st.retreatT > 0
-               || st.corneredT > 0
-               || tick - st.lastSeenTick > Config.POSITION_FREEZE)
+            // 自身告危→撤退优先（盲射时长已在 START 时按目标新鲜度封顶）
+            if (w == null || hpR < Config.RETREAT_RATIO
+               || st.retreatT > 0 || st.corneredT > 0)
             {
                st.suppressT = 0;
                st.lastSuppressTick = tick;
                TdfcLog.line("supp", "END " + TdfcMain.tag(u));
                return;
             }
-            // 有视线则实时跟踪玩家弹着点；无视线保持 lastSeen 盲射
+            // 有视线则实时跟踪玩家弹着点；无视线保持已定目标盲射
             if (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
             {
                st.suppressX = TdfcMain.num(gg, "X", 0);
@@ -357,25 +399,46 @@ package
          if (st.dodgeT > 0 || st.threatT > 0 || st.coverPhase > 0
             || st.retreatT > 0 || st.corneredT > 0)
          {
+            blockLog(st, tick, "busy d=" + st.dodgeT + " th=" + st.threatT
+               + " cv=" + st.coverPhase + " rt=" + st.retreatT
+               + " crn=" + st.corneredT);
             return;
          }
          var wep:* = u["currentWeapon"];
          if (wep == null || int(TdfcMain.num(wep, "tip", 0)) != 3)
          {
+            blockLog(st, tick, "weapon");
             return; // 仅枪械（投掷弹道抛物线、法术变量多，v0.5 排除）
          }
          mhp = TdfcMain.num(u, "maxhp", 1);
          hpR = mhp > 0 ? TdfcMain.num(u, "hp", 0) / mhp : 1;
          if (hpR < 0.5)
          {
+            blockLog(st, tick, "hp " + int(hpR * 100) + "%");
             return;
          }
-         // 活跃门控：交战中或刚失去目标不久
-         if (u["celUnit"] !== gg && tick - st.lastSeenTick >= 300)
+         // 活跃门控：交战中 / 刚见目标 / 近期被警报
+         if (u["celUnit"] !== gg && tick - st.lastSeenTick >= 300
+            && tick - st.lastAlertTick >= 600)
+         {
+            blockLog(st, tick, "inactive");
+            return;
+         }
+         // 脆弱同伴检查（O(n)，节拍防每帧全表扫描）
+         st.suppressCheck--;
+         if (st.suppressCheck > 0)
          {
             return;
          }
-         // 目标点：LOS→实时玩家位；否则盲射 lastSeen（≤POSITION_FREEZE）
+         st.suppressCheck = Config.SUPPRESS_CHECK;
+         var mate:TacticalState = findVulnerableMate(units, u, gg, tick);
+         if (mate == null)
+         {
+            blockLog(st, tick, "no-vuln-mate");
+            return;
+         }
+         // 目标点三级：自身 LOS→玩家实时位；自身 lastSeen 新鲜→盲射；
+         // 都没有→用脆弱同伴的报点（队友知道玩家在哪，压制者照打）
          var blind:Boolean = false;
          if (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
          {
@@ -388,30 +451,29 @@ package
             st.suppressY = st.lastSeenY;
             blind = true;
          }
+         else if (tick - mate.lastSeenTick <= Config.POSITION_FREEZE)
+         {
+            st.suppressX = mate.lastSeenX;
+            st.suppressY = mate.lastSeenY;
+            blind = true;
+         }
          else
          {
+            blockLog(st, tick, "no-target los=0 ownSeen=" + (tick - st.lastSeenTick)
+               + " mateSeen=" + (tick - mate.lastSeenTick));
             return;
          }
-         // 脆弱同伴检查（O(n)，节拍防每帧全表扫描）
-         st.suppressCheck--;
-         if (st.suppressCheck > 0)
-         {
-            return;
-         }
-         st.suppressCheck = Config.SUPPRESS_CHECK;
-         if (!findVulnerableMate(units, u, gg, tick))
-         {
-            return;
-         }
-         st.suppressT = Config.SUPPRESS_TICKS;
+         // 盲射时长按目标新鲜度封顶（无实时修正的压制不超过 POSITION_FREEZE）
+         st.suppressT = blind ? Math.min(Config.SUPPRESS_TICKS, Config.POSITION_FREEZE)
+            : Config.SUPPRESS_TICKS;
          TdfcLog.line("supp", "START " + TdfcMain.tag(u)
             + " at " + int(st.suppressX) + "," + int(st.suppressY)
             + (blind ? " blind" : ""));
       }
 
-      /** 同伴濒死受击（玩家正在施压）或换弹且玩家逼近 → 需要掩护。 */
+      /** 同伴濒死受击（玩家正在施压）或换弹且玩家逼近 → 返回其状态（供报点），无则 null。 */
       private static function findVulnerableMate(units:Array, u:*, gg:*,
-         tick:int):Boolean
+         tick:int):TacticalState
       {
          var fr:int = int(TdfcMain.num(u, "fraction", -1));
          var px:Number = TdfcMain.num(gg, "X", 0);
@@ -443,7 +505,7 @@ package
             if (vhpR < Config.SUPPRESS_MATE_HP
                && tick - vst.lastHitTick < Config.SUPPRESS_MATE_HIT_WINDOW)
             {
-               return true;
+               return vst;
             }
             var vw:* = v["currentWeapon"];
             if (vw != null && TdfcMain.num(vw, "t_reload", 0) > 0)
@@ -452,11 +514,11 @@ package
                var pdy:Number = TdfcMain.num(v, "Y", 0) - py;
                if (pdx * pdx + pdy * pdy < purs2)
                {
-                  return true;
+                  return vst;
                }
             }
          }
-         return false;
+         return null;
       }
    }
 }

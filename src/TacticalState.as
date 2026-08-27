@@ -32,6 +32,9 @@ package
       // ---- 受击记忆（Phase 2 用）----
       public var lastHitTick:int = -999999;  // 最近受击世界帧号
 
+      // ---- v0.5.1：警觉记忆（配合层"活跃"判定用）----
+      public var lastAlertTick:int = -999999; // 最近一次收到 TDFC 警报/受击的帧号
+
       // ---- Phase 2：瞄准回避 ----
       public var lastDodgeTick:int = -999999;// 最近一次躲避开始帧
       public var dodgeT:int = 0;             // 剩余躲避冲量窗口 tick（>0 活动）
@@ -71,6 +74,7 @@ package
       public var retreatT:int = 0;           // 剩余撤退 tick
       public var retreatX:Number = 0;        // 撤退点
       public var retreatY:Number = 0;
+      public var lastRetreatAbort:int = -999999; // v0.5.1：背水中止冷却（防 GO/ABORT 抖动循环）
 
       // ---- cel 位移（狙击走位等需要真的移动到某点）----
       public var relocT:int = 0;             // 剩余 cel 位移 tick
@@ -98,6 +102,7 @@ package
       public var suppressX:Number = 0;       // 压制目标点（实时玩家位或 lastSeen 盲射点）
       public var suppressY:Number = 0;
       public var lastSuppressTick:int = -999999; // 上次压制结束帧（冷却）
+      public var lastBlockLog:int = -999999;     // 诊断：压制触发被挡日志节拍
 
       public function TacticalState()
       {
