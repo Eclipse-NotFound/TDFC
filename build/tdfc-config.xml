@@ -1,24 +1,27 @@
 <?xml version="1.0"?>
 <flex-config xmlns="http://www.adobe.com/2006/flex-config">
-  <!-- TDFC 编译配置：显式指向本地 flexsdk playerglobal 与 airsdk airglobal
-       （flexsdk 内置 flex-config 的 {flexlib}/{playerglobalHome} 令牌失效，故自建） -->
+  <!-- TDFC 编译配置：显式指向本地 playerglobal 与 airglobal。
+       本机工具链位置（2026-08-27 探测）：完整 Flex/AIR SDK 在
+       D:\RemainsMod\mods\Sandevistan\build\tools\（flexsdk + airsdk + ffdec），
+       mxmlc 需 Java：用 Adobe Animate 2024 自带 JRE（D:\Program Files\Adobe Animate 2024\jre）。
+       详见 build.bat 与 knowledge/facts/build-environment.md -->
   <target-player>14.0</target-player>
 
   <compiler>
     <external-library-path>
-      <path-element>C:/Users/micha/Documents/_sandevistan_dev/flexsdk/frameworks/libs/player/14.0/playerglobal.swc</path-element>
-      <path-element>C:/Users/micha/Documents/_sandevistan_dev/airsdk/frameworks/libs/air/airglobal.swc</path-element>
+      <path-element>D:/RemainsMod/mods/Sandevistan/build/tools/airsdk/frameworks/libs/player/14.0/playerglobal.swc</path-element>
+      <path-element>D:/RemainsMod/mods/Sandevistan/build/tools/airsdk/frameworks/libs/air/airglobal.swc</path-element>
     </external-library-path>
 
     <library-path>
-      <path-element>C:/Users/micha/Documents/_sandevistan_dev/flexsdk/frameworks/libs/player/14.0/playerglobal.swc</path-element>
-      <path-element>C:/Users/micha/Documents/_sandevistan_dev/airsdk/frameworks/libs/air/airglobal.swc</path-element>
+      <path-element>D:/RemainsMod/mods/Sandevistan/build/tools/airsdk/frameworks/libs/player/14.0/playerglobal.swc</path-element>
+      <path-element>D:/RemainsMod/mods/Sandevistan/build/tools/airsdk/frameworks/libs/air/airglobal.swc</path-element>
     </library-path>
 
     <source-path>
-      <path-element>C:/Program Files (x86)/Steam/steamapps/common/Remains/mods/TDFC/src</path-element>
+      <path-element>D:/Program Files/Steam/steamapps/common/Remains/mods/TDFC/src</path-element>
     </source-path>
   </compiler>
 
-  <output>C:/Program Files (x86)/Steam/steamapps/common/Remains/mods/TDFC/release/TDFCMod.swf</output>
+  <output>D:/Program Files/Steam/steamapps/common/Remains/mods/TDFC/release/TDFCMod.swf</output>
 </flex-config>

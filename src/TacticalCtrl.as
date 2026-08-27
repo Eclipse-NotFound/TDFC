@@ -22,13 +22,13 @@ package
     */
    public class TacticalCtrl
    {
-      // ---- 武器角色 ----
-      private static const R_MELEE:int = 0;
-      private static const R_GUN:int = 1;
-      private static const R_SNIPER:int = 2;
-      private static const R_SHOTGUN:int = 3;
-      private static const R_THROWER:int = 4;
-      private static const R_MAGIC:int = 5;
+      // ---- 武器角色（v0.5 起 SquadCtrl 复用，internal）----
+      internal static const R_MELEE:int = 0;
+      internal static const R_GUN:int = 1;
+      internal static const R_SNIPER:int = 2;
+      internal static const R_SHOTGUN:int = 3;
+      internal static const R_THROWER:int = 4;
+      internal static const R_MAGIC:int = 5;
 
       private static const TOL_RAD:Number = Config.AIM_TOL_DEG * Math.PI / 180;
       private static const COVER_DISTS:Array = [60, 120, 180];
@@ -77,7 +77,13 @@ package
                }
             }
             var accurate:Boolean = (role == R_SNIPER) || (st.settleT > 0);
-            if (!accurate)
+            if (st.suppressT > 0)
+            {
+               // v0.5 压制射击：强制低精度弹幕（公平性核心，见 phase3 设计 §3B）
+               try { u["weaponSkill"] = st.baseSkill * Config.ACC_SUPPRESS_MULT; }
+               catch (e:Error) {}
+            }
+            else if (!accurate)
             {
                var busy:Boolean = st.dodgeT > 0 || st.threatT > 0 || inCover || inRetreat
                   || speed > 3;
@@ -196,7 +202,8 @@ package
                      && hpRatio < Config.RETREAT_RATIO * 1.4
                      && tick - st.lastCoverTick >= Config.COVER_CD)
                   {
-                     var cpR:* = findCoverPoint(loc, u, ux, uy, px, py);
+                     var cpR:* = findCoverPoint(loc, u, ux, uy, px, py,
+                        coverSide(st));
                      if (cpR != null)
                      {
                         st.coverPhase = 1;
@@ -310,10 +317,11 @@ package
             var hitRecently:Boolean = (tick - st.lastHitTick) < 90;
             if (st.coverPhase == 0
                && hpRatio >= Config.RETREAT_RATIO
+               && st.suppressT <= 0
                && (hitRecently || st.aimExposed >= Config.EXPOSED_TICKS)
                && tick - st.lastCoverTick >= Config.COVER_CD)
             {
-               var cp:* = findCoverPoint(loc, u, ux, uy, px, py);
+               var cp:* = findCoverPoint(loc, u, ux, uy, px, py, coverSide(st));
                if (cp != null)
                {
                   st.coverPhase = 1;
@@ -449,7 +457,7 @@ package
             if (tick - st.lastSniperTick >= 90)
             {
                st.lastSniperTick = tick;
-               var cp:* = findCoverPoint(loc, u, ux, uy, px, py);
+               var cp:* = findCoverPoint(loc, u, ux, uy, px, py, coverSide(st));
                if (cp != null)
                {
                   st.relocT = Config.DODGE_TICKS + 12;
@@ -547,8 +555,8 @@ package
 
       // ============ 武器角色与概率 ============
 
-      /** 武器角色：由 public 武器字段推断（tip/kol/rapid/precision/sniper）。 */
-      private static function weaponRole(u:*):int
+      /** 武器角色：由 public 武器字段推断（tip/kol/rapid/precision/sniper）。v0.5 起 SquadCtrl 复用。 */
+      internal static function weaponRole(u:*):int
       {
          var w:* = u["currentWeapon"];
          if (w == null)
@@ -578,6 +586,16 @@ package
             return R_SNIPER;
          }
          return R_GUN;
+      }
+
+      /** 交叉火力侧位：小队分配的 crossSide（开关关闭或未分配时 0=不选边）。 */
+      internal static function coverSide(st:TacticalState):int
+      {
+         if (!Config.ENABLE_CROSSFIRE)
+         {
+            return 0;
+         }
+         return st.crossSide;
       }
 
       /** 触发概率：智能层人形 0.4；机械僵硬 0.15；按角色微调。 */
@@ -713,12 +731,19 @@ package
 
       // ============ 掩体点搜索 ============
 
-      private static function findCoverPoint(loc:*, u:*, ux:Number, uy:Number,
-         px:Number, py:Number):Object
+      /**
+       * 掩体点搜索。v0.5 增 side 偏好（交叉火力）：候选点优先取
+       * (点x-玩家x)*side>0 的一侧，无该侧候选退回全局最优。side=0 行为同旧。
+       */
+      internal static function findCoverPoint(loc:*, u:*, ux:Number, uy:Number,
+         px:Number, py:Number, side:int = 0):Object
       {
          var bestX:Number = 0;
          var bestY:Number = 0;
          var bestD:Number = -1;
+         var sideX:Number = 0;
+         var sideY:Number = 0;
+         var sideD:Number = -1;
          for (var dir:int = 0; dir < 8; dir++)
          {
             var ang:Number = dir * Math.PI / 4;
@@ -734,6 +759,13 @@ package
                }
                if (!Los.clear(loc, dx, dy, px, py))
                {
+                  if (side != 0 && (dx - px) * side > 0
+                     && (sideD < 0 || COVER_DISTS[di] < sideD))
+                  {
+                     sideD = COVER_DISTS[di];
+                     sideX = dx;
+                     sideY = dy;
+                  }
                   if (bestD < 0 || COVER_DISTS[di] < bestD)
                   {
                      bestD = COVER_DISTS[di];
@@ -743,6 +775,10 @@ package
                   break;
                }
             }
+         }
+         if (sideD >= 0)
+         {
+            return { x: sideX, y: sideY };
          }
          if (bestD < 0)
          {
@@ -782,8 +818,8 @@ package
          catch (e:Error) {}
       }
 
-      /** 冲量水平方向墙体检：want 侧被挡→翻另一侧→两侧都挡返回 0（只跳不推）。 */
-      private static function pickDartX(loc:*, ux:Number, uy:Number, want:Number):Number
+      /** 冲量水平方向墙体检：want 侧被挡→翻另一侧→两侧都挡返回 0（只跳不推）。v0.5 起 SquadCtrl 复用。 */
+      internal static function pickDartX(loc:*, ux:Number, uy:Number, want:Number):Number
       {
          var L:Number = 60;
          if (!tileSolid(loc, ux + want * L, uy))

@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.4.2";
+      public static const VER:String = "0.5.0";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -93,6 +93,26 @@ package
 
       // ---- v0.4.2：墙角固守 ----
       public static const CORNERED_LOCK:int = 60;        // 墙角锁位时长（tick），期间不躲不跳
+
+      // ---- v0.5：配合层（小队/压制/散开/交叉火力）----
+      public static const ENABLE_SQUAD:Boolean     = true; // 小队扫描与角色分配（压制/散开/交叉火力的前置）
+      public static const ENABLE_SUPPRESS:Boolean  = true; // 压制协议（命令开火，需 ENABLE_SQUAD）
+      public static const ENABLE_SPACING:Boolean   = true; // 散开间距
+      public static const ENABLE_CROSSFIRE:Boolean = true; // 交叉火力站位偏置（掩体/走位落点选边）
+
+      public static const SQUAD_SCAN_EVERY:int = 30;     // 小队扫描间隔（tick）
+      public static const SQUAD_RADIUS:Number  = 700;    // 战斗圈半径（距玩家；成员须在圈内）
+      public static const SUPPRESS_TICKS:int   = 150;    // 压制窗口时长（~5s 封顶）
+      public static const SUPPRESS_CD:int      = 300;    // 压制冷却（每压制者）
+      public static const SUPPRESS_MATE_HP:Number = 0.3;   // 同伴血量比例触发线
+      public static const SUPPRESS_MATE_HIT_WINDOW:int = 90; // 同伴最近受击窗口
+      public static const SUPPRESS_PURSUIT:Number = 260;   // 玩家逼近换弹同伴的判定距离
+      public static const SUPPRESS_CHECK:int   = 15;     // 压制触发检查节拍（每压制者）
+      public static const ACC_SUPPRESS_MULT:Number = 0.45; // 压制射击精准倍率（×weaponSkill 基线）
+      public static const SPACING_MIN:Number   = 70;     // 最小同伴间距 px
+      public static const SPACING_CHECK:int    = 30;     // 间距检查间隔（每单位错峰）
+      public static const SPACING_TICKS:int    = 8;      // 分散冲量窗口
+      public static const SPACING_MULT:Number  = 0.8;    // 分散冲量速度系数（×runSpeed）
 
       // ---- 诊断 ----
       public static const LOG_PATH:String = "mods/TDFC/state/logs/tdfc.log";

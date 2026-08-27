@@ -62,6 +62,10 @@ package
             + " dodgeThreat=" + (Config.ENABLE_DODGE_THREAT ? 1 : 0)
             + " cover=" + (Config.ENABLE_COVER ? 1 : 0)
             + " retreat=" + (Config.ENABLE_RETREAT ? 1 : 0)
+            + " squad=" + (Config.ENABLE_SQUAD ? 1 : 0)
+            + " suppress=" + (Config.ENABLE_SUPPRESS ? 1 : 0)
+            + " spacing=" + (Config.ENABLE_SPACING ? 1 : 0)
+            + " crossfire=" + (Config.ENABLE_CROSSFIRE ? 1 : 0)
             + " testSpawn=" + (Config.ENABLE_TEST_SPAWN ? 1 : 0));
       }
 

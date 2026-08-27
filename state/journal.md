@@ -2,6 +2,14 @@
 
 > 协议见 GOVERNANCE.md §8：只追加不改写，**新条目插在最上面**。
 
+## 2026-08-27 v0.5.0 Phase 3 配合层（设计+实现+构建+门禁）
+
+- 做了什么：设计并实现配合层四件套——①小队扫描/角色分配（SquadCtrl.scan：同 fraction 智能层、战斗圈内；ASSAULT/SUPPRESS≤1/HOLD 三槽 + crossSide 交替侧位 + 同伴位置快照防跨帧引用）②压制协议（同伴濒死受击或换弹且玩家逼近 → 指定压制者 cel 锚定 + attack() 命令开火，无 LOS 盲射 lastSeen，精度 0.45×，窗口 150t/冷却 300t/每队 1 人）③散开间距（<70px 分散冲量，ASSAULT 与贴身混战豁免）④交叉火力（findCoverPoint 按 crossSide 选边，掩体/狙击走位落点生效）。TdfcMain 挂接：扫描在单位循环前，update/apply 双调用点（apply 最后写 cel 覆盖锚点），心跳加 supp 计数。
+- 关键决定/发现：
+  - **命令开火链路反编译验证**（design/phase3-cooperation.md §2 全证据）：Weapon.attack() public 且敌人侧无玩家门控——原版 UnitRaider.dropLoot() 临死扫射就是 setCel+attack() 模式；shoot() 在武器 actions() 的 t_attack==rapid 帧执行，方向=rot（每 step 渐转向 atan2(celY-Y,celX-X)）→ 写 cel 即控制弹幕方向，drot 渐转天然形成扫射。
+  - **本机工具链定位**：完整 Flex/AIR SDK 在 `D:\RemainsMod\mods\Sandevistan\build\tools\`，mxmlc 需配 Adobe Animate 2024 自带 JRE 17（本机无独立 JDK）；FFDec 用 `java -jar ffdec-cli.jar`。tdfc-config.xml/build.bat 已改路径并验证编译（knowledge/facts/build-environment.md 与 remains-mod-build 技能已更新）。
+- 遗留/下一步：v0.5.0 与 v0.4.x 均待用户实测（F9 场景清单见 design §6）；发布门禁第 8 项重启冒烟由用户执行（换 SWF 须重启游戏）；gg.noise 负值持续监控。
+
 ## 2026-08-27 外置记忆迁移
 
 - 由 state/current-status.md（交接文档，原文在 git 历史）拆分迁移：现行状态 → state\MEMORY.md；技术决策速查收编入本文件下方；decisions\ 目录同步建立（历史决策暂在代码注释与本日志，今后按 ADR 补）。

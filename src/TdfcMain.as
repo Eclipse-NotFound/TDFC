@@ -126,6 +126,12 @@ package
             detectGunshot(gg, loc, units);
          }
 
+         // ---- Phase 3 小队扫描（全局，先于单位循环）----
+         if (Config.ENABLE_SQUAD)
+         {
+            SquadCtrl.scan(units, gg, tick);
+         }
+
          // ---- 单位循环：事件检测 + 搜索 + 快照 ----
          live = new Dictionary();
          for (var i:int = 0; i < units.length; i++)
@@ -164,11 +170,24 @@ package
                SearchCtrl.update(u, st, gg, loc, tick);
             }
 
+            // Phase 3 配合层：散开冲量 + 压制状态机（先于 TacticalCtrl，
+            // 其 suppressT 供精准接管的低精度分支当帧生效）
+            if (Config.ENABLE_SQUAD)
+            {
+               SquadCtrl.update(u, st, gg, loc, units, tick);
+            }
+
             // Phase 2 生存层（瞄准回避/慢弹回避/掩体/撤退）
             if (Config.ENABLE_DODGE_AIM || Config.ENABLE_DODGE_THREAT
                || Config.ENABLE_COVER || Config.ENABLE_RETREAT)
             {
                TacticalCtrl.update(u, st, gg, loc, tick);
+            }
+
+            // Phase 3 压制写入（最后写：盲射锚点覆盖 v0.4 的"有 LOS 才锚定"）
+            if (Config.ENABLE_SQUAD)
+            {
+               SquadCtrl.apply(u, st, gg, loc, tick);
             }
 
             // 快照
@@ -382,6 +401,7 @@ package
          var dodging:int = 0;
          var covering:int = 0;
          var retreating:int = 0;
+         var suppressing:int = 0;
          var px:Number = gg["X"];
          var py:Number = gg["Y"];
          for (var i:int = 0; i < units.length; i++)
@@ -412,6 +432,10 @@ package
                {
                   retreating++;
                }
+               if (st.suppressT > 0)
+               {
+                  suppressing++;
+               }
             }
             if (u["celUnit"] === gg)
             {
@@ -433,6 +457,7 @@ package
          TdfcLog.line("hb", "t=" + tick + " foes=" + foes + " engaged=" + engaged
             + " searching=" + searching + " hear=" + hear + " los=" + los
             + " dodge=" + dodging + " cover=" + covering + " retreat=" + retreating
+            + " supp=" + suppressing
             + " ggN=" + int(num(gg, "noise", 0)));
       }
 

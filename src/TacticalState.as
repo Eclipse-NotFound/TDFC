@@ -84,6 +84,21 @@ package
       public var lastSniperTick:int = -999999; // 狙击走位冷却
       public var lastHopTick:int = -999999;  // 起跳节奏节拍（防墙边/连续起跳乱跳）
 
+      // ---- v0.5：小队配合（Phase 3）----
+      public var squadRole:int = 0;          // 0=无 1=ASSAULT 2=SUPPRESS 3=HOLD（小队扫描写入）
+      public var crossSide:int = 0;          // 交叉火力侧位偏好 +1/-1（0=未分配）
+      public var mateNearX:Number = 0;       // 最近同伴位置快照（扫描时，≤30t 旧）
+      public var mateNearY:Number = 0;
+      public var mateNearD2:Number = 0;      // 距最近同伴距离平方（0=无同伴）
+      public var spacingCheck:int = 0;       // 间距检查错峰节拍
+      public var spacingT:int = 0;           // 分散冲量剩余窗口
+      public var spacingVX:Number = 0;       // 分散冲量速度（水平）
+      public var suppressCheck:int = 0;      // 压制触发节拍
+      public var suppressT:int = 0;          // 压制窗口剩余 tick（>0 压制中）
+      public var suppressX:Number = 0;       // 压制目标点（实时玩家位或 lastSeen 盲射点）
+      public var suppressY:Number = 0;
+      public var lastSuppressTick:int = -999999; // 上次压制结束帧（冷却）
+
       public function TacticalState()
       {
       }

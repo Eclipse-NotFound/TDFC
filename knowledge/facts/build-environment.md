@@ -1,17 +1,32 @@
 # TDFC 编译环境总结（模组专属，非游戏机制）
 
-- 更新：2026-08-17
+- 更新：2026-08-27（本机工具链定位并验证编译）
 - 用途：记录 TDFC 构建环境的事实，避免后续会话重复踩坑
 
-## 工具链
+## 工具链（当前机器实测可用）
 
-- 编译器：`C:\Users\micha\Documents\_sandevistan_dev\flexsdk\bin\mxmlc`
-  （Apache Flex 4.16.1 build 20171115，JDK 1.8）
-- AIR 库：`C:\Users\micha\Documents\_sandevistan_dev\airsdk\frameworks\libs\air\airglobal.swc`
-- 编译配置：`build/tdfc-config.xml`；一键构建：`build/build.bat`
-- 关键点：flexsdk 内置 flex-config 的 `{flexlib}/{playerglobalHome}/{airHome}` 令牌
-  全部失效（SDK 目录被移动过）→ 必须用自建 config 显式指定两个 .swc 绝对路径。
-- 目标：`-target-player=14.0`（flexsdk 自带 player14.0/32.0 的 playerglobal）。
+- **完整 SDK 位置**：`D:\RemainsMod\mods\Sandevistan\build\tools\`
+  （flexsdk = Flex 4.16.1 + AIR SDK 51.3.3 合并包、airsdk、ffdec——
+  即旧 `_sandevistan_dev` 工具链整体迁入 Sandevistan 源仓库随行）
+- 编译器：`D:\RemainsMod\mods\Sandevistan\build\tools\flexsdk\bin\mxmlc`
+- Java：本机无独立 JDK；用 **Adobe Animate 2024 自带 JRE 17**
+  （`D:\Program Files\Adobe Animate 2024\jre`）——实测 mxmlc 4.16.1 可正常运行；
+  FFDec 同样用该 JRE（`java -jar ffdec-cli.jar`，ffdec-cli.exe 自身找不到 Java）
+- AIR 库：`D:\RemainsMod\mods\Sandevistan\build\tools\airsdk\frameworks\libs\air\airglobal.swc`
+- playerglobal：同树 `libs\player\14.0\playerglobal.swc`
+- 编译配置：`build/tdfc-config.xml`（显式 .swc 绝对路径，2026-08-27 已改新路径）；
+  一键构建：`build/build.bat`（设 JAVA_HOME 后调 mxmlc.bat，ASCII+CRLF）
+- 目标：`-target-player=14.0`
+- 验证：2026-08-27 编译 v0.5.0 一次通过；`ffdec -dumpAS3` 确认 SWF 恰含
+  11 个 TDFC 类、零 fe.* 类定义（ABC 里的 "fe.World" 字符串是
+  getDefinition 字面量，属动态访问正当用法，不是嵌入泄漏）。
+
+## 旧机器路径（已作废，勿再引用）
+
+- `C:\Users\micha\Documents\_sandevistan_dev\...`（flexsdk/airsdk/ffdec 旧位置）——
+  当前机器不存在该目录。2026-08-17 版记录的"flex-config 令牌失效"问题源于
+  旧机器 SDK 目录被移动；现 SDK 目录完整，问题不再出现，但自建 config
+  显式路径的惯例保留（防再迁移）。
 
 ## ASC 编译器怪癖（已踩两次）
 
