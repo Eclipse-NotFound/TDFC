@@ -39,6 +39,11 @@ package
       {
          var px:Number = TdfcMain.num(gg, "X", 0);
          var py:Number = TdfcMain.num(gg, "Y", 0);
+         // 瞄准点（原版 setCel 公式：立绘中心+朝向前置量）——
+         // 写脚底 Y 会让枪口每帧被拽向地面（v0.5.2 修复）
+         var aimX:Number = px + TdfcMain.num(gg, "scX", 40) / 4
+            * TdfcMain.num(gg, "storona", 1);
+         var aimY:Number = py - TdfcMain.num(gg, "scY", 40) / 2;
          var ux:Number = TdfcMain.num(u, "X", 0);
          var uy:Number = TdfcMain.num(u, "Y", 0);
          var ucls:String = TdfcMain.shortClass(u);
@@ -385,7 +390,7 @@ package
          {
             if (st.coverPhase == 2 && st.peekOn && u["currentWeapon"] != null)
             {
-               writeCel(u, px, py);
+               writeCel(u, aimX, aimY);
             }
             else
             {
@@ -405,7 +410,7 @@ package
          if (!relocating && u["celUnit"] === gg && tier <= 1
             && Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
          {
-            writeCel(u, px, py);
+            writeCel(u, aimX, aimY);
          }
          // 冲量：躲避/威胁只写 dx/dy（不写 cel，避免翻转抽搐 + 枪口乱甩）
          if (st.dodgeT > 0)

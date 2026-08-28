@@ -381,11 +381,12 @@ package
                TdfcLog.line("supp", "END " + TdfcMain.tag(u));
                return;
             }
-            // 有视线则实时跟踪玩家弹着点；无视线保持已定目标盲射
+            // 有视线则实时跟踪玩家弹着点（原版公式立绘中心）；无视线保持已定目标盲射
             if (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
             {
-               st.suppressX = TdfcMain.num(gg, "X", 0);
-               st.suppressY = TdfcMain.num(gg, "Y", 0);
+               var ap:* = TdfcMain.playerAimPoint(gg);
+               st.suppressX = ap.x;
+               st.suppressY = ap.y;
             }
             st.suppressT--;
             return;
@@ -438,23 +439,26 @@ package
             return;
          }
          // 目标点三级：自身 LOS→玩家实时位；自身 lastSeen 新鲜→盲射；
-         // 都没有→用脆弱同伴的报点（队友知道玩家在哪，压制者照打）
+         // 都没有→用脆弱同伴的报点（队友知道玩家在哪，压制者照打）。
+         // 全部取原版公式瞄准点（立绘中心），报点/记录是脚底 Y 需抬回中心
          var blind:Boolean = false;
+         var bodyLift:Number = TdfcMain.num(gg, "scY", 40) / 2;
          if (Los.toPlayer(u, loc, gg, Config.SIGHT_RANGE))
          {
-            st.suppressX = TdfcMain.num(gg, "X", 0);
-            st.suppressY = TdfcMain.num(gg, "Y", 0);
+            var ap:* = TdfcMain.playerAimPoint(gg);
+            st.suppressX = ap.x;
+            st.suppressY = ap.y;
          }
          else if (tick - st.lastSeenTick <= Config.POSITION_FREEZE)
          {
             st.suppressX = st.lastSeenX;
-            st.suppressY = st.lastSeenY;
+            st.suppressY = st.lastSeenY - bodyLift;
             blind = true;
          }
          else if (tick - mate.lastSeenTick <= Config.POSITION_FREEZE)
          {
             st.suppressX = mate.lastSeenX;
-            st.suppressY = mate.lastSeenY;
+            st.suppressY = mate.lastSeenY - bodyLift;
             blind = true;
          }
          else

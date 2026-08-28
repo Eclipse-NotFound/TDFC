@@ -283,10 +283,24 @@ package
          return r;
       }
 
-      public static function jitter(err:Number):Number
-      {
-         return (Math.random() * 2 - 1) * err;
-      }
+   public static function jitter(err:Number):Number
+   {
+      return (Math.random() * 2 - 1) * err;
+   }
+
+   /**
+    * 玩家瞄准点（v0.5.2 修复"瞄地面"）：与原版 setCel 完全一致的公式——
+    * 立绘中心 Y - scY/2，水平加朝向前置量 scX/4*storona。
+    * 模组写 celX/celY 若用脚底 Y，枪口每帧被拽向地面（原版瞄准被覆盖）。
+    */
+   public static function playerAimPoint(gg:*):Object
+   {
+      var x:Number = TdfcMain.num(gg, "X", 0)
+         + TdfcMain.num(gg, "scX", 40) / 4 * TdfcMain.num(gg, "storona", 1);
+      var y:Number = TdfcMain.num(gg, "Y", 0)
+         - TdfcMain.num(gg, "scY", 40) / 2;
+      return { x: x, y: y };
+   }
 
       /** 非战斗单位名单：环境/脚本对象（无战术行为，不参与警戒传播）。
        *  依据 1.02 反编译核对：UnitTrigger/UnitTrap/UnitDestr/UnitMWall/Mine

@@ -2,6 +2,12 @@
 
 > 协议见 GOVERNANCE.md §8：只追加不改写，**新条目插在最上面**。
 
+## 2026-08-27 v0.5.2 修复"敌人瞄着地面打"（用户实测反馈）
+
+- 做了什么：用户报告敌人枪口经常朝地。根因：TDFC 的瞄准锚定与压制目标写 celX/celY 用的是玩家**脚底 Y**，而原版 setCel 瞄的是**立绘中心**（`Y - scY/2`，另有 `X + scX/4*storona` 朝向前置量）——交战中模组每帧覆盖原版算好的瞄准点 → 枪口被拽向地面。修复：TdfcMain 新增 playerAimPoint(gg)（逐字照抄原版公式），TacticalCtrl 瞄准锚定/掩体探头瞄准、SquadCtrl 压制目标三级获取（LOS 实时位/自身 lastSeen/同伴报点，后两者补 scY/2 抬升）全部接入。回归：隔离实例 squad=47/supp=11/retreat=10 正常，无异常。
+- 关键决定/发现：**写 cel 必须区分移动点与瞄准点**——移动目标（掩体/撤退/调查）用脚底 Y 是对的，瞄准点必须用立绘中心。此约定已写进 playerAimPoint 注释。
+- 遗留/下一步：待用户真机确认手感（枪口抬起、弹着点在身上）；v0.4.x 手感复测仍欠。
+
 ## 2026-08-27 v0.5.1 测试生成改造 + AutoTest 自动化实测（配合层首次实机验证）
 
 - 做了什么：①F9 测试生成改造（spawnRaider：UnitRaider 构造器 opts.weap 直接发指定枪，枪械池 lmg/autor/aglau/mlau/bel 轮换 + maxhp/hp=200 + tr 随机外观——模板 'raider' 无 <w> 条目，原实现永远徒手）；②新增 AutoTest.as 自动化测试钩子（applicationID != "pfe" 才激活，用户实例零影响）：自动等开机→放菜单→newGame→圈养带枪掠夺者→周期照料靶机→玩家回血，一切可验证现象落日志；③测试描述符 app_tdfc_test_pfe.xml 收进 build/（id=pfe-tdfc-test）；④隔离实例实测 11 轮迭代，配合层全绿：squad 编队/压制者分配、supp START 多轮循环、心跳 supp=1、retreat GO/背水 ABORT 带冷却、space SEP、零崩溃。
