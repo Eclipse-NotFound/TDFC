@@ -2,6 +2,15 @@
 
 > 协议见 GOVERNANCE.md §8：只追加不改写，**新条目插在最上面**。
 
+## 2026-08-28 v0.5.3 AutoTest 接入长游玩存档（用户反馈：测试用白板档血薄图浅）
+
+- 做了什么：用户指出自动化测试用的是全新档（角色白板、开局地形简单）。定位：测试实例存档在 `%APPDATA%\pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol`（newGame(-1) 每轮重建的白板档）；用户长档 = `D:\Remains\Littlepip.sav`（游戏内置 FileReference 导出格式，AMF 序列化的 saveToObj 对象）+ 实时游玩槽位 `%APPDATA%\pfe\Local Store\#SharedObjects\pfe.swf\PFEgameN.sol`。修复：AutoTest 新增种档流程——读 .sav 字节反序列化 → 走游戏原生外部档通道（`world.loaddata = obj; world.comLoad = 99`，槽 99 = 外部数据，反编译 PipPageOpt.completeHandler/loadGame 证实）→ 等 loc 引用变化+allStat==1 → 清空旧圈养名单 → 交战。实测：seed injected → save loaded → 长档地图上 squad/supp START×3/retreat 全绿。
+- 关键决定/发现：
+  - **comLoad=99 外部档通道**：游戏原生支持注入存档对象（PipPageOpt 导入功能同款路径），比铺 .sol 文件干净——不碰 SharedObject 内部结构。
+  - `mxmlc … | tail` 管道会吞退出码（编译失败照样继续链）→ 长命令前加 `set -o pipefail`。
+  - ASC"函数没有返回值"怪癖再次踩中（seedSave try/catch 结尾）——知识库早有记录，写函数时就该用单尾部 return 风格。
+- 遗留/下一步：seededAt 日志显示 1970（obj.date 字段语义与预期不符，仅诊断信息，无碍）；若需用最新游玩槽位（PFEgame0.sol 今天刚写过），后续可加"复制 .sol 进测试存储"的备选路径。
+
 ## 2026-08-27 v0.5.2 修复"敌人瞄着地面打"（用户实测反馈）
 
 - 做了什么：用户报告敌人枪口经常朝地。根因：TDFC 的瞄准锚定与压制目标写 celX/celY 用的是玩家**脚底 Y**，而原版 setCel 瞄的是**立绘中心**（`Y - scY/2`，另有 `X + scX/4*storona` 朝向前置量）——交战中模组每帧覆盖原版算好的瞄准点 → 枪口被拽向地面。修复：TdfcMain 新增 playerAimPoint(gg)（逐字照抄原版公式），TacticalCtrl 瞄准锚定/掩体探头瞄准、SquadCtrl 压制目标三级获取（LOS 实时位/自身 lastSeen/同伴报点，后两者补 scY/2 抬升）全部接入。回归：隔离实例 squad=47/supp=11/retreat=10 正常，无异常。

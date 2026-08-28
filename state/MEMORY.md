@@ -14,17 +14,19 @@ TDFC 增强《FOE REMAINS》敌人 AI 的战术意识：**信息层**（目击/�
 
 ## 3. 当前状态
 
-- **v0.5.2**（2026-08-27），git 独立仓库。
+- **v0.5.3**（2026-08-28），git 独立仓库。
 - loader 已合并进 pfe.swf（备份 `pfe_1.02_before_tdfc_merge_20260817.swf`）；换 SWF 需重启游戏。
-- 配合层（SquadCtrl）**已过自动化实机验证**：小队编队/压制者分配/压制多轮触发/撤退/散开全绿；瞄准回避/掩体/交叉火力落点待用户实测（需玩家主动行为）。
-- v0.5.2 修复"敌人瞄地面"（用户反馈）：模组写 cel 的瞄准点必须用原版立绘中心公式（`TdfcMain.playerAimPoint`：`Y - scY/2` + 朝向前置量），移动点仍用脚底 Y。
+- 配合层（SquadCtrl）**已过自动化实机验证**（长游玩存档上）：小队编队/压制者分配/压制触发/撤退全绿；瞄准回避/掩体/交叉火力落点待用户实测（需玩家主动行为）。
+- v0.5.2 修复"敌人瞄地面"：模组写 cel 的瞄准点必须用原版立绘中心公式（`TdfcMain.playerAimPoint`：`Y - scY/2` + 朝向前置量），移动点仍用脚底 Y。
+- v0.5.3 AutoTest 种入长档：`D:\Remains\Littlepip.sav`（只读）走原生 `comLoad=99 + loaddata` 通道，测试角色不再是白板。
 
-## 4. 自动化测试（AutoTest，v0.5.1 新增）
+## 4. 自动化测试（AutoTest，v0.5.1 新增 / v0.5.3 种档）
 
 - 激活：运行时 `applicationID != "pfe"`（只有测试描述符实例激活）。
-- 流程：等 landData→放菜单→newGame(-1)→稳定→圈养 2 只带枪掠夺者（140/-140px，hp200）→每 450t 照料靶机（首刀 25%，之后小刀刷新受击戳，<20% 回补 32%）→玩家 <60% 血回血。
-- 断言关键词：`squad f=`（编队）、`supp START/END`（压制）、`retreat GO`（撤退）、`space SEP`（散开）、`hb ... supp=N`（窗口活跃）。
-- 复跑：描述符复制到游戏根 → `adl64.exe -runtime runtimes/air/win64 app_tdfc_test_pfe.xml`（后台）→ 等 ~100s → grep 日志 → 杀实例（按 `*app_tdfc_test*` 命令行匹配）→ 删 `%APPDATA%\pfe-tdfc-test`。
+- 存档位置：测试实例 `%APPDATA%\pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol`；用户真实槽位 `%APPDATA%\pfe\...\#SharedObjects\pfe.swf\PFEgameN.sol`；`D:\Remains\Littlepip.sav` = 游戏导出的长游玩档（AutoTest 种入源，**只读**）。
+- 流程：等 landData→放菜单→newGame(-1) 建骨架→种档（readObject→loaddata+comLoad=99→等 loc 重建）→圈养 2 只带枪掠夺者（hp200）→每 450t 照料靶机→玩家 <60% 血回血。
+- 断言关键词：`squad f=`、`supp START/END`、`retreat GO`、`space SEP`、`hb ... supp=N`。
+- 复跑：描述符复制到游戏根 → `adl64.exe -runtime runtimes/air/win64 app_tdfc_test_pfe.xml`（后台，记得 `set -o pipefail`）→ 等 ~120s → grep 日志 → 按 `*app_tdfc_test*` 命令行杀实例（只匹配 adl64.exe）→ 删 `%APPDATA%\pfe-tdfc-test`。
 
 ## 5. 已知问题
 

@@ -1,6 +1,11 @@
 package
 {
    import flash.desktop.NativeApplication;
+   import flash.filesystem.File;
+   import flash.filesystem.FileMode;
+   import flash.filesystem.FileStream;
+   import flash.net.ObjectEncoding;
+   import flash.utils.ByteArray;
 
    /**
     * 自动化测试钩子（remains-auto-testing 技能 §3 可测试性设计）。
@@ -19,7 +24,10 @@ package
    {
       public static var active:Boolean = false;
 
-      private static var phase:int = 0;    // 0=放行菜单 1=自动开局 2=稳定 3=交战
+      private static var phase:int = 0;    // 0=放行菜单 1=自动开局 2=稳定 3=交战 4=等待种档读入
+      private static var seeded:Boolean = false;
+      private static var seedOldLoc:* = null;
+      private static var seedWaitT:int = 0;
       private static var waitT:int = 0;
       private static var combatT0:int = -1;
       private static var newGameT:int = -999999;
@@ -134,11 +142,83 @@ package
             waitT--;
             if (waitT <= 0)
             {
+               if (!seeded)
+               {
+                  seeded = true; // 只尝试一次（失败回退全新档，不重试）
+                  if (seedSave(world))
+                  {
+                     phase = 4;
+                     seedWaitT = 900;
+                     return;
+                  }
+               }
                phase = 3;
                combatT0 = tick;
                TdfcLog.line("auto", "combat phase");
             }
          }
+         else if (phase == 4)
+         {
+            // 等 loadGame(99) 完成：loc 重建（引用变化）且 allStat==1
+            seedWaitT--;
+            var loc4:* = world["loc"];
+            if (seedWaitT <= 0)
+            {
+               TdfcLog.line("auto", "seed load timeout, continue on new game");
+               phase = 3;
+               combatT0 = tick;
+               TdfcLog.line("auto", "combat phase");
+            }
+            else if (loc4 != null && loc4 !== seedOldLoc
+               && TdfcMain.num(world, "allStat", 0) == 1)
+            {
+               spawned.length = 0; // 旧世界的圈养名单作废，否则阻塞新图补怪
+               phase = 2;
+               waitT = 120;
+               TdfcLog.line("auto", "save loaded, stabilize");
+            }
+         }
+      }
+
+      /**
+       * 种入长游玩存档（用户指定 D:\Remains\Littlepip.sav，只读！绝不改动原文件）。
+       * 走游戏原生外部档通道：readObject → loaddata + comLoad=99 →
+       * World.step 两帧流程 loadGame(99)（槽 99 = 外部数据，见 loadGame 反编译）。
+       */
+      private static function seedSave(world:*):Boolean
+      {
+         try
+         {
+            var f:File = new File(Config.TEST_SAVE_PATH);
+            if (!f.exists)
+            {
+               TdfcLog.line("auto", "no seed save at " + Config.TEST_SAVE_PATH);
+               return false;
+            }
+            var fs:FileStream = new FileStream();
+            fs.open(f, FileMode.READ);
+            var ba:ByteArray = new ByteArray();
+            ba.objectEncoding = ObjectEncoding.AMF3;
+            fs.readBytes(ba);
+            fs.close();
+            var obj:Object = ba.readObject();
+            if (obj == null || obj["est"] != 1)
+            {
+               TdfcLog.line("auto", "seed invalid (est!=1)");
+               return false;
+            }
+            seedOldLoc = world["loc"];
+            world["loaddata"] = obj;
+            world["comLoad"] = 99;
+            TdfcLog.line("auto", "seed injected " + Config.TEST_SAVE_PATH
+               + " savedAt=" + new Date(int(obj["date"])));
+            return true;
+         }
+         catch (e:Error)
+         {
+            TdfcLog.line("auto", "seed FAILED: " + e.message);
+         }
+         return false; // ASC 怪癖：try/catch 结尾不认 return，必须单尾部 return
       }
 
       /** 玩家存活时每帧调用：回血 / 补怪 / 打残。 */
