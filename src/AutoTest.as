@@ -43,13 +43,13 @@ package
       private static const HEAL_EVERY:int = 240;     // 玩家回血周期
       private static const RESPAWN_EVERY:int = 300;  // 圈养补怪周期
 
-      /** 探测 app id，非用户实例才激活。 */
+      /** 探测 app id，仅 TDFC 自己的测试描述符（TEST_APP_ID 精确匹配）才激活。 */
       public static function init():void
       {
          try
          {
             var id:String = NativeApplication.nativeApplication.applicationID;
-            if (id != "pfe")
+            if (id == Config.TEST_APP_ID)
             {
                active = true;
                TdfcLog.line("auto", "ACTIVE appid=" + id);

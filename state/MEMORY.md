@@ -14,7 +14,7 @@ TDFC 增强《FOE REMAINS》敌人 AI 的战术意识：**信息层**（目击/�
 
 ## 3. 当前状态
 
-- **v0.5.3**（2026-08-28），git 独立仓库。
+- **v0.5.4**（2026-08-28），git 独立仓库。
 - loader 已合并进 pfe.swf（备份 `pfe_1.02_before_tdfc_merge_20260817.swf`）；换 SWF 需重启游戏。
 - 配合层（SquadCtrl）**已过自动化实机验证**（长游玩存档上）：小队编队/压制者分配/压制触发/撤退全绿；瞄准回避/掩体/交叉火力落点待用户实测（需玩家主动行为）。
 - v0.5.2 修复"敌人瞄地面"：模组写 cel 的瞄准点必须用原版立绘中心公式（`TdfcMain.playerAimPoint`：`Y - scY/2` + 朝向前置量），移动点仍用脚底 Y。
@@ -22,7 +22,7 @@ TDFC 增强《FOE REMAINS》敌人 AI 的战术意识：**信息层**（目击/�
 
 ## 4. 自动化测试（AutoTest，v0.5.1 新增 / v0.5.3 种档）
 
-- 激活：运行时 `applicationID != "pfe"`（只有测试描述符实例激活）。
+- 激活：运行时 `applicationID == Config.TEST_APP_ID`（"pfe-tdfc-test" 精确匹配；v0.5.4 前曾是"≠pfe"排除法，误劫持过 RConnect pfe2 双开实例——教训：测试钩子身份判定严禁排除法）。
 - 存档位置：测试实例 `%APPDATA%\pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol`；用户真实槽位 `%APPDATA%\pfe\...\#SharedObjects\pfe.swf\PFEgameN.sol`；`D:\Remains\Littlepip.sav` = 游戏导出的长游玩档（AutoTest 种入源，**只读**）。
 - 流程：等 landData→放菜单→newGame(-1) 建骨架→种档（readObject→loaddata+comLoad=99→等 loc 重建）→圈养 2 只带枪掠夺者（hp200）→每 450t 照料靶机→玩家 <60% 血回血。
 - 断言关键词：`squad f=`、`supp START/END`、`retreat GO`、`space SEP`、`hb ... supp=N`。

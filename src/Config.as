@@ -7,7 +7,7 @@ package
     */
    public class Config
    {
-      public static const VER:String = "0.5.3";
+      public static const VER:String = "0.5.4";
 
       // ---- 行为开关（逐个验证用）----
       public static const ENABLE_PROP_VISION:Boolean  = true; // 目击传播（分级：LOS 精确 / 听觉模糊）
@@ -16,6 +16,7 @@ package
       public static const ENABLE_SEARCH:Boolean       = true; // 记忆与搜索
       public static const ENABLE_TEST_SPAWN:Boolean   = true; // F9 生成测试敌人（实验性）
       public static const TEST_SAVE_PATH:String = "D:/Remains/Littlepip.sav"; // AutoTest 种入的长游玩存档（只读！绝不改动原文件；缺失则回退全新档）
+      public static const TEST_APP_ID:String = "pfe-tdfc-test"; // AutoTest 只在此 app id 的隔离实例激活——严禁用"!= pfe"判断（会劫持 RConnect pfe2/pfe3 等其他测试实例，v0.5.4 教训）
       // Phase 2 生存层
       public static const ENABLE_DODGE_AIM:Boolean    = true; // 瞄准回避
       public static const ENABLE_DODGE_THREAT:Boolean = true; // 慢弹回避

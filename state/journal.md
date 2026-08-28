@@ -2,6 +2,12 @@
 
 > 协议见 GOVERNANCE.md §8：只追加不改写，**新条目插在最上面**。
 
+## 2026-08-28 v0.5.4 修复 AutoTest 劫持 RConnect 双开实例（用户反馈）
+
+- 做了什么：用户发现 RConnect 的 second_player.bat 双开工具运行后自动开新档+生成掠夺者。根因：AutoTest 激活条件写成 `applicationID != "pfe"`——RConnect 第二实例 app id 是 `pfe2`，同样命中条件，被 TDFC 的自动开局/拉怪劫持（pfe2 测试存储里留有 tdfc.log 的 squad/supp 活动痕迹）。修复：激活条件改为**精确匹配** `Config.TEST_APP_ID = "pfe-tdfc-test"`；双向验证：探针实例（外国 id pfe-probe-x）有 ver 无 auto ACTIVE ✅，TDFC 描述符正常激活 ✅。
+- 关键决定/发现：**多模组共享 release SWF 与共享游戏目录时，测试钩子的身份判定必须精确匹配自己的描述符 id，绝不能用排除法（!= 用户 id）**——游戏目录下任何其他模组的测试实例都会中招。RConnect 仓库文件零改动（git 干净），污染纯行为性；pfe2/pfe3 是纯测试存储，无用户数据风险。
+- 遗留/下一步：无。
+
 ## 2026-08-28 v0.5.3 AutoTest 接入长游玩存档（用户反馈：测试用白板档血薄图浅）
 
 - 做了什么：用户指出自动化测试用的是全新档（角色白板、开局地形简单）。定位：测试实例存档在 `%APPDATA%\pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol`（newGame(-1) 每轮重建的白板档）；用户长档 = `D:\Remains\Littlepip.sav`（游戏内置 FileReference 导出格式，AMF 序列化的 saveToObj 对象）+ 实时游玩槽位 `%APPDATA%\pfe\Local Store\#SharedObjects\pfe.swf\PFEgameN.sol`。修复：AutoTest 新增种档流程——读 .sav 字节反序列化 → 走游戏原生外部档通道（`world.loaddata = obj; world.comLoad = 99`，槽 99 = 外部数据，反编译 PipPageOpt.completeHandler/loadGame 证实）→ 等 loc 引用变化+allStat==1 → 清空旧圈养名单 → 交战。实测：seed injected → save loaded → 长档地图上 squad/supp START×3/retreat 全绿。
