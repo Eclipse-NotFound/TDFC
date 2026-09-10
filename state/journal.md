@@ -2,6 +2,13 @@
 
 > 协议见 GOVERNANCE.md §8：只追加不改写，**新条目插在最上面**。
 
+## 2026-09-10 接手 TDFC v0.5.4（静态核对）
+
+- 做了什么：读取权限、记忆、近期开发历史、设计与核心源码，核对 master/4201b3c 干净基线、现有 release 指纹及构建依赖路径。新增 state/handoff-2026-09-10.md，并更新 MEMORY 的验证边界与接续事项。
+- 发现：配置中的 D:\Remains\Littlepip.sav 不存在，AutoTest 会退回新档；历史长档实测不能当作当前环境通过。暂停门槛、搜索重获与感知层衔接存在待验证点；Perception 的旧原版机制注释与近期源码调查不一致，详见接手记录，保留旧日志供追溯。
+- 验证：本次未编译、启动或关闭游戏，未修改源码、release、游戏 SWF 或用户存档。构建依赖仅检查存在，不表示工具链已执行通过。
+- 下一步：先恢复可复现的隔离验证条件，核对暂停及感知/搜索行为，再完成当前版本剩余玩法验证；未启动士气或侧翼新功能。
+
 ## 2026-08-28 v0.5.4 修复 AutoTest 劫持 RConnect 双开实例（用户反馈）
 
 - 做了什么：用户发现 RConnect 的 second_player.bat 双开工具运行后自动开新档+生成掠夺者。根因：AutoTest 激活条件写成 `applicationID != "pfe"`——RConnect 第二实例 app id 是 `pfe2`，同样命中条件，被 TDFC 的自动开局/拉怪劫持（pfe2 测试存储里留有 tdfc.log 的 squad/supp 活动痕迹）。修复：激活条件改为**精确匹配** `Config.TEST_APP_ID = "pfe-tdfc-test"`；双向验证：探针实例（外国 id pfe-probe-x）有 ver 无 auto ACTIVE ✅，TDFC 描述符正常激活 ✅。
