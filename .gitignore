@@ -6,6 +6,8 @@ release/
 
 # FFDec 反编译工作区（pfe.swf 脚本副本，体积大且属于 game-reference 范畴）
 build/ffdec_work/
+build/out/
+build/test-game/
 
 # 运行时日志
 build/logs/

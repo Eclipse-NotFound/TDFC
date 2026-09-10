@@ -23,5 +23,5 @@
     </source-path>
   </compiler>
 
-  <output>D:/Program Files/Steam/steamapps/common/Remains/mods/TDFC/release/TDFCMod.swf</output>
+  <output>D:/Program Files/Steam/steamapps/common/Remains/mods/TDFC/build/out/TDFCMod.swf</output>
 </flex-config>

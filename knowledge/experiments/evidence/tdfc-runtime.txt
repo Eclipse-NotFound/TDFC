@@ -1,0 +1,817 @@
+Thu Sep 10 12:04:08 2026 UTC [TDFC] version v0.6.0-dev session=1789041848980
+Thu Sep 10 12:04:09 2026 UTC [TDFC] scenario ACTIVE baseline-combat
+Thu Sep 10 12:04:09 2026 UTC [TDFC] room reset
+Thu Sep 10 12:04:22 2026 UTC [TDFC] scenario new game requested
+Thu Sep 10 12:04:26 2026 UTC [TDFC] room reset
+Thu Sep 10 12:04:32 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:04:33 2026 UTC [TDFC] scenario spawned=3
+Thu Sep 10 12:04:33 2026 UTC [TDFC] decision #1 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:04:33 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:04:33 2026 UTC [TDFC] decision #3 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:04:38 2026 UTC [TDFC] heartbeat tick=300 units=3 cost=1ms
+Thu Sep 10 12:04:39 2026 UTC [TDFC] decision #1 raider T1 dodge 慢弹接近
+Thu Sep 10 12:04:39 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:04:39 2026 UTC [TDFC] decision #1 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:04:39 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:04:40 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:04:40 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:04:40 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:04:50 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:04:50 2026 UTC [TDFC] decision #3 ranger T3 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:04:50 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:04:51 2026 UTC [TDFC] heartbeat tick=450 units=3 cost=1ms
+Thu Sep 10 12:04:53 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:04:55 2026 UTC [TDFC] decision #3 ranger T3 hold 换弹中
+Thu Sep 10 12:04:55 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:04:56 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:04:56 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:04:56 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:04:56 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:04:56 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:04:57 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:04:57 2026 UTC [TDFC] heartbeat tick=600 units=3 cost=0ms
+Thu Sep 10 12:04:58 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:04:58 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:04:58 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:04:59 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:04:59 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:04:59 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:04:59 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:05:00 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:05:01 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:05:02 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:05:03 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:05:03 2026 UTC [TDFC] decision #1 raider T1 advance 掠夺者·猛攻，接近有效射程
+Thu Sep 10 12:05:03 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:05:03 2026 UTC [TDFC] heartbeat tick=750 units=3 cost=1ms
+Thu Sep 10 12:05:04 2026 UTC [TDFC] decision #1 raider T1 hold 换弹中
+Thu Sep 10 12:05:04 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:05:06 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:05:07 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:05:09 2026 UTC [TDFC] heartbeat tick=900 units=3 cost=1ms
+Thu Sep 10 12:05:10 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:05:10 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:05:10 2026 UTC [TDFC] decision #1 raider T1 dodge 慢弹接近
+Thu Sep 10 12:05:19 2026 UTC [TDFC] decision #3 ranger T3 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:05:19 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:05:19 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:05:25 2026 UTC [TDFC] version v0.6.0-dev session=1789041925369
+Thu Sep 10 12:05:25 2026 UTC [TDFC] scenario ACTIVE baseline-combat
+Thu Sep 10 12:05:25 2026 UTC [TDFC] room reset
+Thu Sep 10 12:05:37 2026 UTC [TDFC] scenario new game requested
+Thu Sep 10 12:05:41 2026 UTC [TDFC] room reset
+Thu Sep 10 12:05:47 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:05:48 2026 UTC [TDFC] scenario spawned=3
+Thu Sep 10 12:05:48 2026 UTC [TDFC] decision #1 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:48 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:48 2026 UTC [TDFC] decision #3 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:53 2026 UTC [TDFC] heartbeat tick=300 units=3 cost=1ms
+Thu Sep 10 12:05:53 2026 UTC [TDFC] decision #3 ranger T3 dodge 慢弹接近
+Thu Sep 10 12:05:54 2026 UTC [TDFC] decision #1 raider T1 dodge 慢弹接近
+Thu Sep 10 12:05:54 2026 UTC [TDFC] decision #3 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:54 2026 UTC [TDFC] decision #1 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:54 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:05:54 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:55 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:05:56 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #3 ranger T3 dodge 慢弹接近
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #1 raider T1 dodge 慢弹接近
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #3 ranger T3 search 同伴报告 #2；搜索最后位置
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #3 ranger T3 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:05:57 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:05:58 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:05:59 2026 UTC [TDFC] heartbeat tick=450 units=3 cost=1ms
+Thu Sep 10 12:05:59 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:05:59 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:06:01 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:06:02 2026 UTC [TDFC] decision #3 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:06:02 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:02 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:06:02 2026 UTC [TDFC] decision #3 ranger T3 hold 换弹中
+Thu Sep 10 12:06:03 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:06:03 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:06:03 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:06:05 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:05 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:06:05 2026 UTC [TDFC] heartbeat tick=600 units=3 cost=0ms
+Thu Sep 10 12:06:06 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:07 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:06:07 2026 UTC [TDFC] decision #1 raider T1 hold 换弹中
+Thu Sep 10 12:06:08 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:08 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:06:08 2026 UTC [TDFC] decision #3 ranger T3 space 与同伴过近，留出射界
+Thu Sep 10 12:06:09 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:09 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:06:17 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:06:18 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:06:18 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:06:19 2026 UTC [TDFC] decision #3 ranger T3 dodge 慢弹接近
+Thu Sep 10 12:06:19 2026 UTC [TDFC] heartbeat tick=750 units=2 cost=0ms
+Thu Sep 10 12:06:19 2026 UTC [TDFC] decision #3 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:06:19 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:06:22 2026 UTC [TDFC] decision #2 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:06:22 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:06:24 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:24 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:06:24 2026 UTC [TDFC] heartbeat tick=900 units=2 cost=1ms
+Thu Sep 10 12:06:30 2026 UTC [TDFC] heartbeat tick=1050 units=2 cost=0ms
+Thu Sep 10 12:06:30 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:30 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:06:33 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:33 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:06:35 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:36 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:06:36 2026 UTC [TDFC] heartbeat tick=1200 units=2 cost=1ms
+Thu Sep 10 12:06:38 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:39 2026 UTC [TDFC] decision #3 ranger T3 search 目击；搜索最后位置
+Thu Sep 10 12:06:40 2026 UTC [TDFC] decision #3 ranger T3 dodge 慢弹接近
+Thu Sep 10 12:06:48 2026 UTC [TDFC] decision #2 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:06:48 2026 UTC [TDFC] decision #3 ranger T3 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:06:49 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:06:50 2026 UTC [TDFC] heartbeat tick=1350 units=2 cost=1ms
+Thu Sep 10 12:06:51 2026 UTC [TDFC] scenario PASS ranger=true moved=true shot=true suppress=true pause=true
+Thu Sep 10 12:18:41 2026 UTC [TDFC] version v0.6.0-dev session=1789042721677
+Thu Sep 10 12:18:41 2026 UTC [TDFC] scenario ACTIVE load-check
+Thu Sep 10 12:18:42 2026 UTC [TDFC] room reset
+Thu Sep 10 12:18:47 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:18:51 2026 UTC [TDFC] scenario FAIL game error: Error #1009: Cannot access a property or method of a null object reference.TypeError: Error #1009: Cannot access a property or method of a null object reference.	at fe.unit::Invent/addLoad()	at fe.unit::Invent()	at fe::World/newGame1()	at fe::World/step()	at fe::MainMenu/mainStep()gr_stage: 0
+Thu Sep 10 12:20:34 2026 UTC [TDFC] version v0.6.0-dev session=1789042834473
+Thu Sep 10 12:20:34 2026 UTC [TDFC] scenario ACTIVE load-check
+Thu Sep 10 12:20:35 2026 UTC [TDFC] room reset
+Thu Sep 10 12:20:47 2026 UTC [TDFC] room reset
+Thu Sep 10 12:20:47 2026 UTC [TDFC] scenario FAIL boot 存档为空或格式不完整；不会回退新档
+Thu Sep 10 12:25:26 2026 UTC [TDFC] version v0.6.0-dev session=1789043126004
+Thu Sep 10 12:25:26 2026 UTC [TDFC] scenario ACTIVE load-check
+Thu Sep 10 12:25:26 2026 UTC [TDFC] room reset
+Thu Sep 10 12:25:30 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:25:37 2026 UTC [TDFC] room reset
+Thu Sep 10 12:25:44 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:25:45 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:25:45 2026 UTC [TDFC] scenario PASS 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:27:15 2026 UTC [TDFC] version v0.6.0-dev session=1789043235938
+Thu Sep 10 12:27:15 2026 UTC [TDFC] scenario ACTIVE combat
+Thu Sep 10 12:27:16 2026 UTC [TDFC] room reset
+Thu Sep 10 12:27:22 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:27:31 2026 UTC [TDFC] room reset
+Thu Sep 10 12:27:37 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:27:39 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:27:39 2026 UTC [TDFC] scenario spawned=3
+Thu Sep 10 12:27:39 2026 UTC [TDFC] decision #1 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:27:39 2026 UTC [TDFC] decision #2 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:27:39 2026 UTC [TDFC] decision #3 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:27:40 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:27:40 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:27:41 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:27:41 2026 UTC [TDFC] decision #3 ranger T3 space 与同伴过近，留出射界
+Thu Sep 10 12:27:42 2026 UTC [TDFC] decision #2 ranger T2 space 与同伴过近，留出射界
+Thu Sep 10 12:27:42 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:27:42 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:27:43 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:27:43 2026 UTC [TDFC] decision #3 ranger T3 space 与同伴过近，留出射界
+Thu Sep 10 12:27:44 2026 UTC [TDFC] decision #2 ranger T2 space 与同伴过近，留出射界
+Thu Sep 10 12:27:44 2026 UTC [TDFC] decision #1 raider T1 advance 掠夺者·猛攻，接近有效射程
+Thu Sep 10 12:27:44 2026 UTC [TDFC] decision #3 ranger T3 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:27:45 2026 UTC [TDFC] decision #2 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:27:45 2026 UTC [TDFC] heartbeat tick=300 units=3 cost=2ms
+Thu Sep 10 12:27:45 2026 UTC [TDFC] decision #3 ranger T3 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:27:46 2026 UTC [TDFC] decision #3 ranger T3 hold 换弹中
+Thu Sep 10 12:27:46 2026 UTC [TDFC] decision #3 ranger T3 space 与同伴过近，留出射界
+Thu Sep 10 12:27:47 2026 UTC [TDFC] decision #2 ranger T2 space 与同伴过近，留出射界
+Thu Sep 10 12:27:47 2026 UTC [TDFC] decision #2 ranger T2 hold 换弹中
+Thu Sep 10 12:27:47 2026 UTC [TDFC] decision #1 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:27:48 2026 UTC [TDFC] decision #1 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:27:54 2026 UTC [TDFC] heartbeat tick=450 units=1 cost=1ms
+Thu Sep 10 12:27:56 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:28:01 2026 UTC [TDFC] heartbeat tick=600 units=0 cost=0ms
+Thu Sep 10 12:28:07 2026 UTC [TDFC] heartbeat tick=750 units=0 cost=2ms
+Thu Sep 10 12:28:13 2026 UTC [TDFC] heartbeat tick=900 units=0 cost=0ms
+Thu Sep 10 12:28:19 2026 UTC [TDFC] heartbeat tick=1050 units=0 cost=2ms
+Thu Sep 10 12:28:26 2026 UTC [TDFC] heartbeat tick=1200 units=0 cost=0ms
+Thu Sep 10 12:28:31 2026 UTC [TDFC] heartbeat tick=1350 units=0 cost=0ms
+Thu Sep 10 12:28:32 2026 UTC [TDFC] scenario PASS ranger=true moved=true shot=true suppress=true pause=true
+Thu Sep 10 12:32:28 2026 UTC [TDFC] version v0.6.0-dev session=1789043548127
+Thu Sep 10 12:32:28 2026 UTC [TDFC] scenario ACTIVE combat
+Thu Sep 10 12:32:28 2026 UTC [TDFC] room reset
+Thu Sep 10 12:32:34 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:32:42 2026 UTC [TDFC] room reset
+Thu Sep 10 12:32:48 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:32:49 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:32:49 2026 UTC [TDFC] scenario travel requested random_mane
+Thu Sep 10 12:33:00 2026 UTC [TDFC] room reset
+Thu Sep 10 12:33:04 2026 UTC [TDFC] scenario spawned=3
+Thu Sep 10 12:33:04 2026 UTC [TDFC] decision #8 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:04 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:04 2026 UTC [TDFC] decision #10 ranger T2 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:04 2026 UTC [TDFC] decision #11 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:06 2026 UTC [TDFC] heartbeat tick=300 units=11 cost=1ms
+Thu Sep 10 12:33:07 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:33:07 2026 UTC [TDFC] decision #5 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:08 2026 UTC [TDFC] decision #9 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:33:09 2026 UTC [TDFC] decision #10 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:33:11 2026 UTC [TDFC] decision #9 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:33:12 2026 UTC [TDFC] decision #6 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:12 2026 UTC [TDFC] decision #7 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:12 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:33:13 2026 UTC [TDFC] decision #9 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:33:13 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:33:13 2026 UTC [TDFC] decision #5 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:14 2026 UTC [TDFC] decision #5 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:14 2026 UTC [TDFC] heartbeat tick=450 units=11 cost=1ms
+Thu Sep 10 12:33:15 2026 UTC [TDFC] decision #9 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:33:17 2026 UTC [TDFC] decision #10 ranger T2 retreat 低血且近期受伤
+Thu Sep 10 12:33:19 2026 UTC [TDFC] decision #11 ranger T3 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:33:21 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:33:22 2026 UTC [TDFC] heartbeat tick=600 units=11 cost=0ms
+Thu Sep 10 12:33:24 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:33:25 2026 UTC [TDFC] decision #11 ranger T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:26 2026 UTC [TDFC] decision #9 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:33:26 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:33:26 2026 UTC [TDFC] decision #5 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:26 2026 UTC [TDFC] decision #6 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:26 2026 UTC [TDFC] decision #7 merc T4 dodge 慢弹接近
+Thu Sep 10 12:33:26 2026 UTC [TDFC] decision #8 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:27 2026 UTC [TDFC] decision #5 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:27 2026 UTC [TDFC] decision #6 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:27 2026 UTC [TDFC] decision #7 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:27 2026 UTC [TDFC] decision #8 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:27 2026 UTC [TDFC] decision #9 raider T1 retreat 低血且近期受伤
+Thu Sep 10 12:33:28 2026 UTC [TDFC] decision #10 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:33:28 2026 UTC [TDFC] decision #9 raider T1 advance 掠夺者·猛攻，接近有效射程
+Thu Sep 10 12:33:29 2026 UTC [TDFC] decision #7 merc T4 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:33:29 2026 UTC [TDFC] decision #9 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:33:31 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:33:32 2026 UTC [TDFC] decision #6 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:32 2026 UTC [TDFC] heartbeat tick=750 units=10 cost=1ms
+Thu Sep 10 12:33:32 2026 UTC [TDFC] decision #6 merc T3 search 同伴报告 #9；搜索最后位置
+Thu Sep 10 12:33:32 2026 UTC [TDFC] decision #7 merc T4 search 同伴报告 #9；搜索最后位置
+Thu Sep 10 12:33:32 2026 UTC [TDFC] decision #7 merc T4 dodge 慢弹接近
+Thu Sep 10 12:33:37 2026 UTC [TDFC] decision #5 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:37 2026 UTC [TDFC] decision #5 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:40 2026 UTC [TDFC] decision #6 merc T3 idle 没有可靠目标信息
+Thu Sep 10 12:33:41 2026 UTC [TDFC] heartbeat tick=900 units=10 cost=1ms
+Thu Sep 10 12:33:43 2026 UTC [TDFC] decision #7 merc T4 idle 没有可靠目标信息
+Thu Sep 10 12:33:43 2026 UTC [TDFC] decision #7 merc T4 dodge 慢弹接近
+Thu Sep 10 12:33:44 2026 UTC [TDFC] decision #11 ranger T3 idle 没有可靠目标信息
+Thu Sep 10 12:33:44 2026 UTC [TDFC] decision #10 ranger T2 dodge 慢弹接近
+Thu Sep 10 12:33:45 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:33:48 2026 UTC [TDFC] decision #5 merc T3 dodge 慢弹接近
+Thu Sep 10 12:33:48 2026 UTC [TDFC] decision #10 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:33:48 2026 UTC [TDFC] decision #5 merc T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:33:49 2026 UTC [TDFC] heartbeat tick=1050 units=9 cost=2ms
+Thu Sep 10 12:33:50 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:33:56 2026 UTC [TDFC] decision #10 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:33:57 2026 UTC [TDFC] heartbeat tick=1200 units=9 cost=3ms
+Thu Sep 10 12:34:01 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:34:02 2026 UTC [TDFC] decision #10 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:34:03 2026 UTC [TDFC] heartbeat tick=1350 units=9 cost=1ms
+Thu Sep 10 12:34:07 2026 UTC [TDFC] decision #10 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:34:07 2026 UTC [TDFC] decision #10 ranger T2 search 目击；搜索最后位置
+Thu Sep 10 12:34:08 2026 UTC [TDFC] scenario PASS ranger=true moved=true shot=true suppress=true pause=true
+Thu Sep 10 12:36:21 2026 UTC [TDFC] version v0.6.0-dev session=1789043781144
+Thu Sep 10 12:36:21 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 12:36:21 2026 UTC [TDFC] room reset
+Thu Sep 10 12:36:27 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:36:35 2026 UTC [TDFC] room reset
+Thu Sep 10 12:36:41 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=1ms
+Thu Sep 10 12:36:42 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:36:42 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100},"enemy":{"y":639,"x":240},"cover":{"y":639,"x":180,"score":60,"peekX":228}}
+Thu Sep 10 12:36:43 2026 UTC [TDFC] decision #1 ranger T2 cover 受压，找到可达遮挡点
+Thu Sep 10 12:36:43 2026 UTC [TDFC] decision #1 ranger T2 hide 掩体内等待射击窗口
+Thu Sep 10 12:36:45 2026 UTC [TDFC] decision #1 ranger T2 peek 短时探出射击
+Thu Sep 10 12:36:45 2026 UTC [TDFC] decision #1 ranger T2 hide 掩体内等待射击窗口
+Thu Sep 10 12:36:47 2026 UTC [TDFC] decision #1 ranger T2 peek 短时探出射击
+Thu Sep 10 12:36:48 2026 UTC [TDFC] heartbeat tick=300 units=1 cost=2ms
+Thu Sep 10 12:36:49 2026 UTC [TDFC] decision #1 ranger T2 hide 掩体内等待射击窗口
+Thu Sep 10 12:36:50 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:36:52 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:36:52 2026 UTC [TDFC] decision #1 ranger T2 cover 受压，找到可达遮挡点
+Thu Sep 10 12:36:54 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:36:56 2026 UTC [TDFC] heartbeat tick=450 units=1 cost=1ms
+Thu Sep 10 12:36:58 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:36:59 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:36:59 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:03 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:37:03 2026 UTC [TDFC] heartbeat tick=600 units=1 cost=0ms
+Thu Sep 10 12:37:04 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:10 2026 UTC [TDFC] heartbeat tick=750 units=1 cost=1ms
+Thu Sep 10 12:37:11 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:37:12 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:16 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:37:16 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:17 2026 UTC [TDFC] heartbeat tick=900 units=1 cost=1ms
+Thu Sep 10 12:37:18 2026 UTC [TDFC] decision #1 ranger T2 cover 受压，找到可达遮挡点
+Thu Sep 10 12:37:19 2026 UTC [TDFC] decision #1 ranger T2 hide 掩体内等待射击窗口
+Thu Sep 10 12:37:19 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:23 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:37:23 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:24 2026 UTC [TDFC] heartbeat tick=1050 units=1 cost=3ms
+Thu Sep 10 12:37:28 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:37:29 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:31 2026 UTC [TDFC] heartbeat tick=1200 units=1 cost=0ms
+Thu Sep 10 12:37:31 2026 UTC [TDFC] decision #1 ranger T2 cover 受压，找到可达遮挡点
+Thu Sep 10 12:37:32 2026 UTC [TDFC] decision #1 ranger T2 hold 换弹中
+Thu Sep 10 12:37:34 2026 UTC [TDFC] decision #1 ranger T2 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:37:34 2026 UTC [TDFC] decision #1 ranger T2 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:37:37 2026 UTC [TDFC] heartbeat tick=1350 units=1 cost=0ms
+Thu Sep 10 12:37:38 2026 UTC [TDFC] scenario FAIL cover fixture did not observe movement/occlusion/peek: {"moved":true,"peek":true,"ranger":true,"cover":true,"hold":true,"shot":true,"dodge":true,"covered":true,"hide":true}
+Thu Sep 10 12:47:03 2026 UTC [TDFC] version v0.6.0-dev session=1789044423127
+Thu Sep 10 12:47:03 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 12:47:03 2026 UTC [TDFC] room reset
+Thu Sep 10 12:47:09 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:47:17 2026 UTC [TDFC] room reset
+Thu Sep 10 12:47:24 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=2ms
+Thu Sep 10 12:47:25 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:47:25 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100,"cy":444},"cover":{"y":639,"score":60,"peekX":196,"x":160},"enemy":{"y":639,"x":220}}
+Thu Sep 10 12:47:25 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:47:26 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:47:26 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:47:27 2026 UTC [TDFC] fixture x=242 y=640 h=75 action=cover goal=158 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:47:27 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:47:28 2026 UTC [TDFC] fixture x=162 y=640 h=75 action=hide goal=158 clear=false result=已到达目标附近
+Thu Sep 10 12:47:29 2026 UTC [TDFC] decision #1 ranger T4 peek 前往射界，抵达后短时开火
+Thu Sep 10 12:47:29 2026 UTC [TDFC] scenario PASS real terrain: movement, cover occlusion and peek visibility verified
+Thu Sep 10 12:51:01 2026 UTC [TDFC] version v0.6.0 session=1789044661601
+Thu Sep 10 12:51:01 2026 UTC [TDFC] scenario ACTIVE combat
+Thu Sep 10 12:51:02 2026 UTC [TDFC] room reset
+Thu Sep 10 12:51:07 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:51:14 2026 UTC [TDFC] room reset
+Thu Sep 10 12:51:21 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:51:22 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:51:22 2026 UTC [TDFC] scenario travel requested random_mane
+Thu Sep 10 12:51:34 2026 UTC [TDFC] room reset
+Thu Sep 10 12:51:38 2026 UTC [TDFC] scenario spawned=3
+Thu Sep 10 12:51:38 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:38 2026 UTC [TDFC] decision #10 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:38 2026 UTC [TDFC] decision #11 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:41 2026 UTC [TDFC] heartbeat tick=300 units=11 cost=2ms
+Thu Sep 10 12:51:42 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:51:43 2026 UTC [TDFC] decision #9 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 12:51:44 2026 UTC [TDFC] decision #10 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 12:51:44 2026 UTC [TDFC] decision #9 raider T1 search 目击；搜索最后位置
+Thu Sep 10 12:51:44 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:51:45 2026 UTC [TDFC] decision #7 slaver T3 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:46 2026 UTC [TDFC] decision #11 ranger T4 dodge 慢弹接近
+Thu Sep 10 12:51:46 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:51:46 2026 UTC [TDFC] decision #11 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:47 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:51:47 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:49 2026 UTC [TDFC] decision #11 ranger T4 dodge 慢弹接近
+Thu Sep 10 12:51:49 2026 UTC [TDFC] decision #11 ranger T4 search 同伴报告 #10；搜索最后位置
+Thu Sep 10 12:51:49 2026 UTC [TDFC] heartbeat tick=450 units=11 cost=1ms
+Thu Sep 10 12:51:50 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:51:50 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:51:50 2026 UTC [TDFC] decision #10 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 12:51:53 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:51:54 2026 UTC [TDFC] decision #10 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 12:51:54 2026 UTC [TDFC] decision #11 ranger T4 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 12:51:57 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:51:57 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:51:57 2026 UTC [TDFC] decision #10 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 12:51:58 2026 UTC [TDFC] heartbeat tick=600 units=11 cost=3ms
+Thu Sep 10 12:51:59 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:52:00 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:00 2026 UTC [TDFC] decision #11 ranger T4 dodge 慢弹接近
+Thu Sep 10 12:52:00 2026 UTC [TDFC] decision #11 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:00 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:52:02 2026 UTC [TDFC] decision #9 raider T1 dodge 慢弹接近
+Thu Sep 10 12:52:02 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:02 2026 UTC [TDFC] decision #11 ranger T4 search 同伴报告 #10；搜索最后位置
+Thu Sep 10 12:52:04 2026 UTC [TDFC] decision #9 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:04 2026 UTC [TDFC] decision #11 ranger T4 dodge 慢弹接近
+Thu Sep 10 12:52:04 2026 UTC [TDFC] decision #11 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:05 2026 UTC [TDFC] decision #9 raider T1 retreat 低血且近期受伤
+Thu Sep 10 12:52:05 2026 UTC [TDFC] decision #10 ranger T4 retreat 低血且近期受伤
+Thu Sep 10 12:52:06 2026 UTC [TDFC] heartbeat tick=750 units=10 cost=2ms
+Thu Sep 10 12:52:09 2026 UTC [TDFC] decision #8 slaver T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:11 2026 UTC [TDFC] decision #10 ranger T4 hold 换弹中
+Thu Sep 10 12:52:13 2026 UTC [TDFC] heartbeat tick=900 units=10 cost=0ms
+Thu Sep 10 12:52:20 2026 UTC [TDFC] decision #5 slaver T4 search 听觉区域；搜索最后位置
+Thu Sep 10 12:52:21 2026 UTC [TDFC] heartbeat tick=1050 units=10 cost=1ms
+Thu Sep 10 12:52:22 2026 UTC [TDFC] decision #10 ranger T4 advance 铁骑卫·火力阵位，接近有效射程
+Thu Sep 10 12:52:22 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:52:24 2026 UTC [TDFC] decision #10 ranger T4 advance 铁骑卫·火力阵位，接近有效射程
+Thu Sep 10 12:52:25 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:52:27 2026 UTC [TDFC] heartbeat tick=1200 units=10 cost=2ms
+Thu Sep 10 12:52:28 2026 UTC [TDFC] decision #10 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:52:35 2026 UTC [TDFC] heartbeat tick=1350 units=10 cost=1ms
+Thu Sep 10 12:52:40 2026 UTC [TDFC] scenario PASS ranger=true moved=true shot=true suppress=true pause=true
+Thu Sep 10 12:52:40 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789044760834.txt
+Thu Sep 10 12:54:48 2026 UTC [TDFC] version v0.6.0 session=1789044888335
+Thu Sep 10 12:54:48 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 12:54:48 2026 UTC [TDFC] room reset
+Thu Sep 10 12:54:54 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:55:02 2026 UTC [TDFC] room reset
+Thu Sep 10 12:55:08 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 12:55:10 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:55:10 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100,"cy":444},"cover":{"y":639,"score":60,"x":160,"peekX":196},"enemy":{"y":639,"x":220}}
+Thu Sep 10 12:55:10 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:55:11 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:55:11 2026 UTC [TDFC] fixture x=337 y=640 h=75 action=hide goal=340 clear=true result=已到达目标附近
+Thu Sep 10 12:55:13 2026 UTC [TDFC] fixture x=337 y=640 h=75 action=hide goal=340 clear=true result=已到达目标附近
+Thu Sep 10 12:55:13 2026 UTC [TDFC] decision #1 ranger T4 peek 前往射界，抵达后短时开火
+Thu Sep 10 12:55:14 2026 UTC [TDFC] fixture x=373 y=640 h=75 action=peek goal=376 clear=true result=已到达目标附近
+Thu Sep 10 12:55:14 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:55:16 2026 UTC [TDFC] fixture x=339 y=640 h=75 action=hide goal=340 clear=true result=已到达目标附近
+Thu Sep 10 12:55:16 2026 UTC [TDFC] heartbeat tick=300 units=1 cost=0ms
+Thu Sep 10 12:55:16 2026 UTC [TDFC] decision #1 ranger T4 peek 前往射界，抵达后短时开火
+Thu Sep 10 12:55:17 2026 UTC [TDFC] fixture x=353 y=640 h=75 action=peek goal=376 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:55:17 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:55:18 2026 UTC [TDFC] fixture x=347 y=640 h=75 action=hide goal=340 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:55:18 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:19 2026 UTC [TDFC] fixture x=251 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:19 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:55:20 2026 UTC [TDFC] fixture x=155 y=625 h=75 action=cover goal=77 clear=false result=路径阻挡，未强推
+Thu Sep 10 12:55:20 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:22 2026 UTC [TDFC] fixture x=140 y=463 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:22 2026 UTC [TDFC] heartbeat tick=450 units=1 cost=0ms
+Thu Sep 10 12:55:23 2026 UTC [TDFC] fixture x=121 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:24 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:55:24 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:25 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:25 2026 UTC [TDFC] fixture x=319 y=572 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:27 2026 UTC [TDFC] fixture x=267 y=582 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:27 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:27 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:55:29 2026 UTC [TDFC] fixture x=225 y=640 h=75 action=cover goal=184 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:55:29 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:30 2026 UTC [TDFC] fixture x=155 y=513 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:30 2026 UTC [TDFC] heartbeat tick=600 units=1 cost=1ms
+Thu Sep 10 12:55:32 2026 UTC [TDFC] fixture x=92 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:32 2026 UTC [TDFC] fixture x=144 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:33 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:33 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:34 2026 UTC [TDFC] fixture x=316 y=588 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:36 2026 UTC [TDFC] fixture x=255 y=582 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:36 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:37 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:55:37 2026 UTC [TDFC] fixture x=207 y=640 h=75 action=cover goal=175 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:55:37 2026 UTC [TDFC] heartbeat tick=750 units=1 cost=0ms
+Thu Sep 10 12:55:37 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:55:38 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:38 2026 UTC [TDFC] fixture x=162 y=545 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:40 2026 UTC [TDFC] fixture x=421 y=464 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:40 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:41 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:41 2026 UTC [TDFC] fixture x=404 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:43 2026 UTC [TDFC] fixture x=313 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:44 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:44 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:55:44 2026 UTC [TDFC] fixture x=274 y=640 h=75 action=cover goal=224 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:55:44 2026 UTC [TDFC] heartbeat tick=900 units=1 cost=0ms
+Thu Sep 10 12:55:45 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:55:46 2026 UTC [TDFC] fixture x=219 y=626 h=75 action=hide goal=224 clear=true result=已观察到遮挡
+Thu Sep 10 12:55:46 2026 UTC [TDFC] decision #1 ranger T4 hold 换弹中
+Thu Sep 10 12:55:47 2026 UTC [TDFC] fixture x=155 y=577 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:48 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:48 2026 UTC [TDFC] fixture x=347 y=477 h=75 action=dodge goal=330 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:55:48 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:51 2026 UTC [TDFC] fixture x=429 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:52 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:52 2026 UTC [TDFC] fixture x=332 y=453 h=75 action=dodge goal=412 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:52 2026 UTC [TDFC] heartbeat tick=1050 units=1 cost=1ms
+Thu Sep 10 12:55:52 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:53 2026 UTC [TDFC] fixture x=242 y=640 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:54 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:55:54 2026 UTC [TDFC] decision #1 ranger T4 hold 换弹中
+Thu Sep 10 12:55:55 2026 UTC [TDFC] fixture x=155 y=568 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:56 2026 UTC [TDFC] fixture x=109 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:55:58 2026 UTC [TDFC] fixture x=135 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:58 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:55:58 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:55:59 2026 UTC [TDFC] fixture x=183 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:55:59 2026 UTC [TDFC] heartbeat tick=1200 units=1 cost=0ms
+Thu Sep 10 12:56:00 2026 UTC [TDFC] fixture x=79 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:56:02 2026 UTC [TDFC] fixture x=162 y=467 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:56:02 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:56:03 2026 UTC [TDFC] decision #1 ranger T4 hold 换弹中
+Thu Sep 10 12:56:03 2026 UTC [TDFC] fixture x=214 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:56:06 2026 UTC [TDFC] fixture x=155 y=570 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:56:06 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:56:06 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:56:07 2026 UTC [TDFC] fixture x=121 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:56:07 2026 UTC [TDFC] heartbeat tick=1350 units=1 cost=1ms
+Thu Sep 10 12:56:08 2026 UTC [TDFC] fixture x=124 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:56:08 2026 UTC [TDFC] scenario FAIL cover fixture did not observe movement/occlusion/peek: {"moved":true,"peek":true,"covered":true,"dodge":true,"hold":true,"shot":true,"ranger":true,"cover":true,"hide":true}
+Thu Sep 10 12:56:08 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789044968264.txt
+Thu Sep 10 12:58:22 2026 UTC [TDFC] version v0.6.0 session=1789045102546
+Thu Sep 10 12:58:22 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 12:58:23 2026 UTC [TDFC] room reset
+Thu Sep 10 12:58:27 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 12:58:36 2026 UTC [TDFC] room reset
+Thu Sep 10 12:58:43 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=1ms
+Thu Sep 10 12:58:44 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 12:58:44 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100,"cy":444},"cover":{"y":639,"score":60,"x":160,"peekX":196},"enemy":{"y":639,"x":220}}
+Thu Sep 10 12:58:44 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:58:45 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:58:45 2026 UTC [TDFC] fixture x=162 y=640 h=75 action=hide goal=160 clear=false result=已到达目标附近
+Thu Sep 10 12:58:46 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:58:46 2026 UTC [TDFC] fixture x=167 y=640 h=75 action=hold goal=100 clear=false result=已下令，等待结果
+Thu Sep 10 12:58:48 2026 UTC [TDFC] fixture x=245 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:58:50 2026 UTC [TDFC] fixture x=362 y=556 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:58:50 2026 UTC [TDFC] heartbeat tick=300 units=1 cost=2ms
+Thu Sep 10 12:58:51 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:58:51 2026 UTC [TDFC] fixture x=396 y=603 h=75 action=dodge goal=468 clear=true result=路径阻挡，未强推
+Thu Sep 10 12:58:51 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:58:52 2026 UTC [TDFC] fixture x=309 y=573 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:58:53 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:58:53 2026 UTC [TDFC] fixture x=209 y=613 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:58:54 2026 UTC [TDFC] fixture x=153 y=468 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:58:56 2026 UTC [TDFC] fixture x=77 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:58:56 2026 UTC [TDFC] heartbeat tick=450 units=1 cost=0ms
+Thu Sep 10 12:58:57 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:58:57 2026 UTC [TDFC] fixture x=234 y=453 h=75 action=dodge goal=299 clear=true result=路径阻挡，未强推
+Thu Sep 10 12:58:58 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 12:58:58 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:58:59 2026 UTC [TDFC] fixture x=347 y=550 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:00 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:00 2026 UTC [TDFC] fixture x=257 y=640 h=75 action=dodge goal=322 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:00 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:59:02 2026 UTC [TDFC] fixture x=201 y=640 h=75 action=cover goal=142 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 12:59:02 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:03 2026 UTC [TDFC] fixture x=155 y=513 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:03 2026 UTC [TDFC] heartbeat tick=600 units=1 cost=4ms
+Thu Sep 10 12:59:05 2026 UTC [TDFC] fixture x=80 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:06 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:06 2026 UTC [TDFC] fixture x=193 y=446 h=75 action=dodge goal=258 clear=true result=路径阻挡，未强推
+Thu Sep 10 12:59:07 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:08 2026 UTC [TDFC] fixture x=234 y=640 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:08 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:59:10 2026 UTC [TDFC] decision #1 ranger T4 hold 换弹中
+Thu Sep 10 12:59:10 2026 UTC [TDFC] fixture x=155 y=603 h=75 action=hold goal=100 clear=false result=已下令，等待结果
+Thu Sep 10 12:59:11 2026 UTC [TDFC] fixture x=334 y=502 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:11 2026 UTC [TDFC] heartbeat tick=750 units=1 cost=1ms
+Thu Sep 10 12:59:12 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:12 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:13 2026 UTC [TDFC] fixture x=448 y=603 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:14 2026 UTC [TDFC] fixture x=356 y=534 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:14 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:15 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:15 2026 UTC [TDFC] fixture x=270 y=640 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:17 2026 UTC [TDFC] fixture x=169 y=640 h=75 action=hold goal=100 clear=false result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:17 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:59:17 2026 UTC [TDFC] decision #1 ranger T4 hold 换弹中
+Thu Sep 10 12:59:18 2026 UTC [TDFC] fixture x=155 y=499 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:18 2026 UTC [TDFC] heartbeat tick=900 units=1 cost=0ms
+Thu Sep 10 12:59:19 2026 UTC [TDFC] fixture x=97 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:20 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:20 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:20 2026 UTC [TDFC] fixture x=273 y=572 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:21 2026 UTC [TDFC] fixture x=207 y=613 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:23 2026 UTC [TDFC] fixture x=154 y=468 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:24 2026 UTC [TDFC] fixture x=76 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:24 2026 UTC [TDFC] heartbeat tick=1050 units=1 cost=2ms
+Thu Sep 10 12:59:25 2026 UTC [TDFC] fixture x=166 y=467 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:26 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:26 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:26 2026 UTC [TDFC] fixture x=149 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:27 2026 UTC [TDFC] fixture x=102 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 12:59:28 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:28 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:29 2026 UTC [TDFC] fixture x=290 y=530 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:30 2026 UTC [TDFC] fixture x=232 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:30 2026 UTC [TDFC] heartbeat tick=1200 units=1 cost=3ms
+Thu Sep 10 12:59:30 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 12:59:31 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 12:59:31 2026 UTC [TDFC] fixture x=164 y=640 h=75 action=hide goal=169 clear=false result=已到达目标附近
+Thu Sep 10 12:59:32 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:32 2026 UTC [TDFC] fixture x=155 y=543 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:33 2026 UTC [TDFC] fixture x=101 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:35 2026 UTC [TDFC] fixture x=160 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:35 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 12:59:35 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 12:59:36 2026 UTC [TDFC] fixture x=270 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:36 2026 UTC [TDFC] heartbeat tick=1350 units=1 cost=1ms
+Thu Sep 10 12:59:37 2026 UTC [TDFC] fixture x=171 y=538 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 12:59:37 2026 UTC [TDFC] scenario FAIL cover fixture did not observe movement/occlusion/peek: {"covered":true,"moved":true,"cover":true,"hold":true,"shot":true,"dodge":true,"ranger":true,"hide":true}
+Thu Sep 10 12:59:37 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789045177611.txt
+Thu Sep 10 13:03:51 2026 UTC [TDFC] version v0.6.0 session=1789045431567
+Thu Sep 10 13:03:51 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 13:03:52 2026 UTC [TDFC] room reset
+Thu Sep 10 13:03:57 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 13:04:05 2026 UTC [TDFC] room reset
+Thu Sep 10 13:04:13 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 13:04:14 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 13:04:14 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100,"cy":444},"enemy":{"y":639,"x":220},"cover":{"y":639,"peekX":196,"score":60,"x":160}}
+Thu Sep 10 13:04:14 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:14 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:15 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 13:04:15 2026 UTC [TDFC] fixture x=258 y=640 h=75 action=cover goal=165 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 13:04:16 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 13:04:16 2026 UTC [TDFC] fixture x=166 y=640 h=75 action=hide goal=165 clear=false result=已到达目标附近
+Thu Sep 10 13:04:17 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:17 2026 UTC [TDFC] fixture x=169 y=640 h=75 action=hold goal=100 clear=false result=已下令，等待结果
+Thu Sep 10 13:04:19 2026 UTC [TDFC] fixture x=245 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:19 2026 UTC [TDFC] heartbeat tick=300 units=1 cost=1ms
+Thu Sep 10 13:04:21 2026 UTC [TDFC] fixture x=323 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:22 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:22 2026 UTC [TDFC] fixture x=465 y=580 h=75 action=dodge goal=530 clear=true result=路径阻挡，未强推
+Thu Sep 10 13:04:22 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:23 2026 UTC [TDFC] fixture x=375 y=578 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:24 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:24 2026 UTC [TDFC] fixture x=277 y=587 h=75 action=dodge goal=342 clear=true result=路径阻挡，未强推
+Thu Sep 10 13:04:24 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:26 2026 UTC [TDFC] fixture x=176 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:26 2026 UTC [TDFC] heartbeat tick=450 units=1 cost=0ms
+Thu Sep 10 13:04:27 2026 UTC [TDFC] fixture x=154 y=473 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:28 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 13:04:29 2026 UTC [TDFC] fixture x=80 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:30 2026 UTC [TDFC] fixture x=181 y=467 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:31 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:31 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:32 2026 UTC [TDFC] fixture x=229 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:33 2026 UTC [TDFC] fixture x=155 y=598 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:33 2026 UTC [TDFC] heartbeat tick=600 units=1 cost=1ms
+Thu Sep 10 13:04:34 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:34 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:35 2026 UTC [TDFC] fixture x=133 y=461 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:36 2026 UTC [TDFC] fixture x=107 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:37 2026 UTC [TDFC] fixture x=100 y=480 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:39 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:39 2026 UTC [TDFC] fixture x=227 y=453 h=75 action=dodge goal=292 clear=true result=路径阻挡，未强推
+Thu Sep 10 13:04:39 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:41 2026 UTC [TDFC] fixture x=271 y=578 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:41 2026 UTC [TDFC] heartbeat tick=750 units=1 cost=0ms
+Thu Sep 10 13:04:41 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 13:04:42 2026 UTC [TDFC] fixture x=170 y=640 h=75 action=cover goal=164 clear=false result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 13:04:42 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 13:04:43 2026 UTC [TDFC] fixture x=159 y=640 h=75 action=hide goal=164 clear=false result=已到达目标附近
+Thu Sep 10 13:04:43 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:44 2026 UTC [TDFC] fixture x=155 y=526 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:04:46 2026 UTC [TDFC] fixture x=139 y=640 h=75 action=hold goal=100 clear=false result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:47 2026 UTC [TDFC] fixture x=155 y=510 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:47 2026 UTC [TDFC] heartbeat tick=900 units=1 cost=0ms
+Thu Sep 10 13:04:49 2026 UTC [TDFC] fixture x=81 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:50 2026 UTC [TDFC] fixture x=124 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:51 2026 UTC [TDFC] fixture x=122 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:53 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:53 2026 UTC [TDFC] fixture x=203 y=488 h=75 action=dodge goal=258 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 13:04:53 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:54 2026 UTC [TDFC] fixture x=190 y=640 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:54 2026 UTC [TDFC] heartbeat tick=1050 units=1 cost=0ms
+Thu Sep 10 13:04:55 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:56 2026 UTC [TDFC] fixture x=155 y=532 h=75 action=dodge goal=220 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:56 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:04:57 2026 UTC [TDFC] fixture x=98 y=480 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:58 2026 UTC [TDFC] fixture x=159 y=479 h=75 action=hold goal=100 clear=true result=发射证据已观测，未推断命中
+Thu Sep 10 13:04:58 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:04:59 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:05:00 2026 UTC [TDFC] fixture x=338 y=600 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:05:01 2026 UTC [TDFC] fixture x=241 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:05:01 2026 UTC [TDFC] heartbeat tick=1200 units=1 cost=0ms
+Thu Sep 10 13:05:02 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 13:05:03 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 13:05:03 2026 UTC [TDFC] fixture x=122 y=640 h=75 action=hide goal=118 clear=false result=已观察到遮挡
+Thu Sep 10 13:05:04 2026 UTC [TDFC] fixture x=113 y=640 h=75 action=hide goal=118 clear=false result=已观察到遮挡
+Thu Sep 10 13:05:04 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:05:05 2026 UTC [TDFC] fixture x=104 y=640 h=75 action=hold goal=100 clear=false result=已下令，等待结果
+Thu Sep 10 13:05:07 2026 UTC [TDFC] fixture x=231 y=579 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:05:08 2026 UTC [TDFC] fixture x=181 y=640 h=75 action=hold goal=100 clear=true result=已下令，等待结果
+Thu Sep 10 13:05:08 2026 UTC [TDFC] heartbeat tick=1350 units=1 cost=1ms
+Thu Sep 10 13:05:09 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:05:09 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:05:09 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 13:05:10 2026 UTC [TDFC] fixture x=159 y=640 h=75 action=cover goal=141 clear=false result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 13:05:10 2026 UTC [TDFC] scenario FAIL cover fixture did not observe movement/occlusion/peek: {"shot":true,"moved":true,"cover":true,"ranger":true,"hold":true,"dodge":true,"covered":true,"hide":true}
+Thu Sep 10 13:05:10 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789045510247.txt
+Thu Sep 10 13:10:08 2026 UTC [TDFC] version v0.6.0 session=1789045808741
+Thu Sep 10 13:10:08 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 13:10:09 2026 UTC [TDFC] room reset
+Thu Sep 10 13:10:15 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 13:10:24 2026 UTC [TDFC] room reset
+Thu Sep 10 13:10:30 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=2ms
+Thu Sep 10 13:10:32 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 13:10:32 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100,"cy":444},"cover":{"y":639,"peekX":196,"score":60,"x":160},"enemy":{"y":639,"x":220}}
+Thu Sep 10 13:10:32 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 13:10:32 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 13:10:33 2026 UTC [TDFC] fixture x=162 y=640 h=75 action=hide goal=160 clear=false result=已到达目标附近
+Thu Sep 10 13:10:34 2026 UTC [TDFC] decision #1 ranger T4 peek 前往射界，抵达后短时开火
+Thu Sep 10 13:10:34 2026 UTC [TDFC] fixture x=163 y=640 h=75 action=peek goal=196 clear=false result=已下令，等待结果
+Thu Sep 10 13:10:34 2026 UTC [TDFC] scenario PASS real terrain: movement, cover occlusion and peek visibility verified
+Thu Sep 10 13:10:34 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789045834764.txt
+Thu Sep 10 13:12:05 2026 UTC [TDFC] version v0.6.0 session=1789045925441
+Thu Sep 10 13:12:05 2026 UTC [TDFC] scenario ACTIVE cover-check
+Thu Sep 10 13:12:06 2026 UTC [TDFC] room reset
+Thu Sep 10 13:12:11 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 13:12:20 2026 UTC [TDFC] room reset
+Thu Sep 10 13:12:27 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 13:12:28 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 13:12:28 2026 UTC [TDFC] scenario cover fixture {"player":{"y":479,"x":100,"cy":444},"cover":{"y":639,"peekX":196,"score":60,"x":160},"enemy":{"y":639,"x":220}}
+Thu Sep 10 13:12:28 2026 UTC [TDFC] decision #1 ranger T4 dodge 确认被瞄准，短促避线
+Thu Sep 10 13:12:29 2026 UTC [TDFC] decision #1 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:12:29 2026 UTC [TDFC] decision #1 ranger T4 cover 受压，找到可达遮挡点
+Thu Sep 10 13:12:29 2026 UTC [TDFC] fixture x=258 y=640 h=75 action=cover goal=165 clear=true result=位置接近目标；近期受击，归因不确定
+Thu Sep 10 13:12:30 2026 UTC [TDFC] decision #1 ranger T4 hide 掩体内等待射击窗口
+Thu Sep 10 13:12:31 2026 UTC [TDFC] fixture x=165 y=640 h=75 action=hide goal=165 clear=false result=已到达目标附近
+Thu Sep 10 13:12:32 2026 UTC [TDFC] decision #1 ranger T4 peek 前往射界，抵达后短时开火
+Thu Sep 10 13:12:32 2026 UTC [TDFC] scenario PASS real terrain: movement, cover occlusion and peek visibility verified
+Thu Sep 10 13:12:32 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789045952620.txt
+Thu Sep 10 13:13:34 2026 UTC [TDFC] version v0.6.0 session=1789046014263
+Thu Sep 10 13:13:34 2026 UTC [TDFC] scenario ACTIVE combat
+Thu Sep 10 13:13:34 2026 UTC [TDFC] room reset
+Thu Sep 10 13:13:40 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 13:13:48 2026 UTC [TDFC] room reset
+Thu Sep 10 13:13:55 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 13:13:56 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 13:13:56 2026 UTC [TDFC] scenario travel requested random_mane
+Thu Sep 10 13:14:07 2026 UTC [TDFC] room reset
+Thu Sep 10 13:14:12 2026 UTC [TDFC] scenario spawned=3
+Thu Sep 10 13:14:12 2026 UTC [TDFC] decision #7 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:12 2026 UTC [TDFC] decision #8 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:12 2026 UTC [TDFC] decision #9 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:14 2026 UTC [TDFC] heartbeat tick=300 units=9 cost=1ms
+Thu Sep 10 13:14:15 2026 UTC [TDFC] decision #7 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 13:14:16 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:14:17 2026 UTC [TDFC] decision #6 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:19 2026 UTC [TDFC] decision #7 raider T1 search 目击；搜索最后位置
+Thu Sep 10 13:14:21 2026 UTC [TDFC] decision #7 raider T1 advance 掠夺者·猛攻，接近有效射程
+Thu Sep 10 13:14:22 2026 UTC [TDFC] decision #7 raider T1 hold 换弹中
+Thu Sep 10 13:14:23 2026 UTC [TDFC] decision #5 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:23 2026 UTC [TDFC] decision #7 raider T1 search 目击；搜索最后位置
+Thu Sep 10 13:14:24 2026 UTC [TDFC] heartbeat tick=450 units=9 cost=1ms
+Thu Sep 10 13:14:24 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:14:25 2026 UTC [TDFC] decision #7 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 13:14:26 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:14:28 2026 UTC [TDFC] decision #7 raider T1 search 目击；搜索最后位置
+Thu Sep 10 13:14:30 2026 UTC [TDFC] scenario PASS pause clock
+Thu Sep 10 13:14:32 2026 UTC [TDFC] heartbeat tick=600 units=9 cost=0ms
+Thu Sep 10 13:14:32 2026 UTC [TDFC] decision #6 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:32 2026 UTC [TDFC] decision #7 raider T1 dodge 慢弹接近
+Thu Sep 10 13:14:33 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:14:33 2026 UTC [TDFC] decision #6 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:33 2026 UTC [TDFC] decision #7 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:36 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:14:36 2026 UTC [TDFC] decision #7 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 13:14:37 2026 UTC [TDFC] decision #7 raider T1 search 目击；搜索最后位置
+Thu Sep 10 13:14:38 2026 UTC [TDFC] decision #6 merc T4 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 13:14:38 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:14:38 2026 UTC [TDFC] decision #6 merc T4 search 同伴报告 #7；搜索最后位置
+Thu Sep 10 13:14:40 2026 UTC [TDFC] heartbeat tick=750 units=9 cost=1ms
+Thu Sep 10 13:14:41 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:14:41 2026 UTC [TDFC] decision #5 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:42 2026 UTC [TDFC] decision #6 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:42 2026 UTC [TDFC] decision #5 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:42 2026 UTC [TDFC] decision #6 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:44 2026 UTC [TDFC] decision #7 raider T1 hold 掠夺者·猛攻，保持射击窗口
+Thu Sep 10 13:14:44 2026 UTC [TDFC] decision #7 raider T1 search 目击；搜索最后位置
+Thu Sep 10 13:14:44 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:14:45 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:14:46 2026 UTC [TDFC] decision #6 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:46 2026 UTC [TDFC] decision #7 raider T1 dodge 慢弹接近
+Thu Sep 10 13:14:47 2026 UTC [TDFC] decision #5 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:47 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:14:47 2026 UTC [TDFC] decision #6 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:47 2026 UTC [TDFC] decision #7 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:47 2026 UTC [TDFC] decision #5 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:49 2026 UTC [TDFC] heartbeat tick=900 units=9 cost=1ms
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #6 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #7 raider T1 dodge 慢弹接近
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #5 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #6 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #7 raider T1 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #5 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:49 2026 UTC [TDFC] decision #9 ranger T4 suppress 同伴换弹或负伤，需要掩护
+Thu Sep 10 13:14:52 2026 UTC [TDFC] decision #6 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:52 2026 UTC [TDFC] decision #5 merc T4 dodge 慢弹接近
+Thu Sep 10 13:14:52 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:14:52 2026 UTC [TDFC] decision #6 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:52 2026 UTC [TDFC] decision #5 merc T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:55 2026 UTC [TDFC] decision #9 ranger T4 search 听觉区域；搜索最后位置
+Thu Sep 10 13:14:56 2026 UTC [TDFC] heartbeat tick=1050 units=8 cost=1ms
+Thu Sep 10 13:15:00 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:15:00 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:15:02 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:15:03 2026 UTC [TDFC] heartbeat tick=1200 units=8 cost=1ms
+Thu Sep 10 13:15:03 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:15:05 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:15:06 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:15:09 2026 UTC [TDFC] heartbeat tick=1350 units=8 cost=1ms
+Thu Sep 10 13:15:13 2026 UTC [TDFC] decision #8 ranger T4 hold 铁骑卫·火力阵位，保持射击窗口
+Thu Sep 10 13:15:14 2026 UTC [TDFC] decision #8 ranger T4 search 目击；搜索最后位置
+Thu Sep 10 13:15:14 2026 UTC [TDFC] scenario PASS ranger=true moved=true shot=true suppress=true pause=true
+Thu Sep 10 13:15:14 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789046114261.txt
+Thu Sep 10 13:16:35 2026 UTC [TDFC] version v0.6.0 session=1789046195474
+Thu Sep 10 13:16:35 2026 UTC [TDFC] scenario ACTIVE observe
+Thu Sep 10 13:16:35 2026 UTC [TDFC] room reset
+Thu Sep 10 13:16:40 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 10 13:16:49 2026 UTC [TDFC] room reset
+Thu Sep 10 13:16:56 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 10 13:16:57 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 13:16:57 2026 UTC [TDFC] scenario PASS 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 10 13:16:57 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1789046217664.txt
+Thu Sep 10 13:17:03 2026 UTC [TDFC] heartbeat tick=300 units=0 cost=0ms
+Thu Sep 10 13:17:10 2026 UTC [TDFC] heartbeat tick=450 units=0 cost=0ms
+Thu Sep 10 13:17:17 2026 UTC [TDFC] heartbeat tick=600 units=0 cost=0ms
+Thu Sep 10 13:17:22 2026 UTC [TDFC] heartbeat tick=750 units=0 cost=0ms
+Thu Sep 10 13:17:29 2026 UTC [TDFC] heartbeat tick=900 units=0 cost=1ms
+Thu Sep 10 13:17:35 2026 UTC [TDFC] heartbeat tick=1050 units=0 cost=1ms
+Thu Sep 10 13:17:41 2026 UTC [TDFC] heartbeat tick=1200 units=0 cost=0ms
+Thu Sep 10 13:17:47 2026 UTC [TDFC] heartbeat tick=1350 units=0 cost=0ms
+Thu Sep 10 13:17:53 2026 UTC [TDFC] heartbeat tick=1500 units=0 cost=1ms
+Thu Sep 10 13:17:59 2026 UTC [TDFC] heartbeat tick=1650 units=0 cost=1ms
+Thu Sep 10 13:18:05 2026 UTC [TDFC] heartbeat tick=1800 units=0 cost=1ms
+Thu Sep 10 13:18:11 2026 UTC [TDFC] heartbeat tick=1950 units=0 cost=0ms
+Thu Sep 10 13:18:17 2026 UTC [TDFC] heartbeat tick=2100 units=0 cost=0ms
+Thu Sep 10 13:18:24 2026 UTC [TDFC] heartbeat tick=2250 units=0 cost=0ms
+Thu Sep 10 13:18:29 2026 UTC [TDFC] heartbeat tick=2400 units=0 cost=1ms

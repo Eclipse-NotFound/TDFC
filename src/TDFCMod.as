@@ -19,7 +19,7 @@ package
       public static function init(main:*):void
       {
          TdfcLog.init();    // 内部先打版本标记行
-         TdfcMain.init(main);
+         TdfcRuntime.init(main);
       }
    }
 }

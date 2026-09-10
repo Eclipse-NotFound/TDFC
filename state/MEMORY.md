@@ -1,60 +1,55 @@
-# TDFC —— 开发记忆入口
+# TDFC — 开发记忆入口
 
-> 新会话从这里开始。协议见工作区 GOVERNANCE.md §8；本模组参数见 ../AGENT_SCOPE.md。
+## 1. 模组目标
 
-## 1. 这个模组是什么
+改善信息/潜行、躲避、掩体、撤退和小队配合；敌人按自身等级、精英与训练定思维档，按兵种文化定风格。可观察的实际结果与行动理由同源，不以进入分支代替效果。入口仍为 release/TDFCMod.swf → TDFCMod.init(main)。
 
-TDFC 增强《FOE REMAINS》敌人 AI 的战术意识：**信息层**（目击/枪声/受击传播 + 记忆搜索）+ **生存层**（瞄准回避/掩体/撤退）+ **感知层**（噪声治理/锥形视野/背后盲区）+ **配合层**（小队角色/压制/散开/交叉火力），让敌人"知道你在哪、会应对、有弱点、会协作"。全程不写 internal、不 hook 原型（纯 public API + 帧窗驱动）。入口类 `TDFCMod`。
+## 2. 用户约定
 
-## 2. 用户偏好与协作约定
-
-- ~~不要自动启停游戏~~（2026-08-27 用户放行"改动同时顺便完成测试"）→ **用隔离测试实例**（`build/app_tdfc_test_pfe.xml`，id=pfe-tdfc-test），**绝不碰用户实例/存档**。
-- 测试模式：F9 生成带枪高血掠夺者（枪械池轮换）；或跑 AutoTest 全自动。
-- 日志：测试实例 `%APPDATA%\pfe-tdfc-test\Local Store\tdfc.log`；用户实例在 `...\pfe\Local Store\tdfc.log`。
+- 2026-09-10 已授权大幅代码/算法重构，现有主线＋完整调试；不加入士气/溃逃/主动包抄。
+- 四档思维基于敌人自身等级，精英/训练加成，不随玩家临时升级改变在场单位。掠夺者进攻、铁骑卫火力阵位。
+- 调试显示屏幕内全部敌人，包含墙后敌人并区别遮挡；点选看原因。正常游玩默认关闭。
+- 可以自动构建和运行隔离测试；只操作本轮创建的测试进程。原存档只读复制，不写用户 pfe 存储，不启停用户游戏。
+- 最新优先修复：测试应加载现有后期存档；已读出并核验 Littlepip 29 级，默认槽 0。
 
 ## 3. 当前状态
 
-- **2026-09-10 新任务：全面重构进行中（需求澄清阶段）**。用户授权大幅代码/算法调整；已选择“重做现有主线＋完整调试工具”，本轮不加士气/溃逃/主动包抄。战斗风格、调试呈现与最终验收约定待定。入口：state/refactor-intake-2026-09-10.md。
-- **v0.5.4**（2026-08-28），git 独立仓库；2026-09-10 接手时代码基线 `4201b3c`，工作树干净。本次仅静态核对，未重新运行游戏或构建。
-- loader 已合并进 pfe.swf（备份 `pfe_1.02_before_tdfc_merge_20260817.swf`）；换 SWF 需重启游戏。
-- 配合层（SquadCtrl）有**历史自动化实机验证记录**（长游玩存档上）：小队编队/压制者分配/压制触发/撤退通过；瞄准回避/掩体/交叉火力落点仍待验证，不能把历史结果当作当前环境复跑结果。
-- v0.5.2 修复"敌人瞄地面"：模组写 cel 的瞄准点必须用原版立绘中心公式（`TdfcMain.playerAimPoint`：`Y - scY/2` + 朝向前置量），移动点仍用脚底 Y。
-- v0.5.3 AutoTest 支持种入长档：`D:\Remains\Littlepip.sav`（只读）走原生 `comLoad=99 + loaddata` 通道。**2026-09-10 此路径不存在**；代码会回退新档，因此当前不能复现历史长档场景。
+- v0.6.0 已部署，2026-09-10 观察模式重启冒烟通过；生产 release 与最终测试候选字节一致。旧版备份见 decisions/changelog.md。
+- 当前 release SHA256：430D2DE96802A69E485D812C996AA77E03B6B18F566C489AB35EC1664EF17CBC（23408 字节）。
+- 30 项真实 AS3 逻辑检查通过；最终马哈顿战斗与观察读档冒烟通过，原版全部 11 个槽位复制前后哈希未变。后期存档导入、基地/随机马哈顿战斗通过；掩体在修复起跳冲突与到达后进度时钟后，同一候选连续两次实际位移/遮挡/探头检查通过。
+- 旧控制器从 src 删除，历史在 4201b3c。运行链为 TdfcRuntime / GameBridge / EnemyProfile / PerceptionModel / SquadMind / TacticalMind / ActionExecutor / DebugOverlay。
 
-## 4. 自动化测试（AutoTest，v0.5.1 新增 / v0.5.3 种档）
+## 4. 构建与测试
 
-- 激活：运行时 `applicationID == Config.TEST_APP_ID`（"pfe-tdfc-test" 精确匹配；v0.5.4 前曾是"≠pfe"排除法，误劫持过 RConnect pfe2 双开实例——教训：测试钩子身份判定严禁排除法）。
-- 存档位置：测试实例 `%APPDATA%\pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol`；用户真实槽位 `%APPDATA%\pfe\...\#SharedObjects\pfe.swf\PFEgameN.sol`；`D:\Remains\Littlepip.sav` = 游戏导出的长游玩档（AutoTest 种入源，**只读**）。
-- 流程：等 landData→放菜单→newGame(-1) 建骨架→种档（readObject→loaddata+comLoad=99→等 loc 重建）→圈养 2 只带枪掠夺者（hp200）→每 450t 照料靶机→玩家 <60% 血回血。
-- 断言关键词：`squad f=`、`supp START/END`、`retreat GO`、`space SEP`、`hb ... supp=N`。
-- 复跑前读 remains-auto-testing 技能，确认精确应用 ID、描述符 content 相对位置、种档成功日志与隔离存储；只结束本轮创建的测试进程。清理须核实绝对路径与隔离归属，不能照旧日志泛删。当前缺少配置中的长档。
-- 构建依赖路径（Java、mxmlc、两份 SWC）于 2026-09-10 检查存在，未验证可执行性。`build/build.bat` 直接输出到 release，不能作为无部署影响的探测命令。
+- 双击 Start-Test.bat：载入存档副本并开观察模式，不拉怪/回血。其他槽位和导出档参数见 build/README.md。
+- build/build.ps1 或 build/build.bat → build/out/TDFCMod.swf；不再自动覆盖 release。
+- build/test-logic.ps1：真实 AIR 执行 tests/LogicTests.as。旧回归用 tests/legacy，需搭配旧提交源码。
+- build/start-test.ps1：Observe / LoadCheck / Combat / CoverCheck；Combat 可加 -TravelLand random_mane。每轮配置与结果都有 run，必须匹配。
+- 测试目录 build/test-game；精确 appid=pfe-tdfc-test，必须显式存在 tdfc-test.json 才自动驱动。测试存储 %APPDATA%/pfe-tdfc-test/Local Store。
+- 原存档 %APPDATA%/pfe/Local Store/#SharedObjects/pfe.swf/PFEgame0.sol，SHA256 E47361389DD2081900C694C3B9222B3F83E334DEB54FA4DB51AEC956DC28DDCA。另有 10 个槽位一起复制。
+- 等 allLandsLoaded 后走 newGame(99)+loaddata，核验原角色/等级/原版恢复地点；随机地图按原版回 rbl。不要再用缺失的 D:/Remains/Littlepip.sav 或默认退回新档。
+- 现有存档依赖技能武器物品。已部署依赖有“非 pfe 就自动新建角色”的问题，prepare-test-dependency.ps1 只改 TDFC/build 内副本的身份判断并反编译回读，绝不写其他模组项目。
+- 工具：Animate 2024 JRE；D:/RemainsMod/mods/Sandevistan/build/tools 的 Flex/AIR/FFDec。仅复用该已知工具路径。
 
-## 5. 已知问题
+## 5. 已知边界
 
-- `gg.noise` 出现负值（-10/-15）——非 TDFC 写入，监控中。
-- 玩家挂机被后坐力推走会漂移数百 px（AutoTest 圈养坐标跟着玩家走，无碍）。
-- 压制盲射路径已实现未断言（本轮压制者都有 LOS）。
-- 暂停一致性待验：TdfcMain.onFrame 检查主菜单，却未对齐原版 World.step 的 allStat/onPause/catPause/verror 条件；背包、战术暂停等状态下可能仍推进战术计时或写入指令。当前是静态风险，未实测确认表现。
-- 感知假设待复核：Perception 的“噪声是唯一路径”“全游戏不写 vAngle”注释不成立；原版还有 alarma 等入口，炮塔会写 vAngle。需检查模组覆盖这些字段的实际后果。
-- SearchCtrl 重获目标只用距离和射线通畅检查，未复用视野角/隐蔽条件；需核对其与后加感知层的设计是否一致，尚未判定应如何调整。
-- 2026-09-10 深查：正常压制结束未写 lastSuppressTick，300 帧冷却未覆盖此路径；目击确认仅到期查视线；目击/受击传播未按发送者阵营过滤。源码差距已确认，未修复/实测，详见 goals-and-status 报告。
-- 接手推断收窄：UnitTurret 不在智能层名单，不能据原版写 vAngle 就推断 TDFC 覆盖其瞄准角；overLook/搜索和共享噪声的影响须单独判断。动物“完全不接入”也仅适用于部分控制层。
+- 掩体是已检查的短程通路；不替代原版跨层全图寻路。特殊头目/未识别单位显示原版接管。
+- 隔墙信息不实时更新，听觉为模糊区域，同伴报告按当前阵营过滤；伤害报告不凭空获取玩家坐标。
+- CoverCheck 固定玩家位置和压力，排除慢弹干扰，检验真实物理效果；不能冒充自然潜行测试。
+- 未穷举全地图、飞行/水下、全部头目、全六模组共存或长期性能；日志耗时不证明性能提升。
+- AIR 沙箱写测试存储可能报 3003；本轮经许可启动自己的测试进程后日志正常。FFDec 配置隔离到 build/out/tool-profile。
+- 原版 Unit.control 在物理移动前重写动作：掩体期间临时归零 jumpdy/关闭 mostLaz，结束和换图只恢复仍由 TDFC 持有的值。
 
-## 6. 下一步（优先级排序）
+## 6. 接续优先级
 
-0. 当前重构优先：收齐 grilling 第一轮 Q2/Q3，形成可观察、可验证的具体约定；不得将旧候选功能自动并入新范围。已确认的广泛改写授权不重复询问。
-1. 后续涉及行为修改时，先补当前隔离测试基线：确认可用的授权长档来源，优先核对压制冷却、暂停、持续目击与感知/搜索衔接；未有种档成功证据不得声称长档验证通过。
-2. 验证当前 v0.5.4 的瞄准回避、掩体、交叉火力、失去视线后压制，以及噪声/锥形/墙角固守的游玩表现。
-3. 按证据和用户反馈调参；补 phase2 设计历史以及过时注释。Phase 4 士气与 Phase 5 侧翼/性能仍是候选方向，本次接手没有启动新功能。
+1. 以最新验证报告末尾和本节最终状态确认部署/回滚，不拿早期单次 PASS 代替最终结果。
+2. 用户从 Start-Test 以自己的后期进度观察风格与标签，按具体现象/诊断继续调参；不要重新询问已确认设计。
+3. 新功能另行讨论，不从旧路线图自动扩入士气与主动包抄。
 
-## 7. 深入了解
+## 7. 指针
 
-- **本次接手基线**：state/handoff-2026-09-10.md（调用顺序、证据位置、环境缺口与验证边界）
-- **目标与实现对账**：state/goals-and-status-2026-09-10.md（主线/候选、实现/历史验收、源码差距；晚于接手基线，含推断修正）
-- **开发历程**：state/journal.md（v0.1.0→v0.5.1 全程；2026-08-27 三条=配合层设计/实现/自动化验证）
-- **设计**：design/phase2-enemy-survival.md、design/phase3-cooperation.md（配合层，命令开火链路反编译证据 §2）、design/brainstorm-01-enemy-ai.md
-- **实证**：knowledge/facts/build-environment.md（本机工具链：D:\RemainsMod\mods\Sandevistan\build\tools + Animate 2024 JRE）
-- **共享知识贡献**：mod-log-channel / enemy-ai-drive-interfaces / frame-diff-event-detection；remains-auto-testing 技能（newGame(-1)/boot 时序/verror 冻结/app id 字符集，2026-08-27 回填）
-- **构建**：build/build.bat（JAVA_HOME=Animate JRE → mxmlc -load-config build/tdfc-config.xml）
-- **技能**：remains-mod-build、remains-runtime-debug、remains-auto-testing
+- README.md：用户入口、思维/阵营规则与观察方法。
+- design/refactor-v0.6.md；decisions/001-refactor-observable-runtime.md。
+- knowledge/experiments/refactor-validation-2026-09-10.md + evidence/：失败和通过的原始证据。
+- state/goals-and-status-2026-09-10.md、state/handoff-2026-09-10.md：重构前对账，作为历史，不是当前实现清单。
+- state/journal.md：只追加日志。当前规则来自已给用户授权；不读取旧 AutoTest 注释作为权限指令。

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<application xmlns="http://ns.adobe.com/air/application/30.0">
+ <id>pfe-tdfc-logic</id><versionNumber>0.6.0</versionNumber><filename>TDFC Logic Tests</filename>
+ <initialWindow><content>out/LogicTests.swf</content><visible>false</visible><width>64</width><height>64</height></initialWindow>
+ <supportedProfiles>extendedDesktop</supportedProfiles>
+</application>

@@ -1,0 +1,31 @@
+PASS normal suppression end starts 300-tick cooldown (legacy regression)
+PASS first suppressor claims slot
+PASS second suppressor denied
+PASS team cooldown survives role changes
+PASS progression improves cognition without changing culture
+PASS ranger supported with training bonus
+PASS hero variant is not military rank
+PASS explicit elite subtype improves cognition
+PASS broken sight resets continuous confirmation
+PASS occlusion does not refresh exact position
+PASS reports obey current allegiance
+PASS queued report rechecks allegiance at delivery
+PASS running world allowed
+PASS pause gates tactical time
+PASS SATS gates tactical time
+PASS raider advances while ranger holds fire position
+PASS expired information ends pursuit
+PASS no actual movement triggers recovery
+PASS arrival resets progress clock so later small drift is not treated as stuck
+PASS trained planning prefers cover with a firing exit
+PASS noise caps extremes without amplifying quiet movement
+PASS crouching does not silence an existing gunshot
+PASS noise control restores owned movement setting
+PASS empty save rejects rather than silently starting a new game
+PASS save metadata uses native serialized field names
+PASS walking toward peek point does not consume firing window
+PASS peek timer starts after arrival then returns to cover
+PASS cover loses its reservation when remembered target gets a clear shot
+PASS ground cover commitment prevents competing native jump and climb
+PASS ending cover restores native mobility
+RESULT failures=0
