@@ -1,5 +1,13 @@
 package {
  public class ActionExecutor {
+  public static function yieldToNative(b:BrainState):Boolean {
+   if(GameBridge.num(b.unit,"levit")<=0)return false;
+   restore(b);
+   b.order=null;b.cover=null;b.coverCandidates=[];b.until=0;b.decisionAt=-100000;b.stuckUntil=0;b.peek=false;b.peekAt=0;
+   b.action=TacticalMind.action("controlled","被念力抓取，暂停战术指令",GameBridge.num(b.unit,"X"),GameBridge.num(b.unit,"Y"));
+   b.result="移动与开火已交还原版";b.effect="";
+   return true;
+  }
   public static function restore(b:BrainState):void {
    try {
     commitGround(b,false);
@@ -18,6 +26,7 @@ package {
    }
   }
   public static function assess(b:BrainState,t:int):void {
+   if(GameBridge.num(b.unit,"levit")>0)return;
    if(!b.order || !b.previous) return;
    var s:Object=b.sample,pr:Object=b.previous;
    var dx:Number=s.x-b.orderX,dy:Number=s.y-b.orderY;
@@ -33,7 +42,7 @@ package {
    }
   }
   public static function apply(b:BrainState,g:Object,loc:*,t:int):void {
-   if(!b.profile.supported) return;
+   if(!b.profile.supported || yieldToNative(b)) return;
    var s:Object=b.sample,a:Object=b.action;
    try {
     // 原版 control() 在下一帧物理移动前会重新发出跳跃/爬梯指令。

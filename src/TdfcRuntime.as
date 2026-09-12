@@ -21,6 +21,7 @@ package {
    if(host)return;host=main as DisplayObjectContainer;
    if(!host || !host.stage){TdfcLog.line("error","stage unavailable");return;}
    overlay=new DebugOverlay(host,saveReport);ScenarioRunner.init();overlay.enabled=ScenarioRunner.active;host.stage.addEventListener(Event.ENTER_FRAME,onFrame);
+   GrabDiagnostics.init(host.stage,function():*{return worldClass?worldClass["w"]:null;},function():Boolean{return overlay.enabled;});
   }
   private static function reset(loc:*):void {
    PlayerNoise.reset();
@@ -32,6 +33,7 @@ package {
    try {
     if(!worldClass)worldClass=ApplicationDomain.currentDomain.getDefinition("fe.World") as Class;
     w=worldClass["w"];ScenarioRunner.boot(w,frame);
+    GrabDiagnostics.update(w);
     var loc:*=GameBridge.get(w,"loc");if(loc!==room)reset(loc);
     var why:String=GameBridge.pause(w);
     if(why)status=why;
@@ -51,6 +53,7 @@ package {
      all=fresh;perception.deliver(all,tick);perception.schedule(all,tick);squads.frame(all,tick);
      for each(b in all) {
       if(!b.profile.supported){b.action=TacticalMind.action("vanilla",b.profile.excluded,b.sample.x,b.sample.y);continue;}
+      if(ActionExecutor.yieldToNative(b)){squads.release(b.sample.fraction,b.key,tick);continue;}
       ScenarioRunner.prepareBrain(b,tick);
       var context:Object=squads.context(b,all,tick);
       var target:Object={x:b.knownX,y:b.knownY,cx:b.knownX,cy:b.knownY-g.height/2,height:g.height,unit:gg,obs:g.obs,maxObs:g.maxObs};
@@ -82,10 +85,11 @@ package {
    if(frame%30==0)TdfcLog.flush();
   }
   public static function saveReport():void {
-   var lines:Array=["TDFC "+Config.VER+" "+status+" tick="+tick,new Date().toUTCString(),"Save: "+JSON.stringify(TestSave.evidence)];
+   var lines:Array=["TDFC "+Config.VER+" "+status+" tick="+tick,new Date().toUTCString(),"Save: "+JSON.stringify(TestSave.evidence),"Grab: "+JSON.stringify(GrabDiagnostics.last)];
    for each(var b:BrainState in all)lines.push("#"+b.key+" "+b.sample.id+" "+b.profile.style+" T"+b.profile.tier+" "+b.profile.source+"\n  position="+b.sample.x+","+b.sample.y+" hp="+b.sample.hp+" fraction="+b.sample.fraction+"\n  evidence="+b.evidence+" age="+(tick-b.lastSeen)+" observed="+b.observed+" confirmed="+b.confirmed+"\n  action="+b.action.kind+" reason="+b.action.reason+" goal="+b.action.x+","+b.action.y+"\n  result="+b.result+" fault="+b.rejected+" stuckUntil="+b.stuckUntil+" suppressCooldown="+b.suppressCooldown);
    TdfcLog.saveReport(lines.join("\n"));
   }
   public static function captureReport():void {if(overlay)overlay.capture();}
+  public static function setObservation(enabled:Boolean,w:*):void {if(ScenarioRunner.active && overlay){overlay.enabled=enabled;overlay.update(w,all,status,tick,cost,TdfcLog.status);}}
  }
 }

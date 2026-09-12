@@ -1,5 +1,9 @@
 package {
  import flash.display.Sprite;
+ import flash.display.DisplayObject;
+ import flash.display.DisplayObjectContainer;
+ import flash.events.MouseEvent;
+ import flash.events.Event;
  import flash.desktop.NativeApplication;
  import flash.filesystem.File;
  import flash.filesystem.FileStream;
@@ -13,6 +17,10 @@ package {
    NativeApplication.nativeApplication.exit(failed?1:0);
   }
   private function check(ok:Boolean,name:String):void {lines.push((ok?"PASS ":"FAIL ")+name);if(!ok)failed++;}
+  private function named(parent:DisplayObjectContainer,name:String):DisplayObject {
+   for(var i:int=0;i<parent.numChildren;i++){var c:DisplayObject=parent.getChildAt(i);if(c.name==name)return c;if(c is DisplayObjectContainer){var found:DisplayObject=named(c as DisplayObjectContainer,name);if(found)return found;}}
+   return null;
+  }
   private function sample(f:String="raider",level:int=1):Object {return {id:f+"1",family:f,cls:"UnitRaider",level:level,hero:0,boss:false,x:0,y:0,cx:0,cy:-20,height:40,hp:100,maxhp:100,fraction:2,gun:true,reload:0,role:"gun",fixed:false,weapon:{},ammo:20,shots:0};}
   private function brain(n:int=1,f:String="raider",level:int=1):BrainState {var s:Object=sample(f,level);var b:BrainState=new BrainState(n,{},EnemyProfile.make(s));b.sample=s;return b;}
   private function env():Object {return {distance:300,threat:null,slotOwned:false,squad:{coverMate:false,canSuppress:false,nearest:1000,nearX:0},covers:[],retreat:null,aimed:false};}
@@ -71,6 +79,32 @@ package {
    b=brain();b.unit={jumpdy:15,mostLaz:true,isLaz:1};ActionExecutor.commitGround(b,true);
    check(b.unit.jumpdy==0 && !b.unit.mostLaz && b.unit.isLaz==0,"ground cover commitment prevents competing native jump and climb");
    ActionExecutor.commitGround(b,false);check(b.unit.jumpdy==15 && b.unit.mostLaz,"ending cover restores native mobility");
+   var uiHost:Sprite=new Sprite();addChild(uiHost);var overlay:DebugOverlay=new DebugOverlay(uiHost,function():void{});
+   var grip:DisplayObject=named(uiHost,"TDFC_DragGrip");
+   grip.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN,true));
+   check(overlay.dragging,"drag begins at the observed panel grip");
+   grip.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP,true));
+   check(!overlay.dragging,"release over grip ends drag despite button consuming bubbling mouse-up");
+   var released:Boolean=false;stage.addEventListener(MouseEvent.MOUSE_UP,function(e:MouseEvent):void{released=true;});
+   grip.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_UP,true));check(released,"mouse release reaches native controls under overlay buttons");
+   grip.dispatchEvent(new MouseEvent(MouseEvent.MOUSE_DOWN,true));stage.dispatchEvent(new Event(Event.DEACTIVATE));
+   check(!overlay.dragging,"losing window focus also cancels dragging");
+   b=brain();b.unit={levit:1,dx:3,dy:-2,weaponSkill:1,overLook:true,vKonus:0,vAngle:0,jumpdy:15,mostLaz:true,isLaz:0};
+   b.sample=GameBridge.snapshot(b.unit);b.action={kind:"suppress",x:0,y:0};b.sample.weapon={attack:function():void{b.unit.fired=true;}};
+   b.confirmed=false;b.baseSkill=1;
+   ActionExecutor.apply(b,{cx:0,cy:0,height:40,unit:{}},null,100);
+   check(b.unit.dx==3 && b.unit.dy== -2 && b.unit.weaponSkill==1 && !b.unit.fired && b.unit.overLook,"levitated enemy keeps native movement, weapon and vision control");
+   b.unit.levit=0;check(!ActionExecutor.yieldToNative(b),"releasing telekinesis allows tactics to resume");
+   ActionExecutor.commitGround(b,true);b.skillWritten=0.45;b.baseSkill=1;b.unit.weaponSkill=0.45;b.unit.levit=1;
+   ActionExecutor.apply(b,{unit:{}},null,102);
+   check(b.unit.jumpdy==15 && b.unit.mostLaz && b.unit.weaponSkill==1 && b.order==null,"grab restores tactical overrides and discards stale orders");
+   var nativeRelease:Boolean=false;stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN,function(e:MouseEvent):void{nativeRelease=true;});
+   grip.dispatchEvent(new MouseEvent(MouseEvent.RIGHT_MOUSE_DOWN,true));check(nativeRelease,"right-button input bubbles through the draggable overlay");
+   var gate:Object={pause:"",routed:true,base:false,control:true,rat:0,mana:1000,target:"存档点",possible:false,mass:1,limit:12,distance:100,range:640000,line:true};
+   check(GrabDiagnostics.reason(gate).indexOf("存档点")>=0,"diagnostic identifies the actual ungrabbable hover target");
+   gate.routed=false;check(GrabDiagnostics.reason(gate).indexOf("拦截")>=0,"diagnostic distinguishes swallowed input from a target condition");
+   gate.routed=true;gate.possible=true;gate.mana=50;check(GrabDiagnostics.reason(gate).indexOf("魔力不足")>=0,"diagnostic reports native starting mana requirement");
+   gate.mana=1000;gate.line=false;check(GrabDiagnostics.reason(gate).indexOf("遮挡")>=0,"diagnostic preserves native line-of-sight restrictions");
   }
  }
 }

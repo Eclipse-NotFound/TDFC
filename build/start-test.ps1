@@ -1,12 +1,13 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Observe', 'LoadCheck', 'Combat', 'CoverCheck')][string]$Mode = 'Observe',
+    [ValidateSet('Observe', 'LoadCheck', 'Combat', 'CoverCheck', 'TelekinesisCheck', 'TelekinesisUI')][string]$Mode = 'Observe',
     [ValidateRange(0, 38)][int]$SaveSlot = 0,
     [string]$SaveDirectory = (Join-Path $env:APPDATA 'pfe\Local Store\#SharedObjects\pfe.swf'),
     [string]$SaveFile,
     [switch]$Fresh,
     [switch]$Hidden,
     [string]$TravelLand,
+    [ValidateSet('RealisticVision','Sandevistan','RConnect','RandomRooms')][string[]]$ExtraMod = @(),
     [ValidateRange(120, 7200)][int]$Ticks = 1200
 )
 $ErrorActionPreference = 'Stop'
@@ -40,6 +41,25 @@ $modDest = Join-Path $testRoot 'mods\TDFC\release'
 New-Item -ItemType Directory -Force -Path $modDest | Out-Null
 Copy-Item -LiteralPath $candidate -Destination (Join-Path $modDest 'TDFCMod.swf') -Force
 
+# Optional, read-only copies of deployed mods for coexistence checks. Each run clears only
+# known copied binaries in this test root so a previous extra cannot contaminate a baseline.
+$extraHashes = @()
+foreach ($extra in @('RealisticVision','Sandevistan','RConnect','RandomRooms')) {
+    $extraDest = Join-Path $testRoot "mods\$extra\release"
+    $extraBinary = Join-Path $extraDest ($extra + 'Mod.swf')
+    if ($ExtraMod -contains $extra) {
+        $extraSource = Join-Path $gameRoot "mods\$extra\release"
+        New-Item -ItemType Directory -Force -Path $extraDest | Out-Null
+        foreach ($fileName in @(($extra + 'Mod.swf'), 'config.txt')) {
+            $extraFile = Join-Path $extraSource $fileName
+            if (Test-Path -LiteralPath $extraFile) {
+                Copy-Item -LiteralPath $extraFile -Destination (Join-Path $extraDest $fileName) -Force
+                $extraHashes += @{path=$extraFile; sha256=(Get-FileHash -LiteralPath $extraFile).Hash}
+            }
+        }
+    } elseif (Test-Path -LiteralPath $extraBinary) { Remove-Item -LiteralPath $extraBinary }
+}
+
 # Existing saves may contain MSW items; the native inventory loader needs their definitions.
 # Copy only the deployed dependency binary. No dependency source or configuration is edited.
 $msw = Join-Path $gameRoot 'mods\MoreSkills&Weapons\release\MoreSkillsWeaponsMod.swf'
@@ -50,10 +70,11 @@ $testMsw = & (Join-Path $PSScriptRoot 'prepare-test-dependency.ps1')
 Copy-Item -LiteralPath $testMsw -Destination (Join-Path $mswDest 'MoreSkillsWeaponsMod.swf') -Force
 
 $run = [guid]::NewGuid().ToString('N')
-$options = [ordered]@{run=$run; scenario=@{Observe='observe'; LoadCheck='load-check'; Combat='combat'; CoverCheck='cover-check'}[$Mode]; ticks=$Ticks; exit=($Mode -ne 'Observe'); fresh=[bool]$Fresh}
+$options = [ordered]@{run=$run; scenario=@{Observe='observe'; LoadCheck='load-check'; Combat='combat'; CoverCheck='cover-check'; TelekinesisCheck='telekinesis-check'; TelekinesisUI='telekinesis-ui'}[$Mode]; ticks=$Ticks; exit=($Mode -notin @('Observe','TelekinesisUI')); fresh=[bool]$Fresh}
 if ($TravelLand) { $options.travelLand = $TravelLand }
 $manifest = [ordered]@{run=$run; created=(Get-Date).ToString('o'); candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash; mswSha256=(Get-FileHash -LiteralPath $msw).Hash; sources=@()}
 $manifest.testMswSha256=(Get-FileHash -LiteralPath $testMsw).Hash
+$manifest.extraMods=$extraHashes
 if (!$Fresh) {
     # The only external write destination is this exact test application's storage.
     $store = Join-Path $env:APPDATA 'pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf'

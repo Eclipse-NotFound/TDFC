@@ -20,6 +20,8 @@
 .\build\start-test.ps1 -Mode Combat -Hidden -Ticks 1200
 .\build\start-test.ps1 -Mode Combat -TravelLand random_mane -Hidden
 .\build\start-test.ps1 -Mode CoverCheck -Hidden
+.\build\start-test.ps1 -Mode TelekinesisCheck -TravelLand random_mane -Hidden
+.\build\start-test.ps1 -Mode TelekinesisCheck -TravelLand random_mane -ExtraMod RealisticVision,Sandevistan,RConnect,RandomRooms -Hidden
 .\build\test-logic.ps1
 ```
 
@@ -32,6 +34,10 @@
 - `%APPDATA%/pfe-tdfc-test/Local Store/tdfc.log`：测试日志。
 
 `CoverCheck` 在真实地图中寻找可达的掩体/探头位置，固定测试玩家位置和已知情报，持续给敌人“受压”输入；在这个专项中排除慢弹干扰。通过条件是观察到实际位移、遮挡、探头恢复射线。它验证行动执行，不冒充对自然感知和所有地图的验证。
+
+`TelekinesisCheck` 生成可见掠夺者与已发现地雷，选择不与其他交互对象重叠的位置，经过原生对象选中、右键事件、玩家控制，断言成功抓取；另验证被抓敌人的战术控制已交还。它覆盖观察开/关两种状态。若要亲自点鼠标，改为 `-Mode TelekinesisUI`：目标第一次被抓取前固定在出生位置，敌人伤害为零、地雷感应禁用；抓取后停止固定，窗口须手动关闭。此模式不自动给出 PASS。
+
+`-ExtraMod` 仅复制指定模组的已部署文件和配置到 TDFC 测试目录，用于共存排查。下一轮不传此参数会移除测试目录内这些额外 SWF，避免污染基线；不会编辑其他模组项目。联机模组保持离线，不点击 Host/Join。
 
 ## 原存档与依赖
 

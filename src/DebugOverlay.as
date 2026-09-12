@@ -5,6 +5,7 @@ package {
  import flash.text.TextField;
  import flash.text.TextFormat;
  import flash.events.MouseEvent;
+ import flash.events.Event;
  import flash.geom.Point;
  import flash.display.BitmapData;
  import flash.filesystem.File;
@@ -20,18 +21,25 @@ package {
   private var selected:int=0;
   private var parent:DisplayObjectContainer;
   private var report:Function;
+  private var draggingPanel:Boolean=false;
+  public function get dragging():Boolean {return draggingPanel;}
   public function DebugOverlay(host:DisplayObjectContainer,onReport:Function) {
    parent=host;report=onReport;root.name="TDFC_DebugRoot";root.mouseEnabled=false;
    host.addChild(root);root.addChild(marks);marks.mouseEnabled=false;
    toggle=button("TDFC · 观察",0,0,function(e:MouseEvent):void {enabled=!enabled;});
    toggleText=toggle.getChildAt(0) as TextField;root.addChild(toggle);root.addChild(panel);panel.x=12;panel.y=120;
-   panel.graphics.beginFill(0x101c27,0.94);panel.graphics.drawRoundRect(0,0,340,358,10);panel.graphics.endFill();
-   var grip:Sprite=button("TDFC 调试（拖动）",6,5,null,205);panel.addChild(grip);
-   grip.addEventListener(MouseEvent.MOUSE_DOWN,function(e:MouseEvent):void {panel.startDrag();e.stopImmediatePropagation();});
-   host.stage.addEventListener(MouseEvent.MOUSE_UP,function(e:MouseEvent):void {panel.stopDrag();});
+   panel.graphics.beginFill(0x101c27,0.94);panel.graphics.drawRoundRect(0,0,340,390,10);panel.graphics.endFill();
+   var grip:Sprite=button("TDFC 调试（拖动）",6,5,null,205);grip.name="TDFC_DragGrip";panel.addChild(grip);
+   grip.addEventListener(MouseEvent.MOUSE_DOWN,function(e:MouseEvent):void {draggingPanel=true;panel.startDrag();e.stopImmediatePropagation();});
+   // Observe release before a child can consume it; leaving the window also ends dragging.
+   host.stage.addEventListener(MouseEvent.MOUSE_UP,endDrag,true);
+   host.stage.addEventListener(MouseEvent.MOUSE_UP,endDrag);
+   host.stage.addEventListener(Event.MOUSE_LEAVE,endDrag);
+   host.stage.addEventListener(Event.DEACTIVATE,endDrag);
    panel.addChild(button("保存诊断",225,5,function(e:MouseEvent):void {report();}));
-   detail=text(326,305,12);detail.x=7;detail.y=39;panel.addChild(detail);panel.visible=false;
+   detail=text(326,337,12);detail.x=7;detail.y=39;panel.addChild(detail);panel.visible=false;
   }
+  private function endDrag(e:Event=null):void {if(draggingPanel){panel.stopDrag();draggingPanel=false;}}
   private function text(w:int,h:int,size:int=12):TextField {
    var t:TextField=new TextField();t.width=w;t.height=h;t.defaultTextFormat=new TextFormat("Microsoft YaHei",size,0xe5edf5);t.multiline=true;t.wordWrap=true;t.selectable=false;t.mouseEnabled=false;return t;
   }
@@ -40,7 +48,7 @@ package {
    var t:TextField=text(width,30);t.text=s;t.x=6;t.y=4;b.addChild(t);
    b.graphics.beginFill(0x243b50,0.96);b.graphics.drawRoundRect(0,0,t.width,30,6);b.graphics.endFill();
    b.addEventListener(MouseEvent.MOUSE_DOWN,function(e:MouseEvent):void {e.stopPropagation();});
-   b.addEventListener(MouseEvent.MOUSE_UP,function(e:MouseEvent):void {e.stopPropagation();});
+   // Releases must reach native controls even if a press began outside the overlay.
    b.addEventListener(MouseEvent.CLICK,function(e:MouseEvent):void {e.stopPropagation();if(fn!=null)fn(e);});return b;
   }
   private function mark(key:int):Sprite {
@@ -55,8 +63,8 @@ package {
    if(parent.getChildIndex(root)!=parent.numChildren-1)parent.setChildIndex(root,parent.numChildren-1);
    toggle.x=parent.stage.stageWidth-120;toggle.y=12;
    toggleText.text="TDFC "+(enabled?"观察中":status=="运行"?"运行":"状态");
-   panel.visible=marks.visible=enabled;if(!enabled)return;
-   panel.x=Math.max(0,Math.min(parent.stage.stageWidth-340,panel.x));panel.y=Math.max(0,Math.min(parent.stage.stageHeight-358,panel.y));
+   panel.visible=marks.visible=enabled;if(!enabled){endDrag();return;}
+   panel.x=Math.max(0,Math.min(parent.stage.stageWidth-340,panel.x));panel.y=Math.max(0,Math.min(parent.stage.stageHeight-390,panel.y));
    marks.graphics.clear();var alive:Object={};var count:int=0;var chosen:BrainState;
    var visual:DisplayObject=GameBridge.get(world,"visual") as DisplayObject;
    var loc:*=GameBridge.get(world,"loc"),player:*=GameBridge.get(loc,"gg");
@@ -74,7 +82,7 @@ package {
     label.alpha=blocked?0.65:0.96;
     marks.graphics.lineStyle(1,blocked?0x718397:0x6fe0e5,0.5);marks.graphics.moveTo(foot.x,foot.y);marks.graphics.lineTo(label.x+4,label.y+48);
     var tx:TextField=label.getChildAt(0) as TextField;
-    tx.text="#"+b.key+" "+s.id+" · "+(b.profile.supported?"思维 "+b.profile.tier:"原版")+" · "+int(s.hp)+" HP\n"+name(b.action.kind)+" | "+b.result;
+    tx.text="#"+b.key+" "+s.id+" · "+(b.profile.supported?"思维 "+b.profile.tier:"原版")+" · "+int(s.hp)+" HP\n"+(blocked?"[遮挡] ":"")+name(b.action.kind)+" | "+b.result;
     if(b.key==selected) {
      chosen=b;marks.graphics.lineStyle(1,0x6fe0e5,0.8);marks.graphics.drawRect(p.x-s.width/2,p.y,s.width,foot.y-p.y);
      if(b.action && b.profile.supported) {var goal:Point=root.globalToLocal(visual.localToGlobal(new Point(b.action.x,b.action.y)));marks.graphics.moveTo(foot.x,foot.y);marks.graphics.lineTo(goal.x,goal.y);marks.graphics.drawCircle(goal.x,goal.y,5);}
@@ -86,6 +94,7 @@ package {
    }
    for(var key:String in labels)if(!alive[key]){marks.removeChild(labels[key]);delete labels[key];}
    var head:String="v"+Config.VER+" · "+status+" · 战术帧 "+tick+"\n屏幕敌人 "+count+" / 房间记录 "+all.length+" · 更新 "+cost.toFixed(1)+" ms\n日志："+logStatus+"\n";
+   head+="念力："+GrabDiagnostics.summary+"\n";
    if(chosen)head+="\n#"+chosen.key+" "+chosen.profile.style+(chosen.profile.supported?"\n思维 "+chosen.profile.tier+" · "+chosen.profile.tierName+"\n"+chosen.profile.source+"\n情报："+chosen.evidence+(chosen.evidence=="无"?"":"（"+Math.max(0,tick-chosen.lastSeen)+" 帧前）"):"\nTDFC 不接管该兵种")+"\n行动："+name(chosen.action.kind)+"\n原因："+chosen.action.reason+"\n结果："+chosen.result+(chosen.rejected?"\n限制："+chosen.rejected:"");
    else head+="\n点击敌人标签查看原因、目标点与视野方向。\n淡色标签＝玩家与敌人之间有墙体遮挡。\n视野线示意方向，不代表最终察觉距离。\n所有墙后信息仅用于调试。\n测试场景通过独立测试启动器运行。";
    if(ScenarioRunner.active)head+="\n"+TestSave.status;
@@ -93,7 +102,7 @@ package {
   }
   private function freeSpot(x:Number,y:Number,occupied:Array):Boolean {
    if(x<0 || y<0 || x+230>parent.stage.stageWidth || y+52>parent.stage.stageHeight-4)return false;
-   if(x<panel.x+340 && x+230>panel.x && y<panel.y+358 && y+52>panel.y)return false;
+   if(x<panel.x+340 && x+230>panel.x && y<panel.y+390 && y+52>panel.y)return false;
    if(x<toggle.x+108 && x+230>toggle.x && y<toggle.y+30 && y+52>toggle.y)return false;
    for each(var b:Object in occupied)if(Math.abs(x-b.x)<234 && Math.abs(y-b.y)<56)return false;
    return true;
@@ -119,6 +128,6 @@ package {
     fs.open(f,FileMode.WRITE);fs.writeBytes(data);fs.close();bitmap.dispose();
    }catch(e:Error){TdfcLog.line("capture-error",e.message);}
   }
-  public static function name(k:String):String {var n:Object={idle:"待机",vanilla:"原版接管",advance:"推进",retreat:"撤退",cover:"寻找掩体",hide:"掩体隐藏",peek:"探头",search:"搜索",space:"散开",dodge:"避线",hold:"守位射击",suppress:"压制"};return n[k]||k;}
+  public static function name(k:String):String {var n:Object={idle:"待机",vanilla:"原版接管",controlled:"念力控制中",advance:"推进",retreat:"撤退",cover:"寻找掩体",hide:"掩体隐藏",peek:"探头",search:"搜索",space:"散开",dodge:"避线",hold:"守位射击",suppress:"压制"};return n[k]||k;}
  }
 }

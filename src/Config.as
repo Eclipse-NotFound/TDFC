@@ -1,7 +1,7 @@
 package {
  /** 仅保留当前运行链实际消费的参数；时间单位为未暂停的战术帧。 */
  public class Config {
-  public static const VER:String="0.6.0";
+  public static const VER:String="0.6.1";
   public static const TEST_APP_ID:String="pfe-tdfc-test";
   public static const SUPPRESS_COOLDOWN:int=300;
   public static const REPORT_COOLDOWN:int=90;

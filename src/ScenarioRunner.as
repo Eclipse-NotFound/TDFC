@@ -47,6 +47,14 @@ package {
       if(w.game.curLandId!=options.travelLand || GameBridge.get(GameBridge.get(w,"land"),"act")==null || w.land.act.id!=options.travelLand)return;
      }
      var loc:*=w.loc,g:*=loc.gg;
+     if(options.scenario=="telekinesis-ui") {
+      spawned=true;TelekinesisFixture.prepareUI(w);return;
+     }
+     if(options.scenario=="telekinesis-check") {
+      spawned=true;
+      seen.telekinesis=TelekinesisFixture.run(w);
+      finish(seen.telekinesis.pass,JSON.stringify(seen.telekinesis));return;
+     }
      if(options.scenario=="cover-check") {
       if(actors.length==0)add(loc,g,"fe.unit.UnitRanger",1,36,0);
       if(!CoverFixture.locate(loc,GameBridge.snapshot(actors[0]),GameBridge.num(g,"scY",40)))return;
@@ -62,6 +70,7 @@ package {
      spawned=true;startTick=TdfcRuntime.tick;TdfcLog.line("scenario","spawned="+actors.length);
     }catch(ex:Error){finish(false,"load/spawn "+ex.message);}
    }
+   if(options.scenario=="telekinesis-ui"){if(spawned)TelekinesisFixture.sampleUI(w,frame);return;}
    if(spawned && pauseAt<0 && TdfcRuntime.tick-startTick>300) {pauseAt=frame;pauseTick=TdfcRuntime.tick;w.onPause=true;}
    if(pauseAt>=0 && frame-pauseAt>=30 && !pauseOK) {pauseOK=TdfcRuntime.tick==pauseTick;w.onPause=false;if(!pauseOK){finish(false,"tactical clock advanced while paused");return;}TdfcLog.line("scenario","PASS pause clock");}
   }
@@ -74,6 +83,7 @@ package {
   }
   public static function combat(w:*,t:int):void {
    if(!active || !spawned || done)return;
+   if(options.scenario=="telekinesis-ui")return;
    var g:*=w.loc.gg;g.hp=g.maxhp;
    if(options.scenario=="cover-check") {g.setPos(CoverFixture.found.player.x,CoverFixture.found.player.y);g.dx=0;g.dy=0;}
    if(t%120==0){try{g.pers.healAll();}catch(e:Error){}}
@@ -84,6 +94,7 @@ package {
   }
   public static function observe(all:Array,status:String,t:int):void {
    if(!active || !spawned || done)return;
+   if(options.scenario=="telekinesis-ui")return;
    for each(var b:BrainState in all) {
     if(actors.indexOf(b.unit)<0)continue;
     seen[b.action.kind]=true;
