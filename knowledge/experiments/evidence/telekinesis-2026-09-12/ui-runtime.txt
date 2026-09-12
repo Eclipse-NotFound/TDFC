@@ -98,4 +98,3 @@ Sat Sep 12 13:58:21 2026 UTC [TDFC] decision #7 raider T1 advance 掠夺者·猛
 Sat Sep 12 13:58:22 2026 UTC [TDFC] decision #7 raider T1 dodge 确认被瞄准，短促避线
 Sat Sep 12 13:58:24 2026 UTC [TDFC] heartbeat tick=6000 units=8 cost=0ms
 Sat Sep 12 13:58:29 2026 UTC [TDFC] heartbeat tick=6150 units=8 cost=0ms
-
