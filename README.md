@@ -52,6 +52,6 @@ flowchart LR
 
 设计约定见 [design/refactor-v0.6.md](design/refactor-v0.6.md)，当前状态见 [state/MEMORY.md](state/MEMORY.md)。验证记录：[0.6 主线](knowledge/experiments/refactor-validation-2026-09-10.md)、[0.6.1 念力与输入](knowledge/experiments/telekinesis-validation-2026-09-12.md)。
 
-2026-09-19 确认 RealisticVision 的原版显示模式仍会误拦敌人念力；修复副本已验证，正式视觉文件尚未更新。0.6.2 更新的是 TDFC 诊断与回归工具；视觉修复状态见 [本次调查](knowledge/experiments/telekinesis-vision-validation-2026-09-19.md)。
+2026-09-19 已修复并部署 RealisticVision 原版显示误拦念力的问题（v0.28.0-grabfix.1）。正式文件独立启动后，敌人/地雷的右键与 Q 抓取及基础遮挡检查通过；正常保存并重启游戏后生效。TDFC 0.6.2 同时提供实际视觉模式与最近操作诊断；若原目标仍失败，打开观察面板并保存诊断。证据见 [本次调查](knowledge/experiments/telekinesis-vision-validation-2026-09-19.md)。
 
 掩体导航限于已检查的短程通路，不能代替原版完整的跨层寻路。战斗场景包含随机行为；自动结果不是所有关卡、头目或其他模组组合均已验收的证明。
