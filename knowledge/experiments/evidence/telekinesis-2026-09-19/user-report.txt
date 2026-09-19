@@ -1,0 +1,34 @@
+TDFC 0.6.1 游戏暂停 tick=23555
+Sat Sep 19 13:38:53 2026 UTC
+Save: {"verified":false}
+Grab: {"range":640000,"target":"","mana":1000,"routed":true,"result":"未抓取；鼠标下没有锁定对象","mass":0,"limit":12,"source":"Q","age":2,"cursor":0,"wasHeld":false,"pause":"","rat":0,"distance":-1,"control":true,"possible":false,"base":false,"line":true,"cls":""}
+#57 turret0 原版行为 T3 原版等级 26 → 基础 3
+  position=1780,159 hp=285.2 fraction=4
+  evidence=无 age=123555 observed=false confirmed=false
+  action=vanilla reason=未识别的兵种，交还原版 goal=1780,159
+  result=尚未下令 fault= stuckUntil=0 suppressCooldown=-100000
+#58 msp 原版行为 T2 原版等级 22 → 基础 2
+  position=1420,150 hp=50.959999999999994 fraction=4
+  evidence=无 age=123555 observed=false confirmed=false
+  action=vanilla reason=未识别的兵种，交还原版 goal=1420,150
+  result=尚未下令 fault= stuckUntil=0 suppressCooldown=-100000
+#59 msp 原版行为 T3 原版等级 29 → 基础 3
+  position=1824,279 hp=62.720000000000006 fraction=4
+  evidence=无 age=123555 observed=false confirmed=false
+  action=vanilla reason=未识别的兵种，交还原版 goal=1824,279
+  result=尚未下令 fault= stuckUntil=0 suppressCooldown=-100000
+#60 msp 原版行为 T3 原版等级 26 → 基础 3
+  position=1336,199 hp=57.68 fraction=4
+  evidence=无 age=123555 observed=false confirmed=false
+  action=vanilla reason=未识别的兵种，交还原版 goal=1336,199
+  result=尚未下令 fault= stuckUntil=0 suppressCooldown=-100000
+#61 alicorn3 原版行为 T3 原版等级 31 → 基础 3
+  position=1406.6617992075235,849.0571167250467 hp=1060.0612801053871 fraction=1
+  evidence=无 age=123555 observed=false confirmed=false
+  action=vanilla reason=未识别的兵种，交还原版 goal=1406.6617992075235,849.0571167250467
+  result=尚未下令 fault= stuckUntil=0 suppressCooldown=-100000
+#62 alicorn3 原版行为 T3 原版等级 25 → 基础 3
+  position=1397.210381132146,667.6863090850475 hp=821.588246833143 fraction=1
+  evidence=无 age=123555 observed=false confirmed=false
+  action=vanilla reason=未识别的兵种，交还原版 goal=1397.210381132146,667.6863090850475
+  result=尚未下令 fault= stuckUntil=0 suppressCooldown=-100000

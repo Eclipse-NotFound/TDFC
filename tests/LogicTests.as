@@ -1,8 +1,10 @@
 package {
  import flash.display.Sprite;
+ import flash.display.MovieClip;
  import flash.display.DisplayObject;
  import flash.display.DisplayObjectContainer;
  import flash.events.MouseEvent;
+ import flash.events.KeyboardEvent;
  import flash.events.Event;
  import flash.desktop.NativeApplication;
  import flash.filesystem.File;
@@ -105,6 +107,23 @@ package {
    gate.routed=false;check(GrabDiagnostics.reason(gate).indexOf("拦截")>=0,"diagnostic distinguishes swallowed input from a target condition");
    gate.routed=true;gate.possible=true;gate.mana=50;check(GrabDiagnostics.reason(gate).indexOf("魔力不足")>=0,"diagnostic reports native starting mana requirement");
    gate.mana=1000;gate.line=false;check(GrabDiagnostics.reason(gate).indexOf("遮挡")>=0,"diagnostic preserves native line-of-sight restrictions");
+   var carrier:MovieClip=new MovieClip();carrier.name="MSWModAPICarrier";uiHost.addChild(carrier);
+   var settingsWrites:int=0;
+   carrier.modAPI={getPages:function():Array{return [{modId:"realisticvision",items:[
+    {key:"enabled",get:function():Boolean{return true;},set:function(v:*):void{settingsWrites++;}},
+    {key:"mode",get:function():int{return 0;},set:function(v:*):void{settingsWrites++;}}
+   ]}];}};
+   w={main:uiHost,allStat:1,comLoad:-1,t_exit:0,loc:{base:false,celObj:{nazv:"测试敌人",levitPoss:true,massa:1,onCursor:1},celDist:100,isLine:function(...args):Boolean{return true;}},gg:{ggControl:true,mana:1000,rat:0,pers:{maxTeleMassa:12,teleDist:640000},teleObj:null}};
+   w.gg.sost=1;w.loc.gg=w.gg;
+   var vision:Object=GrabDiagnostics.visibility(w);
+   check(vision.known && vision.enabled && vision.modeName=="原版" && settingsWrites==0,"visibility diagnostic reads the public settings bridge without changing settings");
+   GrabDiagnostics.init(stage,function():*{return w;},function():Boolean{return true;});
+   var swallow:Function=function(e:Event):void{e.stopImmediatePropagation();};stage.addEventListener(KeyboardEvent.KEY_DOWN,swallow,false,100);
+   uiHost.dispatchEvent(new KeyboardEvent(KeyboardEvent.KEY_DOWN,true,false,113,81));GrabDiagnostics.update(w);GrabDiagnostics.update(w);
+   stage.removeEventListener(KeyboardEvent.KEY_DOWN,swallow);
+   check(GrabDiagnostics.last.target=="测试敌人" && !GrabDiagnostics.last.routed && GrabDiagnostics.summary.indexOf("原版")>=0,"intercepted Q records the active visibility mode at the event boundary");
+   w.loc.celObj=null;uiHost.dispatchEvent(new KeyboardEvent(KeyboardEvent.KEY_DOWN,true,false,113,81));GrabDiagnostics.update(w);GrabDiagnostics.update(w);
+   check(GrabDiagnostics.last.target=="" && GrabDiagnostics.recent.length==2 && GrabDiagnostics.recent[0].target=="测试敌人","an empty follow-up click preserves the previous failed grab in exported history");
   }
  }
 }

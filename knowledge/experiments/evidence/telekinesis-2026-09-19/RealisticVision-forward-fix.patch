@@ -1,0 +1,13 @@
+diff --git a/src/RealisticVisionMod.as b/src/RealisticVisionMod.as
+index c8e61a2..ea5ef57 100644
+--- a/src/RealisticVisionMod.as
++++ b/src/RealisticVisionMod.as
+@@ -472,7 +472,7 @@ package
+             return false;
+          }
+          var loc:Location = w.loc;
+-         if(loc !== this.curLoc)
++         if(loc !== this.curLoc || this.cfgMode == "vanilla" || loc.base || this.cfgBaseRooms[loc.id] == true)
+          {
+             return false;
+          }

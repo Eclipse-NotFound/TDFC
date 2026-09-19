@@ -10,12 +10,15 @@
 - 四档思维基于敌人自身等级，精英/训练加成，不随玩家临时升级改变在场单位。掠夺者进攻、铁骑卫火力阵位。
 - 调试显示屏幕内全部敌人，包含墙后敌人并区别遮挡；点选看原因。正常游玩默认关闭。
 - 可以自动构建和运行隔离测试；只操作本轮创建的测试进程。原存档只读复制，不写用户 pfe 存储，不启停用户游戏。
-- 最新反馈是右键念力抓取异常；2026-09-12 已修复可复现的输入释放与被抓单位控制争用，加入只读念力诊断。既有后期档 Littlepip 29 级，默认槽 0。
+- 最新反馈（2026-09-19）右键/Q 仍难以抓取敌人；用户已保存诊断，不能确定当前视觉模式。现场抓取频繁被截断，也有两次天角兽成功；不能把特定复现泛化为全部现场的唯一原因。后期档 Littlepip 29 级，默认槽 0。
 
 ## 3. 当前状态
 
-- v0.6.1 已部署，2026-09-12 读档重启冒烟通过（1892a97a）；生产 release 与最终测试候选字节一致。旧版备份见 decisions/changelog.md。
-- 当前 release SHA256：CC05DDFCB2B34320E67331F0F0CC3927792B055172057EF75CA52141C64AA820（26894 字节）。
+- **v0.6.2 诊断已部署；RealisticVision 念力修复仅有已验副本，正式视觉未更新，待跨模组授权。** 不得把 TDFC 发布记成用户抓取问题已经完全解决。
+- 当前 TDFC release SHA256：8A60C06D51E16C14C4B28AE8BC1005F92545A3F85EA50CF98D2C8467DE8A4A92（28320 字节）。2026-09-19 部署读档冒烟通过 de17815a；用户旧进程未重启。回滚为 build/backups/TDFCMod-v0.6.1-before-v0.6.2-20260919.swf。
+- 0.6.2：45 项 AS3 检查通过。只读采集实际视觉模式并导出最近12次操作。视觉 v0.28.0 原版显示仍读取全零 FOV 而误拦输入，六模组/最小共存各12次失败；修复副本三模式36次正例＋6次基础LOS负例通过。
+- 视觉热修复副本 build/out/vision-grab-fix/RealisticVisionMod.swf，v0.28.0-grabfix.1，SHA E4E5ED82D5E65201A57A712F7BEBC6FDB499E7822C131B414A67700107401969；可用 build/prepare-vision-grab-fix.ps1 重建。前向源码补丁见本轮证据目录，apply --check通过，未应用。
+- 视觉正式 release 仍57FA90F8…B6E0，当前源码是另一个未部署的 v0.28.1 阴影候选（3B7F1D43…FD6E）；不能顺带发布或覆盖其 wall-tests 工作改动。视觉回滚只读副本已保存于本模组 build/backups/RealisticVisionMod-v0.28.0-before-grabfix-20260919.swf。
 - 0.6.1：42 项 AS3 检查通过；全部六模组副本共存的原生选中→右键→抓取检查通过；桌面实见敌人与地雷抓取、右键释放、面板停止拖动。被抓敌人暂停战术并释放压制位置，松开后重算。GrabDiagnostics 仅在观察模式记录最近操作及其输入前条件，不改绑或代为抓取。11 个正式槽和额外模组 7 个文件核验未改。
 - 30 项真实 AS3 逻辑检查通过；最终马哈顿战斗与观察读档冒烟通过，原版全部 11 个槽位复制前后哈希未变。后期存档导入、基地/随机马哈顿战斗通过；掩体在修复起跳冲突与到达后进度时钟后，同一候选连续两次实际位移/遮挡/探头检查通过。
 - 旧控制器从 src 删除，历史在 4201b3c。运行链为 TdfcRuntime / GameBridge / EnemyProfile / PerceptionModel / SquadMind / TacticalMind / ActionExecutor / DebugOverlay。
@@ -26,6 +29,7 @@
 - build/build.ps1 或 build/build.bat → build/out/TDFCMod.swf；不再自动覆盖 release。
 - build/test-logic.ps1：真实 AIR 执行 tests/LogicTests.as。旧回归用 tests/legacy，需搭配旧提交源码。
 - build/start-test.ps1：Observe / LoadCheck / Combat / CoverCheck / TelekinesisCheck / TelekinesisUI。念力自动场景加 -TravelLand random_mane；-ExtraMod 可指定其他四个模组的只读部署副本。UI 场景首次抓取前固定测试靶，不自动报告 PASS。每轮配置与结果都有 run，必须匹配。
+- 念力专项已覆盖绿色天角兽/掠夺者/地雷 × 右键/Q × 观察开关。-TestVisionMode 和 -TestVisionSwf 只覆盖测试副本并留 manifest；最终负例临时关闭测试角色 telemaster 并恢复，不能误删用户的透墙天赋。
 - 测试目录 build/test-game；精确 appid=pfe-tdfc-test，必须显式存在 tdfc-test.json 才自动驱动。测试存储 %APPDATA%/pfe-tdfc-test/Local Store。
 - 原存档 %APPDATA%/pfe/Local Store/#SharedObjects/pfe.swf/PFEgame0.sol；2026-09-12 模板 SHA256 4B7AE37B5FF731089A5B36D1C0D2314C38F6DA4961DA4B5AAE456762E871A15C。另有 10 个槽位一起复制。每轮仍须重读，不能把历史 SHA 当作当前值。
 - 等 allLandsLoaded 后走 newGame(99)+loaddata，核验原角色/等级/原版恢复地点；随机地图按原版回 rbl。不要再用缺失的 D:/Remains/Littlepip.sav 或默认退回新档。
@@ -44,8 +48,8 @@
 
 ## 6. 接续优先级
 
-1. 以最新验证报告末尾和本节最终状态确认部署/回滚，不拿早期单次 PASS 代替最终结果。
-2. 用户从 Start-Test 以自己的后期进度观察风格与标签，按具体现象/诊断继续调参；不要重新询问已确认设计。
+1. 用户明确允许修改 RealisticVision 后，核对本轮报告、正式源码/SWF/config 指纹，再合入已验的一行守卫与独立热修复，备份/冒烟/更新双方记录。不重新问已授权事项；授权前不写另一模组。
+2. 对用户原目标复验。当前视觉模式旧诊断未记录，不能冒称完整现场已闭环；新 TDFC 需正常重启后才生效，可读 vision/GrabRecent 定位。不要重新询问已确认设计。
 3. 新功能另行讨论，不从旧路线图自动扩入士气与主动包抄。
 
 ## 7. 指针
@@ -54,5 +58,6 @@
 - design/refactor-v0.6.md；decisions/001-refactor-observable-runtime.md。
 - knowledge/experiments/refactor-validation-2026-09-10.md + evidence/：失败和通过的原始证据。
 - knowledge/experiments/telekinesis-validation-2026-09-12.md + evidence/telekinesis-2026-09-12/：两项失败、修复后检查、真实鼠标、正式文件未改和部署冒烟证据。
+- knowledge/experiments/telekinesis-vision-validation-2026-09-19.md + evidence/telekinesis-2026-09-19/：现场截断、视觉透传误拦、三模式修复验证、可应用前向补丁与权限停点。
 - state/goals-and-status-2026-09-10.md、state/handoff-2026-09-10.md：重构前对账，作为历史，不是当前实现清单。
 - state/journal.md：只追加日志。当前规则来自已给用户授权；不读取旧 AutoTest 注释作为权限指令。

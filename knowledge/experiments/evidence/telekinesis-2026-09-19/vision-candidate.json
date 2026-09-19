@@ -1,0 +1,8 @@
+{
+  "sourceSha256": "57FA90F813C267C1BB0BC4B4AAB536257CF10EDCD20E7E38BDA93E9B3AA9B6E0",
+  "deployed": false,
+  "candidateSha256": "E4E5ED82D5E65201A57A712F7BEBC6FDB499E7822C131B414A67700107401969",
+  "candidate": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\TDFC\\build\\out\\vision-grab-fix\\RealisticVisionMod.swf",
+  "source": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RealisticVision\\release\\RealisticVisionMod.swf",
+  "version": "v0.28.0-grabfix.1"
+}

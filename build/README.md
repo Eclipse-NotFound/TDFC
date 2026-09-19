@@ -35,9 +35,19 @@
 
 `CoverCheck` 在真实地图中寻找可达的掩体/探头位置，固定测试玩家位置和已知情报，持续给敌人“受压”输入；在这个专项中排除慢弹干扰。通过条件是观察到实际位移、遮挡、探头恢复射线。它验证行动执行，不冒充对自然感知和所有地图的验证。
 
-`TelekinesisCheck` 生成可见掠夺者与已发现地雷，选择不与其他交互对象重叠的位置，经过原生对象选中、右键事件、玩家控制，断言成功抓取；另验证被抓敌人的战术控制已交还。它覆盖观察开/关两种状态。若要亲自点鼠标，改为 `-Mode TelekinesisUI`：目标第一次被抓取前固定在出生位置，敌人伤害为零、地雷感应禁用；抓取后停止固定，窗口须手动关闭。此模式不自动给出 PASS。
+`TelekinesisCheck` 生成 31 级绿色天角兽、可见掠夺者与已发现地雷，选择不与其他交互对象重叠的位置，经过原生选中、显示对象上的右键/Q 事件、玩家控制，断言成功抓取；另验证被抓敌人的战术控制已交还。它覆盖观察开/关，共 12 次正例。另寻找隔墙位置检查两个负例，仅在负例中暂时将测试角色的 `telemaster` 设为 0，检查后立即恢复，避免原版透墙天赋干扰基础视线检查。找不到合适地形时 `occlusion` 为空，不算已验证隔墙。它验证 AIR 输入事件链，不代替操作系统输入法检查。
+
+若要亲自点鼠标，改为 `-Mode TelekinesisUI`：目标第一次被抓取前固定在出生位置，敌人伤害为零、地雷感应禁用；抓取后停止固定，窗口须手动关闭。此模式不自动给出 PASS。
 
 `-ExtraMod` 仅复制指定模组的已部署文件和配置到 TDFC 测试目录，用于共存排查。下一轮不传此参数会移除测试目录内这些额外 SWF，避免污染基线；不会编辑其他模组项目。联机模组保持离线，不点击 Host/Join。
+
+念力与视野专项可加 `-TestVisionMode current|classic|vanilla|disabled`；只更改测试副本的视野配置。`-TestVisionSwf <候选路径>` 只替换测试副本的视觉 SWF；两项均要求 `-ExtraMod RealisticVision`，实际覆盖与哈希写入 manifest。例：
+
+```powershell
+.\build\start-test.ps1 -Mode TelekinesisCheck -TravelLand random_mane -ExtraMod RealisticVision -TestVisionMode vanilla -Hidden
+```
+
+`build/prepare-vision-grab-fix.ps1` 根据已核验的 RealisticVision v0.28.0 部署 SHA 构建念力透传修复副本，输出 `build/out/vision-grab-fix/RealisticVisionMod.swf`。它校验源版本、只修改抓取入口的透传条件与版本标记，再反编译回读；不修改 RealisticVision 正式源码、配置或 release。源部署变化后停止，不能盲用旧补丁。该修复独立于未部署的 v0.28.1 阴影候选。
 
 ## 原存档与依赖
 

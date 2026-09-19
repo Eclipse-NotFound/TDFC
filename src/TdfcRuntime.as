@@ -85,7 +85,7 @@ package {
    if(frame%30==0)TdfcLog.flush();
   }
   public static function saveReport():void {
-   var lines:Array=["TDFC "+Config.VER+" "+status+" tick="+tick,new Date().toUTCString(),"Save: "+JSON.stringify(TestSave.evidence),"Grab: "+JSON.stringify(GrabDiagnostics.last)];
+   var lines:Array=["TDFC "+Config.VER+" "+status+" tick="+tick,new Date().toUTCString(),"Save: "+JSON.stringify(TestSave.evidence),"Grab: "+JSON.stringify(GrabDiagnostics.last),"GrabRecent: "+JSON.stringify(GrabDiagnostics.recent)];
    for each(var b:BrainState in all)lines.push("#"+b.key+" "+b.sample.id+" "+b.profile.style+" T"+b.profile.tier+" "+b.profile.source+"\n  position="+b.sample.x+","+b.sample.y+" hp="+b.sample.hp+" fraction="+b.sample.fraction+"\n  evidence="+b.evidence+" age="+(tick-b.lastSeen)+" observed="+b.observed+" confirmed="+b.confirmed+"\n  action="+b.action.kind+" reason="+b.action.reason+" goal="+b.action.x+","+b.action.y+"\n  result="+b.result+" fault="+b.rejected+" stuckUntil="+b.stuckUntil+" suppressCooldown="+b.suppressCooldown);
    TdfcLog.saveReport(lines.join("\n"));
   }

@@ -8,6 +8,8 @@ param(
     [switch]$Hidden,
     [string]$TravelLand,
     [ValidateSet('RealisticVision','Sandevistan','RConnect','RandomRooms')][string[]]$ExtraMod = @(),
+    [ValidateSet('current','classic','vanilla','disabled')][string]$TestVisionMode,
+    [string]$TestVisionSwf,
     [ValidateRange(120, 7200)][int]$Ticks = 1200
 )
 $ErrorActionPreference = 'Stop'
@@ -17,6 +19,11 @@ $testRoot = Join-Path $PSScriptRoot 'test-game'
 $descriptor = Join-Path $testRoot 'app-tdfc-test.xml'
 $candidate = Join-Path $PSScriptRoot 'out\TDFCMod.swf'
 if (!(Test-Path -LiteralPath $candidate)) { throw 'Build the candidate with build.ps1 first.' }
+if (($TestVisionMode -or $TestVisionSwf) -and $ExtraMod -notcontains 'RealisticVision') { throw 'Vision test overrides require the copied RealisticVision dependency.' }
+if ($TestVisionSwf) {
+    $TestVisionSwf = (Get-Item -LiteralPath $TestVisionSwf).FullName
+    if ([IO.Path]::GetExtension($TestVisionSwf) -ne '.swf') { throw 'TestVisionSwf must be an existing SWF candidate.' }
+}
 
 # Refuse to overwrite files used by an existing test. Never stop another game.
 $running = Get-CimInstance Win32_Process -Filter "Name = 'adl64.exe'" |
@@ -60,6 +67,16 @@ foreach ($extra in @('RealisticVision','Sandevistan','RConnect','RandomRooms')) 
     } elseif (Test-Path -LiteralPath $extraBinary) { Remove-Item -LiteralPath $extraBinary }
 }
 
+# Override only the isolated copy for input/visibility regression checks.
+if ($TestVisionSwf) { Copy-Item -LiteralPath $TestVisionSwf -Destination (Join-Path $testRoot 'mods\RealisticVision\release\RealisticVisionMod.swf') -Force }
+if ($TestVisionMode) {
+    $visionConfig = Join-Path $testRoot 'mods\RealisticVision\release\config.txt'
+    $visionText = Get-Content -LiteralPath $visionConfig -Raw
+    $visionText = $visionText -replace '(?m)^enabled=\d+', ('enabled=' + $(if ($TestVisionMode -eq 'disabled') {'0'} else {'1'}))
+    $visionText = $visionText -replace '(?m)^mode=\w+', ('mode=' + $(if ($TestVisionMode -eq 'disabled') {'current'} else {$TestVisionMode}))
+    [IO.File]::WriteAllText($visionConfig, $visionText, (New-Object System.Text.UTF8Encoding($false)))
+}
+
 # Existing saves may contain MSW items; the native inventory loader needs their definitions.
 # Copy only the deployed dependency binary. No dependency source or configuration is edited.
 $msw = Join-Path $gameRoot 'mods\MoreSkills&Weapons\release\MoreSkillsWeaponsMod.swf'
@@ -75,6 +92,9 @@ if ($TravelLand) { $options.travelLand = $TravelLand }
 $manifest = [ordered]@{run=$run; created=(Get-Date).ToString('o'); candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash; mswSha256=(Get-FileHash -LiteralPath $msw).Hash; sources=@()}
 $manifest.testMswSha256=(Get-FileHash -LiteralPath $testMsw).Hash
 $manifest.extraMods=$extraHashes
+$manifest.testVisionMode=$TestVisionMode
+if ($TestVisionSwf) { $manifest.testVisionSwf=@{path=$TestVisionSwf; sha256=(Get-FileHash -LiteralPath $TestVisionSwf).Hash} }
+if ($TestVisionMode) { $manifest.testVisionConfigSha256=(Get-FileHash -LiteralPath $visionConfig).Hash }
 if (!$Fresh) {
     # The only external write destination is this exact test application's storage.
     $store = Join-Path $env:APPDATA 'pfe-tdfc-test\Local Store\#SharedObjects\pfe.swf'

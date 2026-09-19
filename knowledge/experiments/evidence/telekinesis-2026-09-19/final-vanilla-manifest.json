@@ -1,0 +1,89 @@
+{
+  "run": "a31b92ea71dd45018e9bf56c014ca18b",
+  "created": "2026-09-19T21:58:11.6666131+08:00",
+  "candidateSha256": "8A60C06D51E16C14C4B28AE8BC1005F92545A3F85EA50CF98D2C8467DE8A4A92",
+  "mswSha256": "BEF4D857B6B78D6CCB1F9E012B8BF33CD1E9892B7347892DA984176789DE648F",
+  "sources": [
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame0.sol",
+      "sha256": "17BCC696541EA7077D4E8AEB64D3E0229C53F00A8ECABDFB30155279248BACAD"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame1.sol",
+      "sha256": "28129EEF58522EED03436697AE18F4A78A0A71E4AD924A8D1224E2788ADD9273"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame10.sol",
+      "sha256": "4FE5AAFAA70480C0A9E0979368674DD9722E66A46130DB7F096E90F6CC34FC85"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame2.sol",
+      "sha256": "CDF55370889116C79178F264713FFD33B3995503AB00D555B3406EEF14316439"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame3.sol",
+      "sha256": "C148FD96B03C200148619BF1F0BB7D910E8D5A4A9548E0D5EDBE42B587D0D226"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame4.sol",
+      "sha256": "381DC68B9287D927BBAF9A9828C4BBAA44E4A4E9876C888C1785FC6FAD02F8BF"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame5.sol",
+      "sha256": "AAB0B90D39B894EB3E1AF901131B0A9DAADA4F4960A02182F28D9A056B53C7EC"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame6.sol",
+      "sha256": "1C51506517E5FD664DFDF70F904579AD199433BB8BF09B643509C4FE8213CDE3"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame7.sol",
+      "sha256": "063427925F1EB72CCD7E9DBEE63BAF12E5551652EED5ADC15FA6F7A1C05D2D97"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame8.sol",
+      "sha256": "9147744A6DF66CB84FE4B4BC172B86F391AD3374EAFB11E9457BD3F23AA8FC8A"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame9.sol",
+      "sha256": "C98EC6983054872E62B3C826FCDC19F6211F2C17E83A602DF89E581A96DF18A0"
+    }
+  ],
+  "testMswSha256": "49A3DA8B41E2573807696CF3A4AD875425CC53AE7C98E0711AA9B01D3B9EB083",
+  "extraMods": [
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RealisticVision\\release\\RealisticVisionMod.swf",
+      "sha256": "57FA90F813C267C1BB0BC4B4AAB536257CF10EDCD20E7E38BDA93E9B3AA9B6E0"
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RealisticVision\\release\\config.txt",
+      "sha256": "5136EE1923A77F5F10EAB1B3994B64CBD67B09D687A7E829FB1E81D2E79A3C7F"
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\Sandevistan\\release\\SandevistanMod.swf",
+      "sha256": "4F44D602B8E02532F64F9640B9BB98F3B5FD918EC13319B4441E07B4B89A8625"
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\Sandevistan\\release\\config.txt",
+      "sha256": "D91C4C2889ABA19B1BCFB356885921B0605A50188B270A9E7619D2116E7EBDC3"
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RConnect\\release\\RConnectMod.swf",
+      "sha256": "2A65D5F83567BD1FB8D537270BEE4499FBAA7BF6EF2EAF89BE161BFDE0A8CF56"
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RConnect\\release\\config.txt",
+      "sha256": "5CA72017F1F811B5F8A2B1F18F6CB8B2C24239E2240716C4059CBC073913FC0A"
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RandomRooms\\release\\RandomRoomsMod.swf",
+      "sha256": "5F340D05EDDFD14488D7330D6D499849F76DE9C1B0CBFEA1E818224204C46E8F"
+    }
+  ],
+  "testVisionMode": "vanilla",
+  "testVisionSwf": {
+    "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\TDFC\\build\\out\\vision-grab-fix\\RealisticVisionMod.swf",
+    "sha256": "E4E5ED82D5E65201A57A712F7BEBC6FDB499E7822C131B414A67700107401969"
+  },
+  "testVisionConfigSha256": "4AD3B4969CDF1FA5B89B52B373172C1A1E52392B0A9CC218B83BB313BC4BB812"
+}
