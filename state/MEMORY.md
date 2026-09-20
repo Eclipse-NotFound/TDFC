@@ -1,5 +1,9 @@
 # TDFC — 开发记忆入口
 
+## 2026-09-20 当前发布覆盖：v0.6.3
+按用户要求切换独立设置入口：GrabDiagnostics 从 ModSettingsCarrier 只读 RV 当前设置，无 MSW 依赖。仅修改桥接名称和版本、更新逻辑测试；战术/抓取行为保持。当前正式 SHA256 5EE8B967BF0EDDC1D6C1931F1264DB37DEA94F365CC416B1971502A999AF8A7E（28321 字节）。下文 v0.6.2 与旧 RV 热修复为历史。
+45 项逻辑测试通过；完整/无 MSW 组合均读到实际模式，正式七模组同字节启动出现 v0.6.3。成套回滚与验证见 ../ModSettings/knowledge/experiments/2026-09-20-migration.md，备份在其 build/backups/before-migration-20260920-142036；不把本轮入口测试称为战术全量回归。
+
 ## 1. 模组目标
 
 改善信息/潜行、躲避、掩体、撤退和小队配合；敌人按自身等级、精英与训练定思维档，按兵种文化定风格。可观察的实际结果与行动理由同源，不以进入分支代替效果。入口仍为 release/TDFCMod.swf → TDFCMod.init(main)。

@@ -107,7 +107,7 @@ package {
    gate.routed=false;check(GrabDiagnostics.reason(gate).indexOf("拦截")>=0,"diagnostic distinguishes swallowed input from a target condition");
    gate.routed=true;gate.possible=true;gate.mana=50;check(GrabDiagnostics.reason(gate).indexOf("魔力不足")>=0,"diagnostic reports native starting mana requirement");
    gate.mana=1000;gate.line=false;check(GrabDiagnostics.reason(gate).indexOf("遮挡")>=0,"diagnostic preserves native line-of-sight restrictions");
-   var carrier:MovieClip=new MovieClip();carrier.name="MSWModAPICarrier";uiHost.addChild(carrier);
+   var carrier:MovieClip=new MovieClip();carrier.name="ModSettingsCarrier";uiHost.addChild(carrier);
    var settingsWrites:int=0;
    carrier.modAPI={getPages:function():Array{return [{modId:"realisticvision",items:[
     {key:"enabled",get:function():Boolean{return true;},set:function(v:*):void{settingsWrites++;}},

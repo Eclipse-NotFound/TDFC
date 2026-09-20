@@ -50,7 +50,7 @@ package {
   public static function visibility(w:*):Object {
    var result:Object={known:false};
    try {
-    var main:*=GameBridge.get(w,"main"),carrier:*=main?main.getChildByName("MSWModAPICarrier"):null;
+    var main:*=GameBridge.get(w,"main"),carrier:*=main?main.getChildByName("ModSettingsCarrier"):null;
     var api:*=GameBridge.get(carrier,"modAPI");if(!api)return result;
     for each(var page:Object in api.getPages())if(page.modId=="realisticvision") {
      for each(var item:Object in page.items) {
