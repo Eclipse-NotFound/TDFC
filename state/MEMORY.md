@@ -1,68 +1,51 @@
 # TDFC — 开发记忆入口
 
-## 2026-09-20 当前发布覆盖：v0.6.3
-按用户要求切换独立设置入口：GrabDiagnostics 从 ModSettingsCarrier 只读 RV 当前设置，无 MSW 依赖。仅修改桥接名称和版本、更新逻辑测试；战术/抓取行为保持。当前正式 SHA256 5EE8B967BF0EDDC1D6C1931F1264DB37DEA94F365CC416B1971502A999AF8A7E（28321 字节）。下文 v0.6.2 与旧 RV 热修复为历史。
-45 项逻辑测试通过；完整/无 MSW 组合均读到实际模式，正式七模组同字节启动出现 v0.6.3。成套回滚与验证见 ../ModSettings/knowledge/experiments/2026-09-20-migration.md，备份在其 build/backups/before-migration-20260920-142036；不把本轮入口测试称为战术全量回归。
-
 ## 1. 模组目标
 
-改善信息/潜行、躲避、掩体、撤退和小队配合；敌人按自身等级、精英与训练定思维档，按兵种文化定风格。可观察的实际结果与行动理由同源，不以进入分支代替效果。入口仍为 release/TDFCMod.swf → TDFCMod.init(main)。
+改善信息/潜行、躲避、掩体、撤退和小队配合；敌人按自身等级、精英与训练定思维档，按兵种文化定风格。界面显示实际决策及可核对的效果，不把进入分支当成成功。入口仍为 release/TDFCMod.swf → TDFCMod.init(main)。
 
 ## 2. 用户约定
 
-- 2026-09-10 已授权大幅代码/算法重构，现有主线＋完整调试；不加入士气/溃逃/主动包抄。
-- 四档思维基于敌人自身等级，精英/训练加成，不随玩家临时升级改变在场单位。掠夺者进攻、铁骑卫火力阵位。
-- 调试显示屏幕内全部敌人，包含墙后敌人并区别遮挡；点选看原因。正常游玩默认关闭。
-- 可以自动构建和运行隔离测试；只操作本轮创建的测试进程。原存档只读复制，不写用户 pfe 存储，不启停用户游戏。
-- 最新反馈（2026-09-19）右键/Q 仍难以抓取敌人；用户已保存诊断，不能确定当前视觉模式。现场抓取频繁被截断，也有两次天角兽成功；不能把特定复现泛化为全部现场的唯一原因。后期档 Littlepip 29 级，默认槽 0。
-- 2026-09-19 用户回答“允许”，明确授权将本次念力修复合入 RealisticVision 并更新正式模组；已完成，不重复询问。授权不扩展到其阴影候选发布。
+- 2026-09-10授权大幅重构，现有主线＋完整调试；不加入士气/溃逃/主动包抄。四档思维基于敌人自身等级、精英和训练，在场单位不随玩家临时升级改变；掠夺者进攻、铁骑卫火力阵位。
+- 调试显示屏幕内全部敌人，包括墙后目标并区别遮挡；点选看原因，正常游玩默认关闭。
+- 可自动构建和运行隔离测试；只操作本任务创建的测试进程。原存档只读复制，不写用户 pfe 存储，不启停用户游戏。后期角色Littlepip29级，默认槽0；每轮重新读取原档，不能使用历史指纹代替。
+- 2026-09-24最新反馈：枪口停在旧位置/错误方向，当前无法复现原战斗。Q3明确选择：**个人目击记忆未过期时，重新看见立即恢复确认**；初次发现仍保留反应/暴露积累，墙后不追踪精确位置，听觉/报告不刷新个人识别记忆。
+- 2026-09-19曾明确授权念力修复合入RealisticVision，已完成；不是本轮修改其他模组的授权。视觉项目现在已有后续部署，不重放旧热修复或覆盖并发修改。
 
 ## 3. 当前状态
 
-- **TDFC v0.6.2 与 RealisticVision v0.28.0-grabfix.1 均已正式部署。** 授权后直接从视觉正式部署点复制并独立启动，念力12正例＋2基础LOS负例通过（cff44575）；用户旧游戏需正常重启，原现场仍待复验。
-- 当前 TDFC release SHA256：8A60C06D51E16C14C4B28AE8BC1005F92545A3F85EA50CF98D2C8467DE8A4A92（28320 字节）。2026-09-19 部署读档冒烟通过 de17815a；用户旧进程未重启。回滚为 build/backups/TDFCMod-v0.6.1-before-v0.6.2-20260919.swf。
-- 0.6.2：45 项 AS3 检查通过。只读采集实际视觉模式并导出最近12次操作。视觉 v0.28.0 原版显示仍读取全零 FOV 而误拦输入，六模组/最小共存各12次失败；修复副本三模式36次正例＋6次基础LOS负例通过。
-- 视觉正式 release 与热修复副本 SHA 均为 E4E5ED82D5E65201A57A712F7BEBC6FDB499E7822C131B414A67700107401969。build/prepare-vision-grab-fix.ps1 是以原57FA部署为输入的构建记录；正式文件已更新，不能直接对新文件重跑旧输入校验。
-- 视觉源码一行守卫已合入并单独提交 a583f1a；其并发阴影修改保留且未部署、未纳入本次提交。正式热修复由v0.28.0派生，不是源码v0.28.1阴影候选。视觉自有回滚点为 build/release_backup_v0280_before_grabfix_20260919.swf（57FA90F8…B6E0）；本模组 build/backups 中的同版备份亦保留。
-- 0.6.1：42 项 AS3 检查通过；全部六模组副本共存的原生选中→右键→抓取检查通过；桌面实见敌人与地雷抓取、右键释放、面板停止拖动。被抓敌人暂停战术并释放压制位置，松开后重算。GrabDiagnostics 仅在观察模式记录最近操作及其输入前条件，不改绑或代为抓取。11 个正式槽和额外模组 7 个文件核验未改。
-- 30 项真实 AS3 逻辑检查通过；最终马哈顿战斗与观察读档冒烟通过，原版全部 11 个槽位复制前后哈希未变。后期存档导入、基地/随机马哈顿战斗通过；掩体在修复起跳冲突与到达后进度时钟后，同一候选连续两次实际位移/遮挡/探头检查通过。
-- 旧控制器从 src 删除，历史在 4201b3c。运行链为 TdfcRuntime / GameBridge / EnemyProfile / PerceptionModel / SquadMind / TacticalMind / ActionExecutor / DebugOverlay。
+- **TDFC v0.6.4已部署，2026-09-24。** 正式SHA256 `311880C78186565E915A3B9C15AE41CC3E09DE9478994D1673B237236C0DB7D4`，31829字节。上一版0.6.3为5EE8B967…9AF8A7E，唯一回滚备份 `build/backups/TDFCMod-v0.6.3-before-v0.6.4-20260924.swf`。
+- 修复转身时旧锥角影响look、已识别目标反复走首次确认、执行层重复用暴露值否决重新目击。lastVisual与包含听觉/报告的lastSeen分开。仅在目击成立时更新目标；原版枪口转速/散布保留。
+- 51项真实AS3检查通过。实际游戏UnitSlaver原生/模组对照、转身和低暴露重新目击通过；正常ENTER_FRAME七模组副本两位置各60/60瞄准/枪口检查通过（82a07e47）。后期存档独立重启冒烟通过（67e79308）。
+- 期间MSW外部更新为7AE25C6B…，补跑0d5da5ea通过：第一位置末60帧确认51、瞄准/角度58，第二位置全60；第一位置有首次识别过渡，不能称全部采样满分。TDFC仍同一已部署字节。
+- 观察面板默认右侧，选中敌人显示枪口橙线、瞄准点橙圈、目击/确认状态。保存诊断包含玩家中心、目击条件、个人记忆年龄、原生/执行后瞄准点和实际武器角。抓取诊断继续保留最近12次输入及正在运行的视觉模式（ModSettingsCarrier只读桥）。
+- 旧0.6.0重构、0.6.1念力与输入、0.6.2视觉念力排查、0.6.3设置桥已完成；当前运行链 TdfcRuntime / GameBridge / EnemyProfile / PerceptionModel / SquadMind / TacticalMind / ActionExecutor / DebugOverlay。旧控制器历史在4201b3c。
 
-## 4. 构建与测试
+## 4. 正在进行与卡点
 
-- 双击 Start-Test.bat：载入存档副本并开观察模式，不拉怪/回血。其他槽位和导出档参数见 build/README.md。
-- build/build.ps1 或 build/build.bat → build/out/TDFCMod.swf；不再自动覆盖 release。
-- build/test-logic.ps1：真实 AIR 执行 tests/LogicTests.as。旧回归用 tests/legacy，需搭配旧提交源码。
-- build/start-test.ps1：Observe / LoadCheck / Combat / CoverCheck / TelekinesisCheck / TelekinesisUI。念力自动场景加 -TravelLand random_mane；-ExtraMod 可指定其他四个模组的只读部署副本。UI 场景首次抓取前固定测试靶，不自动报告 PASS。每轮配置与结果都有 run，必须匹配。
-- 念力专项已覆盖绿色天角兽/掠夺者/地雷 × 右键/Q × 观察开关。-TestVisionMode 和 -TestVisionSwf 只覆盖测试副本并留 manifest；最终负例临时关闭测试角色 telemaster 并恢复，不能误删用户的透墙天赋。
-- 测试目录 build/test-game；精确 appid=pfe-tdfc-test，必须显式存在 tdfc-test.json 才自动驱动。测试存储 %APPDATA%/pfe-tdfc-test/Local Store。
-- 原存档 %APPDATA%/pfe/Local Store/#SharedObjects/pfe.swf/PFEgame0.sol；2026-09-12 模板 SHA256 4B7AE37B5FF731089A5B36D1C0D2314C38F6DA4961DA4B5AAE456762E871A15C。另有 10 个槽位一起复制。每轮仍须重读，不能把历史 SHA 当作当前值。
-- 等 allLandsLoaded 后走 newGame(99)+loaddata，核验原角色/等级/原版恢复地点；随机地图按原版回 rbl。不要再用缺失的 D:/Remains/Littlepip.sav 或默认退回新档。
-- 现有存档依赖技能武器物品。已部署依赖有“非 pfe 就自动新建角色”的问题，prepare-test-dependency.ps1 只改 TDFC/build 内副本的身份判断并反编译回读，绝不写其他模组项目。
-- 工具：Animate 2024 JRE；D:/RemainsMod/mods/Sandevistan/build/tools 的 Flex/AIR/FFDec。仅复用该已知工具路径。
+- 本轮修复、部署和独立验证已完成，自有测试已退出，自动场景开关已移除。没有待授权动作。
+- **原用户战斗未再次捕获**，不能把两项可复现缺陷泛化成所有瞄准问题的唯一根因。若仍发生，优先读取新Player/sense/aim字段，结合橙色枪口/瞄准点区分感知、记忆与武器转动。
+- 用户正常保存/重启后加载新版本；未代为操作用户游戏。最终进程清单由测试回执记录，不把历史PID当当前进程身份。
 
 ## 5. 已知边界
 
-- 掩体是已检查的短程通路；不替代原版跨层全图寻路。特殊头目/未识别单位显示原版接管。
-- 隔墙信息不实时更新，听觉为模糊区域，同伴报告按当前阵营过滤；伤害报告不凭空获取玩家坐标。
-- CoverCheck 固定玩家位置和压力，排除慢弹干扰，检验真实物理效果；不能冒充自然潜行测试。
-- 未穷举全地图、飞行/水下、全部头目、时停回放/在线联机或长期性能；全六模组仅做念力专项共存，不扩称全部行为验收。
-- 原生交互对象重叠可使 CheckPoint 抢占敌人悬停；视觉模组也会拦截不可见单位输入，均未绕过。不能把本轮两个 TDFC 修复当作用户所有历史抓取个案的已证根因。若还有个案，优先读取新“念力”行及导出 Grab 字段。
-- AIR 沙箱写测试存储可能报 3003；本轮经许可启动自己的测试进程后日志正常。FFDec 配置隔离到 build/out/tool-profile。
-- 原版 Unit.control 在物理移动前重写动作：掩体期间临时归零 jumpdy/关闭 mostLaz，结束和换图只恢复仍由 TDFC 持有的值。
+- 仅接管raider/ranger/merc/slaver/zebra/encl，特殊头目/未知单位交回原版。未穷举六家族全部武器/地图、飞行水下、时停回放、在线联机或长期性能。
+- 掩体是已检查的短程可达通路，不代替原版跨层全图寻路。原版物理前会重写动作，掩体期间临时归零jumpdy/关闭mostLaz，结束恢复仍由TDFC持有的值。
+- AimCheck固定物理位置、生命、噪声和可见距离；第一段手动走真实游戏链，第二段才是正常ENTER_FRAME。CoverCheck固定已知情报和压力。两者不能冒充自然潜行/全部战斗验收。
+- `Unit.setPos`同时清空目标，不能每帧用于瞄准夹具；`visibility`是距离尺度，不能当0～1开关。本轮失败及纠正已留证。原生初次转身有随机延迟，测试允许固定窗口内的初次识别过渡。
+- 正式宿主现已用ModLoader清单；根AGENTS旧“直接六loader”表是历史，不改受保护文件。依赖正在并行开发，使用时重新核验正式哈希，不把历史热修复或支持文件指纹当当前部署。
 
-## 6. 接续优先级
+## 6. 下一步
 
-1. 本次跨模组热修复部署已完成，双方回滚与证据已记录；不重做已通过的三模式检查，不发布正在修改的阴影候选。
-2. 用户正常保存并重启后，对原目标复验。旧诊断未记录当时视觉模式，不能冒称完整现场已闭环；若仍失败，读取新 vision/GrabRecent 定位。不要重新询问已确认设计。
-3. 新功能另行讨论，不从旧路线图自动扩入士气与主动包抄。
+1. 当前修复不需重复部署；若用户仍报告旧方向，取0.6.4新诊断对具体兵种/情报/枪口判断，不重复询问已确认玩法。
+2. 新功能另行讨论，不从旧路线图自动扩入士气和主动包抄。
 
-## 7. 指针
+## 7. 开发与证据入口
 
-- README.md：用户入口、思维/阵营规则与观察方法。
-- design/refactor-v0.6.md；decisions/001-refactor-observable-runtime.md。
-- knowledge/experiments/refactor-validation-2026-09-10.md + evidence/：失败和通过的原始证据。
-- knowledge/experiments/telekinesis-validation-2026-09-12.md + evidence/telekinesis-2026-09-12/：两项失败、修复后检查、真实鼠标、正式文件未改和部署冒烟证据。
-- knowledge/experiments/telekinesis-vision-validation-2026-09-19.md + evidence/telekinesis-2026-09-19/：现场截断、视觉透传误拦、三模式修复验证、已合入补丁与授权后正式部署回执。
-- state/goals-and-status-2026-09-10.md、state/handoff-2026-09-10.md：重构前对账，作为历史，不是当前实现清单。
-- state/journal.md：只追加日志。当前规则来自已给用户授权；不读取旧 AutoTest 注释作为权限指令。
+- `build/build.ps1` → `build/out/TDFCMod.swf`，不自动部署。`build/test-logic.ps1`运行真实AIR逻辑；工具为Animate2024 JRE及D:/RemainsMod/mods/Sandevistan/build/tools中的Flex/AIR/FFDec，只有此已知工具路径被复用。
+- `Start-Test.bat`复制现有全部槽位并载入槽0观察，不拉怪/回血。`build/start-test.ps1`支持Observe/LoadCheck/Combat/CoverCheck/AimCheck/TelekinesisCheck/TelekinesisUI；专项加`-TravelLand random_mane`，`-ExtraMod RealisticVision,Sandevistan,RConnect,RandomRooms`做部署副本共存。
+- 测试目录build/test-game，精确appid=pfe-tdfc-test且必须有tdfc-test.json；存储%APPDATA%/pfe-tdfc-test/Local Store。正式存档%APPDATA%/pfe/Local Store/#SharedObjects/pfe.swf/PFEgameN.sol，只读复制。随机地图读档按原版回rbl，随后专项传送。
+- 启动器复制当前启用ModLoader/ModSettings支持文件，生成独立manifest并记录宿主/依赖/存档SHA。MSW部署的竞争开档守卫只在TDFC/build副本定向关闭；两个已核对锚点可用，未知版本停止，不盲改。
+- README.md、build/README.md：观察、构建和测试入口；design/refactor-v0.6.md包含9月24日识别记忆约定；decisions/changelog.md、state/journal.md为版本历史。
+- `knowledge/experiments/aim-validation-2026-09-24.md`及evidence/aim-2026-09-24：本轮红绿检查、夹具错误、最终共存、并发依赖更新、部署与回滚回执。
+- 历史证据：refactor-validation-2026-09-10.md、telekinesis-validation-2026-09-12.md、telekinesis-vision-validation-2026-09-19.md（均在knowledge/experiments）。重构前目标对账state/goals-and-status-2026-09-10.md与handoff仅作历史。

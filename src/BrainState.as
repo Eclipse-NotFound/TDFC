@@ -7,6 +7,8 @@ package {
   public var sample:Object;
   public var previous:Object;
   public var lastSeen:int=-100000;
+  public var lastVisual:int=-100000;
+  public var sensing:Object;
   public var knownX:Number=0;
   public var knownY:Number=0;
   public var evidence:String="无";

@@ -1,0 +1,142 @@
+{
+  "deployedSha256": "311880C78186565E915A3B9C15AE41CC3E09DE9478994D1673B237236C0DB7D4",
+  "candidateSha256": "311880C78186565E915A3B9C15AE41CC3E09DE9478994D1673B237236C0DB7D4",
+  "preserved": [
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\pfe.swf",
+      "before": "B78244657ED407D03808C90E97325509DB35F802122835F58933FFF8003305AC",
+      "after": "B78244657ED407D03808C90E97325509DB35F802122835F58933FFF8003305AC",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\application.xml",
+      "before": "70DD3B085E5F6C66C03693CF68CE5E93A4E4136DD745D40D1A5B2A49863BA236",
+      "after": "70DD3B085E5F6C66C03693CF68CE5E93A4E4136DD745D40D1A5B2A49863BA236",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\loader-manifest.txt",
+      "before": "3FEC194F7DE2ED9325E7D81AE3A0B3BF54F62B8FB04211CBE2492BA674EB3927",
+      "after": "3FEC194F7DE2ED9325E7D81AE3A0B3BF54F62B8FB04211CBE2492BA674EB3927",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RealisticVision\\release\\RealisticVisionMod.swf",
+      "before": "CE3ABB8D1321DF4F2A6E1053ECBB44AABFF66A6E27F81B517D3A341B3A8DFB5B",
+      "after": "CE3ABB8D1321DF4F2A6E1053ECBB44AABFF66A6E27F81B517D3A341B3A8DFB5B",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RealisticVision\\release\\config.txt",
+      "before": "5136EE1923A77F5F10EAB1B3994B64CBD67B09D687A7E829FB1E81D2E79A3C7F",
+      "after": "5136EE1923A77F5F10EAB1B3994B64CBD67B09D687A7E829FB1E81D2E79A3C7F",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\Sandevistan\\release\\SandevistanMod.swf",
+      "before": "2C26EADCFE760EC3BD998DDBEDF0FAD333151E203B0688AF268BDF0612BA0263",
+      "after": "2C26EADCFE760EC3BD998DDBEDF0FAD333151E203B0688AF268BDF0612BA0263",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\Sandevistan\\release\\config.txt",
+      "before": "D91C4C2889ABA19B1BCFB356885921B0605A50188B270A9E7619D2116E7EBDC3",
+      "after": "D91C4C2889ABA19B1BCFB356885921B0605A50188B270A9E7619D2116E7EBDC3",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RConnect\\release\\RConnectMod.swf",
+      "before": "ADFB72C5D2BCE6A77B889759F63E7D9B4CEEA02AAFB57174FDB8E8E224685562",
+      "after": "ADFB72C5D2BCE6A77B889759F63E7D9B4CEEA02AAFB57174FDB8E8E224685562",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RConnect\\release\\config.txt",
+      "before": "5CA72017F1F811B5F8A2B1F18F6CB8B2C24239E2240716C4059CBC073913FC0A",
+      "after": "5CA72017F1F811B5F8A2B1F18F6CB8B2C24239E2240716C4059CBC073913FC0A",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\RandomRooms\\release\\RandomRoomsMod.swf",
+      "before": "8E0E8A83E0DE96D0CA6F5162DD81F226B53CF8F0634F0AD073E9E3829BA292E9",
+      "after": "8E0E8A83E0DE96D0CA6F5162DD81F226B53CF8F0634F0AD073E9E3829BA292E9",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\ModLoader\\release\\ModLoaderMod.swf",
+      "before": "375951AE86BCCD8886CDEAC8B479A339877CEE30F5D1B489C21FE06C736C0BF5",
+      "after": "375951AE86BCCD8886CDEAC8B479A339877CEE30F5D1B489C21FE06C736C0BF5",
+      "unchanged": true
+    },
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\MoreSkills&Weapons\\release\\MoreSkillsWeaponsMod.swf",
+      "before": "620A5BB9459E7E50F74644A3FCC24C548C5C15BA225D5335A204D3448C715B91",
+      "after": "7AE25C6BABEF61DBB3A158AD9E20FD8DBB3B473E4E66E34D2226CF2DA4F73ACF",
+      "unchanged": false
+    }
+  ],
+  "saves": [
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame0.sol",
+      "copied": "39C72342C96DEFD16C58697D58BBB23DEACEEF0C593C43FBB037632A5DCA58B8",
+      "current": "39C72342C96DEFD16C58697D58BBB23DEACEEF0C593C43FBB037632A5DCA58B8"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame1.sol",
+      "copied": "28129EEF58522EED03436697AE18F4A78A0A71E4AD924A8D1224E2788ADD9273",
+      "current": "28129EEF58522EED03436697AE18F4A78A0A71E4AD924A8D1224E2788ADD9273"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame10.sol",
+      "copied": "4FE5AAFAA70480C0A9E0979368674DD9722E66A46130DB7F096E90F6CC34FC85",
+      "current": "4FE5AAFAA70480C0A9E0979368674DD9722E66A46130DB7F096E90F6CC34FC85"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame2.sol",
+      "copied": "CDF55370889116C79178F264713FFD33B3995503AB00D555B3406EEF14316439",
+      "current": "CDF55370889116C79178F264713FFD33B3995503AB00D555B3406EEF14316439"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame3.sol",
+      "copied": "C148FD96B03C200148619BF1F0BB7D910E8D5A4A9548E0D5EDBE42B587D0D226",
+      "current": "C148FD96B03C200148619BF1F0BB7D910E8D5A4A9548E0D5EDBE42B587D0D226"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame4.sol",
+      "copied": "381DC68B9287D927BBAF9A9828C4BBAA44E4A4E9876C888C1785FC6FAD02F8BF",
+      "current": "381DC68B9287D927BBAF9A9828C4BBAA44E4A4E9876C888C1785FC6FAD02F8BF"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame5.sol",
+      "copied": "AAB0B90D39B894EB3E1AF901131B0A9DAADA4F4960A02182F28D9A056B53C7EC",
+      "current": "AAB0B90D39B894EB3E1AF901131B0A9DAADA4F4960A02182F28D9A056B53C7EC"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame6.sol",
+      "copied": "1C51506517E5FD664DFDF70F904579AD199433BB8BF09B643509C4FE8213CDE3",
+      "current": "1C51506517E5FD664DFDF70F904579AD199433BB8BF09B643509C4FE8213CDE3"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame7.sol",
+      "copied": "063427925F1EB72CCD7E9DBEE63BAF12E5551652EED5ADC15FA6F7A1C05D2D97",
+      "current": "063427925F1EB72CCD7E9DBEE63BAF12E5551652EED5ADC15FA6F7A1C05D2D97"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame8.sol",
+      "copied": "9147744A6DF66CB84FE4B4BC172B86F391AD3374EAFB11E9457BD3F23AA8FC8A",
+      "current": "9147744A6DF66CB84FE4B4BC172B86F391AD3374EAFB11E9457BD3F23AA8FC8A"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame9.sol",
+      "copied": "C98EC6983054872E62B3C826FCDC19F6211F2C17E83A602DF89E581A96DF18A0",
+      "current": "C98EC6983054872E62B3C826FCDC19F6211F2C17E83A602DF89E581A96DF18A0"
+    }
+  ],
+  "ownTestProcesses": 0,
+  "remainingProcesses": [
+    {
+      "ProcessId": 40800,
+      "CommandLine": "\"D:\\Program Files\\Steam\\steamapps\\common\\Remains\\adl64.exe\" -runtime \"D:\\Program Files\\Steam\\steamapps\\common\\Remains\\runtimes\\air\\win64\" \"D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\MoreSkills&Weapons\\build\\out\\pointer-contact-work\\build\\out\\contact-green\\runtime\\app_msw_install_test.xml\""
+    }
+  ]
+}

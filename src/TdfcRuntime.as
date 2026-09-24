@@ -86,10 +86,18 @@ package {
   }
   public static function saveReport():void {
    var lines:Array=["TDFC "+Config.VER+" "+status+" tick="+tick,new Date().toUTCString(),"Save: "+JSON.stringify(TestSave.evidence),"Grab: "+JSON.stringify(GrabDiagnostics.last),"GrabRecent: "+JSON.stringify(GrabDiagnostics.recent)];
-   for each(var b:BrainState in all)lines.push("#"+b.key+" "+b.sample.id+" "+b.profile.style+" T"+b.profile.tier+" "+b.profile.source+"\n  position="+b.sample.x+","+b.sample.y+" hp="+b.sample.hp+" fraction="+b.sample.fraction+"\n  evidence="+b.evidence+" age="+(tick-b.lastSeen)+" observed="+b.observed+" confirmed="+b.confirmed+"\n  action="+b.action.kind+" reason="+b.action.reason+" goal="+b.action.x+","+b.action.y+"\n  result="+b.result+" fault="+b.rejected+" stuckUntil="+b.stuckUntil+" suppressCooldown="+b.suppressCooldown);
+   var g:Object=GameBridge.snapshot(GameBridge.get(room,"gg"));
+   lines.push("Player: "+JSON.stringify({position:[g.x,g.y],center:[g.cx,g.cy],face:g.face,exposure:g.obs,maxExposure:g.maxObs}));
+   for each(var b:BrainState in all) {
+    var gun:*=GameBridge.get(b.unit,"currentWeapon");
+    var aim:Object={beforeOrder:[b.sample.aimX,b.sample.aimY],current:[GameBridge.num(b.unit,"celX"),GameBridge.num(b.unit,"celY")],
+     remembered:[b.knownX,b.knownY],visualAge:tick-b.lastVisual,face:GameBridge.num(b.unit,"storona"),viewAngle:GameBridge.num(b.unit,"vAngle"),
+     weapon:[GameBridge.num(gun,"X"),GameBridge.num(gun,"Y")],rot:GameBridge.num(gun,"rot"),attached:GameBridge.num(gun,"krep"),ready:GameBridge.get(gun,"ready",false)};
+    lines.push("#"+b.key+" "+b.sample.id+" "+b.profile.style+" T"+b.profile.tier+" "+b.profile.source+"\n  position="+b.sample.x+","+b.sample.y+" hp="+b.sample.hp+" fraction="+b.sample.fraction+"\n  evidence="+b.evidence+" age="+(tick-b.lastSeen)+" observed="+b.observed+" confirmed="+b.confirmed+"\n  action="+b.action.kind+" reason="+b.action.reason+" goal="+b.action.x+","+b.action.y+"\n  result="+b.result+" fault="+b.rejected+" stuckUntil="+b.stuckUntil+" suppressCooldown="+b.suppressCooldown+"\n  sense="+JSON.stringify(b.sensing)+"\n  aim="+JSON.stringify(aim));
+   }
    TdfcLog.saveReport(lines.join("\n"));
   }
-  public static function captureReport():void {if(overlay)overlay.capture();}
+  public static function captureReport():void {if(overlay){overlay.update(worldClass?worldClass["w"]:null,all,status,tick,cost,TdfcLog.status);overlay.capture();}}
   public static function setObservation(enabled:Boolean,w:*):void {if(ScenarioRunner.active && overlay){overlay.enabled=enabled;overlay.update(w,all,status,tick,cost,TdfcLog.status);}}
  }
 }

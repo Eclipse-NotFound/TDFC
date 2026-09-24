@@ -30,7 +30,7 @@ package {
     npc:get(u,"npc",false),disabled:get(u,"disabled",false) || get(u,"trigDis",false) || get(u,"unres",false),
     role:role,weapon:w,weaponId:String(get(w,"id","")),gun:tip==3,ammo:num(w,"hold",-1),shots:num(w,"kol_shoot"),reload:num(w,"t_reload"),
     rot:num(w,"rot",NaN),wx:num(w,"X",x),wy:num(w,"Y",y-20),weaponSkill:num(u,"weaponSkill",1),
-    target:get(u,"celUnit"),ground:get(u,"stay",false),fly:get(u,"isFly",false),water:get(u,"isPlav",false),fixed:get(u,"fixed",false),
+    target:get(u,"celUnit"),aimX:num(u,"celX"),aimY:num(u,"celY"),ground:get(u,"stay",false),fly:get(u,"isFly",false),water:get(u,"isPlav",false),fixed:get(u,"fixed",false),
     speed:num(u,"runSpeed",num(u,"maxSpeed",3)),jump:num(u,"jumpdy",12),noise:num(u,"noise"),obs:num(u,"obs"),maxObs:num(u,"maxObs",1)};
   }
   public static function hostile(s:Object,g:Object):Boolean {
@@ -55,7 +55,12 @@ package {
    while(angle>Math.PI) angle-=Math.PI*2; while(angle< -Math.PI) angle+=Math.PI*2;
    var front:Boolean=Math.abs(angle)<=Config.VISION_CONE/2;
    var look:Number=0, hear:Number=0;
-   try { look=Number(b.unit.look(g.unit,false)); hear=Number(b.unit.listen(g.unit)); } catch(e:Error) { b.rejected="感知接口不可用: "+e.errorID; }
+   try {
+    // Native control can turn the body before this sample. Its look() also reads
+    // our cone angle, so synchronise that owned field before asking about sight.
+    if(b.viewWritten)b.unit.vAngle=s.face>0?0:Math.PI;
+    look=Number(b.unit.look(g.unit,false)); hear=Number(b.unit.listen(g.unit));
+   } catch(e:Error) { b.rejected="感知接口不可用: "+e.errorID; }
    return {los:los,distance:distance,front:front,visible:los && front && look>0,look:look,heard:hear>0,hearing:hear};
   }
   public static function standable(loc:*,x:Number,y:Number,s:Object):Boolean {

@@ -1,0 +1,52 @@
+PASS normal suppression end starts 300-tick cooldown (legacy regression)
+PASS first suppressor claims slot
+PASS second suppressor denied
+PASS team cooldown survives role changes
+PASS progression improves cognition without changing culture
+PASS ranger supported with training bonus
+PASS hero variant is not military rank
+PASS explicit elite subtype improves cognition
+PASS broken sight resets continuous confirmation
+PASS occlusion does not refresh exact position
+FAIL recently identified player is reacquired on the first visible frame even after exposure decays
+PASS recognition memory never follows a player through occlusion
+PASS a report alone cannot bypass first visual identification
+PASS fresh hearing does not prolong expired personal visual recognition
+PASS first identification still requires native exposure threshold
+FAIL confirmed reacquisition updates the native target even when current exposure is low
+PASS reports obey current allegiance
+PASS queued report rechecks allegiance at delivery
+PASS running world allowed
+PASS pause gates tactical time
+PASS SATS gates tactical time
+PASS raider advances while ranger holds fire position
+PASS expired information ends pursuit
+PASS no actual movement triggers recovery
+PASS arrival resets progress clock so later small drift is not treated as stuck
+PASS trained planning prefers cover with a firing exit
+PASS noise caps extremes without amplifying quiet movement
+PASS crouching does not silence an existing gunshot
+PASS noise control restores owned movement setting
+PASS empty save rejects rather than silently starting a new game
+PASS save metadata uses native serialized field names
+PASS walking toward peek point does not consume firing window
+PASS peek timer starts after arrival then returns to cover
+PASS cover loses its reservation when remembered target gets a clear shot
+PASS ground cover commitment prevents competing native jump and climb
+PASS ending cover restores native mobility
+PASS drag begins at the observed panel grip
+PASS release over grip ends drag despite button consuming bubbling mouse-up
+PASS mouse release reaches native controls under overlay buttons
+PASS losing window focus also cancels dragging
+PASS levitated enemy keeps native movement, weapon and vision control
+PASS releasing telekinesis allows tactics to resume
+PASS grab restores tactical overrides and discards stale orders
+PASS right-button input bubbles through the draggable overlay
+PASS diagnostic identifies the actual ungrabbable hover target
+PASS diagnostic distinguishes swallowed input from a target condition
+PASS diagnostic reports native starting mana requirement
+PASS diagnostic preserves native line-of-sight restrictions
+PASS visibility diagnostic reads the public settings bridge without changing settings
+PASS intercepted Q records the active visibility mode at the event boundary
+PASS an empty follow-up click preserves the previous failed grab in exported history
+RESULT failures=2

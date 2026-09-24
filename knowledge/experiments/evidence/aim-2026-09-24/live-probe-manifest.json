@@ -1,0 +1,64 @@
+{
+  "run": "00cafed86591478e96ba7bb78062a46c",
+  "created": "2026-09-24T08:39:09.6971761+08:00",
+  "candidateSha256": "EFB2B9BE0CAFAE132149C041C42F6E7979BEC2442AE833C9B405B7AA4C708F3E",
+  "mswSha256": "620A5BB9459E7E50F74644A3FCC24C548C5C15BA225D5335A204D3448C715B91",
+  "sources": [
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame0.sol",
+      "sha256": "39C72342C96DEFD16C58697D58BBB23DEACEEF0C593C43FBB037632A5DCA58B8"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame1.sol",
+      "sha256": "28129EEF58522EED03436697AE18F4A78A0A71E4AD924A8D1224E2788ADD9273"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame10.sol",
+      "sha256": "4FE5AAFAA70480C0A9E0979368674DD9722E66A46130DB7F096E90F6CC34FC85"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame2.sol",
+      "sha256": "CDF55370889116C79178F264713FFD33B3995503AB00D555B3406EEF14316439"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame3.sol",
+      "sha256": "C148FD96B03C200148619BF1F0BB7D910E8D5A4A9548E0D5EDBE42B587D0D226"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame4.sol",
+      "sha256": "381DC68B9287D927BBAF9A9828C4BBAA44E4A4E9876C888C1785FC6FAD02F8BF"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame5.sol",
+      "sha256": "AAB0B90D39B894EB3E1AF901131B0A9DAADA4F4960A02182F28D9A056B53C7EC"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame6.sol",
+      "sha256": "1C51506517E5FD664DFDF70F904579AD199433BB8BF09B643509C4FE8213CDE3"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame7.sol",
+      "sha256": "063427925F1EB72CCD7E9DBEE63BAF12E5551652EED5ADC15FA6F7A1C05D2D97"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame8.sol",
+      "sha256": "9147744A6DF66CB84FE4B4BC172B86F391AD3374EAFB11E9457BD3F23AA8FC8A"
+    },
+    {
+      "path": "C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame9.sol",
+      "sha256": "C98EC6983054872E62B3C826FCDC19F6211F2C17E83A602DF89E581A96DF18A0"
+    }
+  ],
+  "testMswSha256": "479DEE1FC2C823D57EE69EAC5D2CE19233229E8CC0096C7ED1683D89C8351616",
+  "extraMods": [],
+  "loaderDependencies": [
+    {
+      "path": "D:\\Program Files\\Steam\\steamapps\\common\\Remains\\mods\\ModLoader\\release\\ModLoaderMod.swf",
+      "sha256": "375951AE86BCCD8886CDEAC8B479A339877CEE30F5D1B489C21FE06C736C0BF5"
+    }
+  ],
+  "loaderManifestSha256": "3FEC194F7DE2ED9325E7D81AE3A0B3BF54F62B8FB04211CBE2492BA674EB3927",
+  "testLoaderManifestSha256": "20B2D0849868E5EEC1BB4463B60E049322A0B17304127C599E3938D28DF2CC87",
+  "hostSha256": "B78244657ED407D03808C90E97325509DB35F802122835F58933FFF8003305AC",
+  "testVisionMode": ""
+}

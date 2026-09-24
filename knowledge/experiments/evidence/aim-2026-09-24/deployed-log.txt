@@ -1,0 +1,9 @@
+Thu Sep 24 00:44:21 2026 UTC [TDFC] version v0.6.4 session=1790210661129
+Thu Sep 24 00:44:21 2026 UTC [TDFC] scenario ACTIVE load-check
+Thu Sep 24 00:44:21 2026 UTC [TDFC] room reset
+Thu Sep 24 00:44:22 2026 UTC [TDFC] save 正在载入 Littlepip / Lv.29 / random_mane source=C:\Users\hello\AppData\Roaming\pfe\Local Store\#SharedObjects\pfe.swf\PFEgame0.sol
+Thu Sep 24 00:44:26 2026 UTC [TDFC] room reset
+Thu Sep 24 00:44:32 2026 UTC [TDFC] heartbeat tick=150 units=0 cost=0ms
+Thu Sep 24 00:44:33 2026 UTC [TDFC] save 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 24 00:44:33 2026 UTC [TDFC] scenario PASS 存档已核验：Littlepip · Lv.29 · rbl
+Thu Sep 24 00:44:33 2026 UTC [TDFC] report C:\Users\hello\AppData\Roaming\pfe-tdfc-test\Local Store\tdfc-report-1790210673664.txt

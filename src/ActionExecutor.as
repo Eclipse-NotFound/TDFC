@@ -67,8 +67,9 @@ package {
      else { b.result="路径阻挡，未强推"; b.stuckUntil=t+45; b.cover=null; b.until=0; }
     }
     if(b.confirmed) {
-     // 不跳过原版察觉积累；只有确认信息才能更新精确瞄准。
-     if(g.obs>=g.maxObs) b.unit.setCel(g.unit);
+     // Perception owns initial exposure and recent visual recognition. Do not
+     // discard a legitimate reacquisition just because exposure decayed in cover.
+     b.unit.setCel(g.unit);
      b.unit.celX=g.cx; b.unit.celY=g.cy;
     } else {
      if(!b.observed && GameBridge.get(b.unit,"celUnit")===g.unit) b.unit.setCel(null,b.knownX,b.knownY);

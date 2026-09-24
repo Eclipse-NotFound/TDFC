@@ -5,12 +5,14 @@ package {
   public function PerceptionModel() {}
   public function reset():void { pending=[]; }
   public function observe(b:BrainState,g:Object,sense:Object,t:int):void {
+   b.sensing=sense;
    b.observed=sense.visible;
    b.heard=sense.heard;
    if(sense.visible) b.confirm++; else b.confirm=0;
-   b.confirmed=sense.visible && b.confirm>=b.profile.confirm && g.obs>=g.maxObs;
+   var recognized:Boolean=t-b.lastVisual<b.profile.memory;
+   b.confirmed=sense.visible && (recognized || b.confirm>=b.profile.confirm && g.obs>=g.maxObs);
    if(b.confirmed) {
-    b.knownX=g.x; b.knownY=g.y; b.lastSeen=t; b.evidence="目击";
+    b.knownX=g.x; b.knownY=g.y; b.lastSeen=t; b.lastVisual=t; b.evidence="目击";
    } else if(sense.heard && t-b.lastHeard>=60 && t-b.lastSeen>30) {
     // 可复现的有限位置误差；听觉不会获得精确追踪能力。
     var seed:int=(b.key*37+t*13)%181;

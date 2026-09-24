@@ -20,8 +20,10 @@ try {
     $script = Join-Path $cache 'scripts\MSWAutoTest.as'
     $text = [IO.File]::ReadAllText($script)
     # Exact source anchor: reject unexpected dependency versions rather than guessing.
-    $pattern = 'enabled = id != "pfe";'
-    if (($text.Split(@($pattern), [StringSplitOptions]::None).Length - 1) -ne 1) { throw 'MSW test guard changed; inspect the new dependency before testing.' }
+    $patterns = @('enabled = id != "pfe";', 'enabled = id != "pfe" && id.indexOf("pfe-modsettings-") != 0;')
+    $matches = @($patterns | Where-Object { ($text.Split(@($_), [StringSplitOptions]::None).Length - 1) -eq 1 })
+    if ($matches.Count -ne 1) { throw 'MSW test guard changed; inspect the new dependency before testing.' }
+    $pattern = $matches[0]
     $text = $text.Replace($pattern, 'enabled = id == "pfe-msw-test";')
     [IO.File]::WriteAllText($script, $text, (New-Object System.Text.UTF8Encoding($false)))
     & $java -jar $ffdec -importScript $original $output (Join-Path $cache 'scripts') | Out-Host

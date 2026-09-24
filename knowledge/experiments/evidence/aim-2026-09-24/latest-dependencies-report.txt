@@ -1,0 +1,13 @@
+TDFC 0.6.4 运行 tick=404
+Thu Sep 24 00:48:08 2026 UTC
+Save: {"sha256":"39C72342C96DEFD16C58697D58BBB23DEACEEF0C593C43FBB037632A5DCA58B8","verified":true,"slot":0,"source":"C:\\Users\\hello\\AppData\\Roaming\\pfe\\Local Store\\#SharedObjects\\pfe.swf\\PFEgame0.sol","expected":{"date":1790208494484,"level":29,"version":"1.0.2","loadLand":"rbl","land":"random_mane","name":"Littlepip"},"actual":{"land":"rbl","level":29,"name":"Littlepip"}}
+Grab: null
+GrabRecent: []
+Player: {"center":[392.5,214],"exposure":40,"face":1,"maxExposure":20,"position":[380,249]}
+#1 slaver1 奴隶贩子·机会进攻 T3 原版等级 30 → 基础 3
+  position=100,319 hp=10000 fraction=2
+  evidence=目击 age=0 observed=true confirmed=true
+  action=advance reason=奴隶贩子·机会进攻，接近有效射程 goal=180,249
+  result=未见有效位移，已放弃该位置 fault= stuckUntil=494 suppressCooldown=-100000
+  sense={"heard":true,"front":true,"hearing":1.8529437500000001,"distance":297.81244097585983,"look":4,"visible":true,"los":true}
+  aim={"remembered":[380,249],"visualAge":0,"rot":-0.2381294551629291,"ready":true,"face":1,"weapon":[100,285],"beforeOrder":[392.5,214],"current":[392.5,214],"attached":1,"viewAngle":0}

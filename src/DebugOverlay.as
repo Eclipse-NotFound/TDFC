@@ -22,13 +22,14 @@ package {
   private var parent:DisplayObjectContainer;
   private var report:Function;
   private var draggingPanel:Boolean=false;
+  private static const PANEL_HEIGHT:int=430;
   public function get dragging():Boolean {return draggingPanel;}
   public function DebugOverlay(host:DisplayObjectContainer,onReport:Function) {
    parent=host;report=onReport;root.name="TDFC_DebugRoot";root.mouseEnabled=false;
    host.addChild(root);root.addChild(marks);marks.mouseEnabled=false;
    toggle=button("TDFC · 观察",0,0,function(e:MouseEvent):void {enabled=!enabled;});
-   toggleText=toggle.getChildAt(0) as TextField;root.addChild(toggle);root.addChild(panel);panel.x=12;panel.y=120;
-   panel.graphics.beginFill(0x101c27,0.94);panel.graphics.drawRoundRect(0,0,340,390,10);panel.graphics.endFill();
+   toggleText=toggle.getChildAt(0) as TextField;root.addChild(toggle);root.addChild(panel);panel.x=Math.max(12,host.stage.stageWidth-352);panel.y=120;
+   panel.graphics.beginFill(0x101c27,0.94);panel.graphics.drawRoundRect(0,0,340,PANEL_HEIGHT,10);panel.graphics.endFill();
    var grip:Sprite=button("TDFC 调试（拖动）",6,5,null,205);grip.name="TDFC_DragGrip";panel.addChild(grip);
    grip.addEventListener(MouseEvent.MOUSE_DOWN,function(e:MouseEvent):void {draggingPanel=true;panel.startDrag();e.stopImmediatePropagation();});
    // Observe release before a child can consume it; leaving the window also ends dragging.
@@ -37,7 +38,7 @@ package {
    host.stage.addEventListener(Event.MOUSE_LEAVE,endDrag);
    host.stage.addEventListener(Event.DEACTIVATE,endDrag);
    panel.addChild(button("保存诊断",225,5,function(e:MouseEvent):void {report();}));
-   detail=text(326,337,12);detail.x=7;detail.y=39;panel.addChild(detail);panel.visible=false;
+   detail=text(326,PANEL_HEIGHT-53,12);detail.x=7;detail.y=39;panel.addChild(detail);panel.visible=false;
   }
   private function endDrag(e:Event=null):void {if(draggingPanel){panel.stopDrag();draggingPanel=false;}}
   private function text(w:int,h:int,size:int=12):TextField {
@@ -64,7 +65,7 @@ package {
    toggle.x=parent.stage.stageWidth-120;toggle.y=12;
    toggleText.text="TDFC "+(enabled?"观察中":status=="运行"?"运行":"状态");
    panel.visible=marks.visible=enabled;if(!enabled){endDrag();return;}
-   panel.x=Math.max(0,Math.min(parent.stage.stageWidth-340,panel.x));panel.y=Math.max(0,Math.min(parent.stage.stageHeight-390,panel.y));
+   panel.x=Math.max(0,Math.min(parent.stage.stageWidth-340,panel.x));panel.y=Math.max(0,Math.min(parent.stage.stageHeight-PANEL_HEIGHT,panel.y));
    marks.graphics.clear();var alive:Object={};var count:int=0;var chosen:BrainState;
    var visual:DisplayObject=GameBridge.get(world,"visual") as DisplayObject;
    var loc:*=GameBridge.get(world,"loc"),player:*=GameBridge.get(loc,"gg");
@@ -85,6 +86,15 @@ package {
     tx.text="#"+b.key+" "+s.id+" · "+(b.profile.supported?"思维 "+b.profile.tier:"原版")+" · "+int(s.hp)+" HP\n"+(blocked?"[遮挡] ":"")+name(b.action.kind)+" | "+b.result;
     if(b.key==selected) {
      chosen=b;marks.graphics.lineStyle(1,0x6fe0e5,0.8);marks.graphics.drawRect(p.x-s.width/2,p.y,s.width,foot.y-p.y);
+     var gun:*=GameBridge.get(b.unit,"currentWeapon");
+     if(gun!=null) {
+      var gx:Number=GameBridge.num(gun,"X"),gy:Number=GameBridge.num(gun,"Y"),rot:Number=GameBridge.num(gun,"rot");
+      var muzzle:Point=root.globalToLocal(visual.localToGlobal(new Point(gx,gy)));
+      var ray:Point=root.globalToLocal(visual.localToGlobal(new Point(gx+Math.cos(rot)*200,gy+Math.sin(rot)*200)));
+      var aim:Point=root.globalToLocal(visual.localToGlobal(new Point(GameBridge.num(b.unit,"celX"),GameBridge.num(b.unit,"celY"))));
+      marks.graphics.lineStyle(2,0xffb454,0.95);marks.graphics.moveTo(muzzle.x,muzzle.y);marks.graphics.lineTo(ray.x,ray.y);marks.graphics.drawCircle(aim.x,aim.y,6);
+     }
+     marks.graphics.lineStyle(1,0x6fe0e5,0.8);
      if(b.action && b.profile.supported) {var goal:Point=root.globalToLocal(visual.localToGlobal(new Point(b.action.x,b.action.y)));marks.graphics.moveTo(foot.x,foot.y);marks.graphics.lineTo(goal.x,goal.y);marks.graphics.drawCircle(goal.x,goal.y,5);}
      if(b.profile.supported) {
       var eye:Point=root.globalToLocal(visual.localToGlobal(new Point(s.x,s.cy))),face:Number=s.face>0?0:Math.PI;
@@ -97,12 +107,13 @@ package {
    head+="念力："+GrabDiagnostics.summary+"\n";
    if(chosen)head+="\n#"+chosen.key+" "+chosen.profile.style+(chosen.profile.supported?"\n思维 "+chosen.profile.tier+" · "+chosen.profile.tierName+"\n"+chosen.profile.source+"\n情报："+chosen.evidence+(chosen.evidence=="无"?"":"（"+Math.max(0,tick-chosen.lastSeen)+" 帧前）"):"\nTDFC 不接管该兵种")+"\n行动："+name(chosen.action.kind)+"\n原因："+chosen.action.reason+"\n结果："+chosen.result+(chosen.rejected?"\n限制："+chosen.rejected:"");
    else head+="\n点击敌人标签查看原因、目标点与视野方向。\n淡色标签＝玩家与敌人之间有墙体遮挡。\n视野线示意方向，不代表最终察觉距离。\n所有墙后信息仅用于调试。\n测试场景通过独立测试启动器运行。";
+   if(chosen && chosen.profile.supported)head+="\n目击："+(chosen.observed?"有":"无")+" · 目标："+(chosen.confirmed?"已确认":"未确认")+"\n橙线＝实际枪口 · 橙圈＝瞄准点";
    if(ScenarioRunner.active)head+="\n"+TestSave.status;
    detail.text=head;
   }
   private function freeSpot(x:Number,y:Number,occupied:Array):Boolean {
    if(x<0 || y<0 || x+230>parent.stage.stageWidth || y+52>parent.stage.stageHeight-4)return false;
-   if(x<panel.x+340 && x+230>panel.x && y<panel.y+390 && y+52>panel.y)return false;
+   if(x<panel.x+340 && x+230>panel.x && y<panel.y+PANEL_HEIGHT && y+52>panel.y)return false;
    if(x<toggle.x+108 && x+230>toggle.x && y<toggle.y+30 && y+52>toggle.y)return false;
    for each(var b:Object in occupied)if(Math.abs(x-b.x)<234 && Math.abs(y-b.y)<56)return false;
    return true;

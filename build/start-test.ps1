@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Observe', 'LoadCheck', 'Combat', 'CoverCheck', 'TelekinesisCheck', 'TelekinesisUI')][string]$Mode = 'Observe',
+    [ValidateSet('Observe', 'LoadCheck', 'Combat', 'CoverCheck', 'AimCheck', 'TelekinesisCheck', 'TelekinesisUI')][string]$Mode = 'Observe',
     [ValidateRange(0, 38)][int]$SaveSlot = 0,
     [string]$SaveDirectory = (Join-Path $env:APPDATA 'pfe\Local Store\#SharedObjects\pfe.swf'),
     [string]$SaveFile,
@@ -86,12 +86,42 @@ New-Item -ItemType Directory -Force -Path $mswDest | Out-Null
 $testMsw = & (Join-Path $PSScriptRoot 'prepare-test-dependency.ps1')
 Copy-Item -LiteralPath $testMsw -Destination (Join-Path $mswDest 'MoreSkillsWeaponsMod.swf') -Force
 
+# The current host reads a manifest instead of calling the historical loaders.
+# Keep the installed registration format but enable only this test's dependencies.
+$manifestSource = Join-Path $gameRoot 'mods\loader-manifest.txt'
+$loaderHashes = @()
+if (Test-Path -LiteralPath $manifestSource) {
+    $testEntries = @('# Isolated TDFC test; never copied back to the installed manifest.')
+    $selected = @('TDFC', 'MoreSkills&Weapons') + $ExtraMod
+    foreach ($entry in Get-Content -LiteralPath $manifestSource) {
+        $fields = $entry.Trim().Split('|')
+        if ($fields.Count -ne 5 -or $entry.Trim().StartsWith('#')) { continue }
+        $enabled = $selected -contains $fields[0]
+        if ($fields[0] -in @('ModLoader','ModSettings') -and $fields[2] -eq '1') {
+            $supportSource = Join-Path $gameRoot ("mods\{0}\release\{1}.swf" -f $fields[0],$fields[1])
+            $supportDest = Join-Path $testRoot ("mods\{0}\release" -f $fields[0])
+            New-Item -ItemType Directory -Path $supportDest -Force | Out-Null
+            Copy-Item -LiteralPath $supportSource -Destination $supportDest -Force
+            $loaderHashes += @{path=$supportSource;sha256=(Get-FileHash -LiteralPath $supportSource).Hash}
+            $enabled = $true
+        }
+        $testEntries += ('{0}|{1}|{2}|0|0' -f $fields[0],$fields[1],[int]$enabled)
+    }
+    [IO.File]::WriteAllLines((Join-Path $testRoot 'mods\loader-manifest.txt'),$testEntries,(New-Object System.Text.UTF8Encoding($false)))
+}
+
 $run = [guid]::NewGuid().ToString('N')
-$options = [ordered]@{run=$run; scenario=@{Observe='observe'; LoadCheck='load-check'; Combat='combat'; CoverCheck='cover-check'; TelekinesisCheck='telekinesis-check'; TelekinesisUI='telekinesis-ui'}[$Mode]; ticks=$Ticks; exit=($Mode -notin @('Observe','TelekinesisUI')); fresh=[bool]$Fresh}
+$options = [ordered]@{run=$run; scenario=@{Observe='observe'; LoadCheck='load-check'; Combat='combat'; CoverCheck='cover-check'; AimCheck='aim-check'; TelekinesisCheck='telekinesis-check'; TelekinesisUI='telekinesis-ui'}[$Mode]; ticks=$Ticks; exit=($Mode -notin @('Observe','TelekinesisUI')); fresh=[bool]$Fresh}
 if ($TravelLand) { $options.travelLand = $TravelLand }
 $manifest = [ordered]@{run=$run; created=(Get-Date).ToString('o'); candidateSha256=(Get-FileHash -LiteralPath $candidate).Hash; mswSha256=(Get-FileHash -LiteralPath $msw).Hash; sources=@()}
 $manifest.testMswSha256=(Get-FileHash -LiteralPath $testMsw).Hash
 $manifest.extraMods=$extraHashes
+$manifest.loaderDependencies=$loaderHashes
+if (Test-Path -LiteralPath $manifestSource) {
+    $manifest.loaderManifestSha256=(Get-FileHash -LiteralPath $manifestSource).Hash
+    $manifest.testLoaderManifestSha256=(Get-FileHash -LiteralPath (Join-Path $testRoot 'mods\loader-manifest.txt')).Hash
+}
+$manifest.hostSha256=(Get-FileHash -LiteralPath (Join-Path $testRoot 'pfe.swf')).Hash
 $manifest.testVisionMode=$TestVisionMode
 if ($TestVisionSwf) { $manifest.testVisionSwf=@{path=$TestVisionSwf; sha256=(Get-FileHash -LiteralPath $TestVisionSwf).Hash} }
 if ($TestVisionMode) { $manifest.testVisionConfigSha256=(Get-FileHash -LiteralPath $visionConfig).Hash }

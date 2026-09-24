@@ -47,6 +47,27 @@ package {
    for(t=32;t<70;t++)p.observe(b,g,seen,t);
    var x:Number=b.knownX;g.x=900;p.observe(b,g,blind,70);
    check(b.knownX==x && b.lastSeen==69,"occlusion does not refresh exact position");
+   g.obs=0;p.observe(b,g,seen,71);
+   check(b.confirmed && b.knownX==900,"recently identified player is reacquired on the first visible frame even after exposure decays");
+   var recognized:BrainState=b;var reacquiredX:Number=b.knownX;
+   p.observe(b,g,blind,72);g.x=1200;p.observe(b,g,blind,73);
+   check(!b.confirmed && b.knownX==reacquiredX,"recognition memory never follows a player through occlusion");
+   b=brain(9);b.lastSeen=100;b.evidence="同伴报告 #1";g.obs=g.maxObs;
+   p.observe(b,g,seen,101);
+   check(!b.confirmed,"a report alone cannot bypass first visual identification");
+   b=recognized;var expired:int=71+b.profile.memory+1;
+   b.lastSeen=expired-1;b.evidence="听觉区域";p.observe(b,g,seen,expired);
+   check(!b.confirmed,"fresh hearing does not prolong expired personal visual recognition");
+   b=brain();g.obs=0;for(t=0;t<60;t++)p.observe(b,g,seen,t);
+   check(!b.confirmed,"first identification still requires native exposure threshold");
+   b=recognized;g.obs=g.maxObs;
+   var lockWritten:Boolean=false,aimBrain:BrainState=brain();
+   aimBrain.unit={X:0,Y:100,scX:55,scY:70,sost:1,levit:0,weaponSkill:1,overLook:true,vKonus:0,vAngle:0,
+    setCel:function(...args):void{lockWritten=true;}};
+   aimBrain.sample=GameBridge.snapshot(aimBrain.unit);aimBrain.action={kind:"hold",x:150,y:100};aimBrain.confirmed=true;
+   ActionExecutor.apply(aimBrain,{unit:{},cx:150,cy:65,height:70,obs:0,maxObs:20},null,72);
+   check(lockWritten && aimBrain.unit.celX==150 && aimBrain.unit.celY==65,"confirmed reacquisition updates the native target even when current exposure is low");
+   ActionExecutor.restore(aimBrain);
    var receiver:BrainState=brain(2),enemy:BrainState=brain(3);receiver.sample.x=100;enemy.sample.x=100;enemy.sample.fraction=4;
    b.confirmed=true;b.lastReport=-1000;b.lastSeen=80;p.schedule([b,receiver,enemy],80);p.deliver([b,receiver,enemy],130);
    check(receiver.evidence.indexOf("同伴")>=0 && enemy.evidence=="无","reports obey current allegiance");

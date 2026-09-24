@@ -20,6 +20,7 @@
 .\build\start-test.ps1 -Mode Combat -Hidden -Ticks 1200
 .\build\start-test.ps1 -Mode Combat -TravelLand random_mane -Hidden
 .\build\start-test.ps1 -Mode CoverCheck -Hidden
+.\build\start-test.ps1 -Mode AimCheck -TravelLand random_mane -ExtraMod RealisticVision,Sandevistan,RConnect,RandomRooms -Hidden
 .\build\start-test.ps1 -Mode TelekinesisCheck -TravelLand random_mane -Hidden
 .\build\start-test.ps1 -Mode TelekinesisCheck -TravelLand random_mane -ExtraMod RealisticVision,Sandevistan,RConnect,RandomRooms -Hidden
 .\build\test-logic.ps1
@@ -34,6 +35,8 @@
 - `%APPDATA%/pfe-tdfc-test/Local Store/tdfc.log`：测试日志。
 
 `CoverCheck` 在真实地图中寻找可达的掩体/探头位置，固定测试玩家位置和已知情报，持续给敌人“受压”输入；在这个专项中排除慢弹干扰。通过条件是观察到实际位移、遮挡、探头恢复射线。它验证行动执行，不冒充对自然感知和所有地图的验证。
+
+`AimCheck` 先用真实 UnitSlaver 和 Location.step 比较原生/模组的两个目标位置，检查转身视野与低察觉值下的重新目击；再让正常 ENTER_FRAME 主循环运行 360 帧，分别采样两位置末 60 帧的感知、瞄准点及实际枪口角度。夹具固定物理位置、生命和可见距离，不直接给正常主循环写确认结果；不能当成自然潜行、全部兵种或全部地形验收。不得用每帧 `setPos` 固定靶子（它会清空目标），也不得把 `visibility` 当作 0～1 布尔量（原版玩家通常是 2000）。
 
 `TelekinesisCheck` 生成 31 级绿色天角兽、可见掠夺者与已发现地雷，选择不与其他交互对象重叠的位置，经过原生选中、显示对象上的右键/Q 事件、玩家控制，断言成功抓取；另验证被抓敌人的战术控制已交还。它覆盖观察开/关，共 12 次正例。另寻找隔墙位置检查两个负例，仅在负例中暂时将测试角色的 `telemaster` 设为 0，检查后立即恢复，避免原版透墙天赋干扰基础视线检查。找不到合适地形时 `occlusion` 为空，不算已验证隔墙。它验证 AIR 输入事件链，不代替操作系统输入法检查。
 
@@ -54,5 +57,7 @@
 当前原档在 `%APPDATA%/pfe/Local Store/#SharedObjects/pfe.swf/PFEgameN.sol`，测试副本在相同尾路径的 `pfe-tdfc-test` 存储中；不同游戏 SWF 的槽位目录不同。TDFC 启动器不改原目录，也不修改根目录 `application.xml` 或 `pfe.swf`。
 
 已有存档含技能武器模组物品，所以必须带上它的已部署 SWF。该版本自带的自动测试会误判所有非 `pfe` 窗口、抢先新建角色。`prepare-test-dependency.ps1` 只在 TDFC 的 `build/out/` 中生成依赖副本，将其自动测试限定为 `pfe-msw-test`，定向编译并反编译回读验证，再复制到测试目录；不改其他模组项目。源 SWF 变化后重新核对锚点，失败即停止启动。
+
+2026-09-24 起，安装目录的启动器已使用 `mods/loader-manifest.txt`。测试启动器复制当前启用的 ModLoader/ModSettings 支持文件，在自己的测试目录生成清单，只启用 TDFC、技能武器和指定附加依赖；宿主、清单和支持文件哈希均写入 manifest。正式清单不改。技能武器旧守卫与排除 `pfe-modsettings-` 的新守卫均已分别核对，未知形式仍停止。
 
 随机地图不会随原版存档恢复：原版 `Game.init` 将这类读档送回基地 `rbl`。测试报告同时保留原存档地点和预期恢复地点，不把正常回基地当成载入失败。
